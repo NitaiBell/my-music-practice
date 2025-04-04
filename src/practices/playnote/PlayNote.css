@@ -1,0 +1,42 @@
+.playnote-container {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #56f6f9, #bdf6f9);
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .playnote-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .note-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .note-button {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #4c8bf5;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .note-button:hover {
+    background-color: #3a6fd9;
+    transform: scale(1.05);
+  }
+  
+  .playnote-title + .note-buttons {
+    margin-top: 1rem;
+  }
+  
