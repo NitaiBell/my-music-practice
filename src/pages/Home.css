@@ -1,7 +1,7 @@
 .home-container {
     text-align: center;
     padding: 4rem 2rem;
-    background: linear-gradient(to bottom right, #ffe9b9, #fff7db);
+    background: linear-gradient(to bottom right, #f8f8f8, #eccf68);
     min-height: 100vh;
     font-family: 'Segoe UI', sans-serif;
   }

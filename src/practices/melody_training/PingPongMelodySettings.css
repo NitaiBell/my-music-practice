@@ -1,0 +1,156 @@
+.container_settings {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, #56f6f9, #bdf6f9);
+}
+
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: transparent;
+    color: black;
+    z-index: 2;
+    position: relative;
+  }
+  
+  /* Dropdown */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropbtn {
+    background: linear-gradient(to right, #a2d4f3, #d0cfff);
+    color: #222;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .dropbtn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #8ec9f2, #bcb8ff);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Dropdown menu */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    padding: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 10px;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: flex;
+  }
+  
+  .dropdown-content .column {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  
+  .dropdown-content label {
+    margin: 4px 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  /* Right side controls */
+  .nav-fixed-letters {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 5px;
+  }
+  
+  .nav-fixed-letters input.rounds-input {
+    width: 60px;
+    font-size: 1rem;
+    padding: 5px;
+    border-radius: 10px;
+    border: 2px solid black;
+    text-align: center;
+  }
+  
+  /* Start button */
+  .start-btn {
+    background: linear-gradient(to right, #a2f3b8, #cfffd0);
+    color: #222;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .start-btn:hover {
+    background: linear-gradient(to right, #8df2aa, #bcffb8);
+    transform: scale(1.05);
+  }
+  
+  /* Summary text */
+  .summary {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+  
+  /* Buttons grid */
+  .letter-buttons-area {
+    height: 30vh;
+    background-color: transparent;
+    padding: 10px;
+    display: grid;
+    gap: 10px;
+    align-items: stretch;
+    justify-items: stretch;
+  }
+  
+  /* Note buttons */
+  .letter-btn {
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 8px;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 247, 255, 0.5),
+      rgba(0, 50, 150, 0.5)
+    );
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .letter-btn:hover {
+    background-color: #090859;
+    color: white;
+    transform: scale(1.03);
+  }
+  

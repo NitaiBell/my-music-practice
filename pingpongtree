@@ -1,0 +1,9 @@
+pingpong_melody/
+├── PingPongMelodyContainer.jsx     # 🌐 Top-level controller (routing between settings/game)
+├── PingPongMelodySettings.jsx      # ⚙️ Settings UI (notes, rounds, color)
+├── PingPongMelody.jsx              # 🎮 Game UI (note challenge, buttons, score logic)
+├── PingPongMelody.css              # 🎨 Shared styles
+└── components/
+    ├── Navbar.jsx                  # 🧭 Top bar with score/rounds/leave
+    ├── NoteSelector.jsx           # ⭕ Toggle grid of notes in settings
+    └── NoteButtons.jsx            # 🎹 Clickable note buttons shown during game

@@ -1,0 +1,108 @@
+.container_game {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, #006769, #00a8b1af);
+  }
+  
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: transparent;
+    color: black;
+    z-index: 2;
+    position: relative;
+  }
+  
+  /* Dropdown (non-functional here for visual parity) */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropbtn {
+    background: linear-gradient(to right, #a2d4f3, #d0cfff);
+    color: #222;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .dropbtn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #8ec9f2, #bcb8ff);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Fixed letters (A, B, C) */
+  .nav-fixed-letters {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 5px;
+  }
+  
+  .nav-fixed-letters span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: white;
+  }
+  
+  /* Summary */
+  .summary {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+  
+  /* Bottom note buttons area */
+  .letter-buttons-area {
+    height: 30vh;
+    background-color: transparent;
+    padding: 10px;
+    display: grid;
+    gap: 10px;
+    align-items: stretch;
+    justify-items: stretch;
+  }
+  
+  .letter-btn {
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+    border: 2px solid black;
+    border-radius: 8px;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 247, 255, 0.5),
+      rgba(0, 50, 150, 0.5)
+    );
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .letter-btn:hover {
+    background-color: #090859;
+    transform: scale(1.03);
+  }
+  
+  
+  
