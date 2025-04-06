@@ -11,11 +11,24 @@ const Home = () => {
       <p className="home-description">
         Train your ears and improve your musicianship with interactive note and chord exercises.
       </p>
-      <button className="home-button" onClick={() => navigate("/play")}>
-        Start Practicing
-      </button>
+
+      <div className="home-buttons">
+        <button
+          className="home-button practice"
+          onClick={() => navigate("/play")}
+        >
+          Start Practicing
+        </button>
+        <button
+          className="home-button melody"
+          onClick={() => navigate("/melody")}
+        >
+          Ping Pong Melody
+        </button>
+      </div>
     </div>
   );
 };
 
 export default Home;
+

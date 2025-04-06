@@ -3,14 +3,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: linear-gradient(to bottom, #006769, #00a8b1af);
+    background: linear-gradient(to bottom, #ddf2f2, #1bd9e3af);
   }
   
   /* Navbar */
   .navbar {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     padding: 10px;
     background-color: transparent;
     color: black;
@@ -18,52 +18,71 @@
     position: relative;
   }
   
-  /* Dropdown (non-functional here for visual parity) */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropbtn {
-    background: linear-gradient(to right, #a2d4f3, #d0cfff);
-    color: #222;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
-  
-  .dropbtn:hover {
-    transform: scale(1.05);
-    background: linear-gradient(to right, #8ec9f2, #bcb8ff);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Fixed letters (A, B, C) */
-  .nav-fixed-letters {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    font-size: 2rem;
-    font-weight: bold;
-    padding: 5px;
-  }
-  
-  .nav-fixed-letters span {
+  /* Left side of the navbar */
+  .navbar-left {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border: 2px solid black;
-    border-radius: 50%;
+    gap: 10px;
+  }
+  
+  .logo-title {
     font-size: 1.5rem;
     font-weight: bold;
+    padding: 5px 10px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 2px solid #000;
+  }
+  
+  .c-note-btn,
+  .current-btn,
+  .start-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #e0f7fa;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .c-note-btn:hover,
+  .current-btn:hover,
+  .start-btn:hover {
+    transform: scale(1.05);
+    background-color: #b2ebf2;
+  }
+  
+  /* Game progress stats */
+  .navbar-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .stat {
+    padding: 5px 10px;
+    border-radius: 6px;
     background-color: white;
+    border: 2px solid black;
+  }
+  
+  .stat.correct {
+    background-color: #b2f5b2;
+    border-color: #2ecc71;
+  }
+  
+  .stat.wrong {
+    background-color: #ffb3b3;
+    border-color: #e74c3c;
+  }
+  
+  .stat.current {
+    background-color: #ffe8a1;
+    border-color: #f39c12;
   }
   
   /* Summary */
@@ -73,7 +92,7 @@
     text-align: center;
   }
   
-  /* Bottom note buttons area */
+  /* Note buttons grid */
   .letter-buttons-area {
     height: 30vh;
     background-color: transparent;
@@ -105,4 +124,71 @@
   }
   
   
+  .letter-btn.correct-flash {
+    background-color: #7cff7c !important;
+    transform: scale(1.05);
+  }
+  
+  .letter-btn.wrong-flash {
+    background-color: #fd6666 !important;
+    transform: scale(1.05);
+  }
+  
+  
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  
+  .popup {
+    background: rgb(198, 234, 201);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .popup h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .popup p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .popup-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(to right, #a2f3b8, #cfffd0);
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .popup-buttons button:hover {
+    background: linear-gradient(to right, #8df2aa, #bcffb8);
+    transform: scale(1.05);
+  }
   

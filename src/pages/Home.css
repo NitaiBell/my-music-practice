@@ -23,15 +23,36 @@
     font-size: 1.2rem;
     border: none;
     border-radius: 10px;
-    background-color: #ff9e2c;
     color: white;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
-  .home-button:hover {
+  /* 🎯 Style for the first button */
+  .home-button.practice {
+    background-color: #ff9e2c;
+  }
+  
+  .home-button.practice:hover {
     background-color: #e67e00;
     transform: scale(1.05);
   }
   
+  /* 🎵 Style for the second button */
+  .home-button.melody {
+    background-color: #00b2b2;
+  }
+  
+  .home-button.melody:hover {
+    background-color: #008b8b;
+    transform: scale(1.05);
+  }
+
+  .home-buttons {
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    gap: 20px;               /* More space between buttons */
+    margin-top: 30px;
+    align-items: center;
+  }
