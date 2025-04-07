@@ -7,10 +7,16 @@ const noteDisplayMap = {
   Cs: 'C#', Ds: 'D#', Fs: 'F#', Gs: 'G#', As: 'A#',
 };
 
+const getBaseNote = (note) => note.replace(/\d$/, ''); // e.g. C3 → C
+
 const PingPongMelody = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { selectedNotes = [], rounds = 1 } = location.state || {};
+  const {
+    selectedNotes = [],
+    rounds = 1,
+    octaves = [3],
+  } = location.state || {};
 
   const [sequence, setSequence] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -23,40 +29,36 @@ const PingPongMelody = () => {
 
   const generateSequence = () => {
     const notesCount = selectedNotes.length;
-    const minC = Math.ceil(rounds / notesCount); // Ensure C appears at least this many times
+    const minC = Math.ceil(rounds / notesCount);
     const nonCNotes = selectedNotes.filter(n => n !== 'C');
-  
+
     if (!selectedNotes.includes('C') || nonCNotes.length === 0) {
       alert("C must be included and there must be at least one other note.");
       return;
     }
-  
+
     const otherRounds = rounds - minC;
     let pool = [];
-  
-    // Add extra C notes (reserving 1 for start and 1 for end)
+
     const cMiddleCount = Math.max(minC - 2, 0);
     for (let i = 0; i < cMiddleCount; i++) pool.push('C');
-  
-    // Add other notes evenly
+
     const minPerNote = Math.floor(otherRounds / nonCNotes.length);
     const remainder = otherRounds % nonCNotes.length;
-  
+
     nonCNotes.forEach((note, i) => {
       const extra = i < remainder ? 1 : 0;
       for (let j = 0; j < minPerNote + extra; j++) {
         pool.push(note);
       }
     });
-  
-    // Shuffle pool (Fisher-Yates)
+
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
-  
-    // Build result avoiding 3 repeated notes
-    const result = ['C']; // Start with C
+
+    const result = ['C'];
     while (pool.length) {
       const last = result[result.length - 1];
       const secondLast = result[result.length - 2];
@@ -65,17 +67,21 @@ const PingPongMelody = () => {
       result.push(pool[nextIndex]);
       pool.splice(nextIndex, 1);
     }
-  
-    result.push('C'); // End with C
+
+    result.push('C');
     return result;
   };
-  
 
   const playNote = (note) => {
-    const filename = `${note}4.wav`;
+    // Special case: fixed C3 for the reference C button
+    const isReferenceC = note === 'C-ref';
+    const baseNote = isReferenceC ? 'C' : note;
+    const octave = isReferenceC ? 3 : octaves[Math.floor(Math.random() * octaves.length)];
+    const filename = `${baseNote}${octave}.wav`;
     const audio = new Audio(`/clean_cut_notes/${filename}`);
     audio.play().catch((err) => console.error(`Error playing ${filename}:`, err));
   };
+  
 
   const handleStart = () => {
     const newSequence = generateSequence();
@@ -100,9 +106,10 @@ const PingPongMelody = () => {
   const handleAnswer = (note) => {
     if (!isPlaying || !canAnswer) return;
 
-    const button = document.getElementById(`note-btn-${note}`);
-    const isCorrect = note === sequence[currentRound];
+    const currentExpected = sequence[currentRound];
+    const isCorrect = getBaseNote(note) === getBaseNote(currentExpected);
 
+    const button = document.getElementById(`note-btn-${note}`);
     if (button) {
       button.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
       setTimeout(() => {
@@ -161,6 +168,9 @@ const PingPongMelody = () => {
           You chose notes to practice:{' '}
           <strong>{selectedNotes.map(n => noteDisplayMap[n]).join(', ') || 'None'}</strong>
         </p>
+        <p>
+          Octaves: <strong>{octaves.sort().join(', ')}</strong>
+        </p>
       </div>
 
       <div
@@ -201,6 +211,8 @@ const PingPongMelody = () => {
 };
 
 export default PingPongMelody;
+
+
 
 
 

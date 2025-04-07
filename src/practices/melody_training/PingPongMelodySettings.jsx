@@ -2,33 +2,28 @@ import React, { useState } from 'react';
 import './PingPongMelodySettings.css';
 import { useNavigate } from 'react-router-dom';
 
-// 🎵 Map safe names to display names
 const noteDisplayMap = {
   C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B',
   Cs: 'C#', Ds: 'D#', Fs: 'F#', Gs: 'G#', As: 'A#',
 };
 
-const notes = Object.keys(noteDisplayMap); // ['C', 'D', ..., 'As']
+const notes = Object.keys(noteDisplayMap);
 
 const PingPongMelodySettings = () => {
-  const [selectedNotes, setSelectedNotes] = useState(['C']); // ✅ 'C' selected by default
+  const [selectedNotes, setSelectedNotes] = useState(['C']);
   const [rounds, setRounds] = useState(1);
+  const [octaves, setOctaves] = useState([3]);
   const navigate = useNavigate();
 
-  // 🔊 Play audio for note4.wav
   const playNote = (note) => {
     const encodedNote = encodeURIComponent(`${note}4.wav`);
     const audio = new Audio(`/clean_cut_notes/${encodedNote}`);
-    audio.play().catch((err) => {
-      console.error(`Error playing ${encodedNote}:`, err);
-    });
+    audio.play().catch((err) => console.error(`Error playing ${encodedNote}:`, err));
   };
 
-  // ✅ Toggle note selection & play audio (C is fixed)
   const toggleNote = (note) => {
     if (note === 'C') return;
     playNote(note);
-
     setSelectedNotes((prev) =>
       prev.includes(note) ? prev.filter((n) => n !== note) : [...prev, note]
     );
@@ -39,6 +34,7 @@ const PingPongMelodySettings = () => {
       state: {
         selectedNotes,
         rounds,
+        octaves,
       },
     });
   };
@@ -63,7 +59,7 @@ const PingPongMelodySettings = () => {
                     type="checkbox"
                     checked={selectedNotes.includes(note)}
                     onChange={() => toggleNote(note)}
-                    disabled={note === 'C'} // 🔒 Disable 'C'
+                    disabled={note === 'C'}
                   />
                   {noteDisplayMap[note]}
                 </label>
@@ -72,18 +68,45 @@ const PingPongMelodySettings = () => {
           </div>
         </div>
 
-        <div className="nav-fixed-letters">
-          <input
-            type="number"
-            min="1"
-            max="20"
-            value={rounds}
-            onChange={(e) => setRounds(Number(e.target.value))}
-            className="rounds-input"
-          />
-          <button className="start-btn" onClick={startPractice}>
-            Start Practice
-          </button>
+        <div className="nav-controls">
+          <div className="rounds-container">
+            <label>Rounds</label>
+            <input
+              type="number"
+              min="1"
+              max="20"
+              value={rounds}
+              onChange={(e) => setRounds(Number(e.target.value))}
+              className="rounds-input"
+            />
+          </div>
+
+          <div className="octave-dropdown">
+            <button className="dropbtn">Octaves⬇️</button>
+            <div className="dropdown-content">
+              <div className="column">
+                {[1, 2, 3, 4, 5, 6].map((oct) => (
+                  <label key={oct}>
+                    <input
+                      type="checkbox"
+                      checked={octaves.includes(oct)}
+                      disabled={oct === 3}
+                      onChange={() => {
+                        if (octaves.includes(oct)) {
+                          setOctaves(octaves.filter((o) => o !== oct));
+                        } else {
+                          setOctaves([...octaves, oct]);
+                        }
+                      }}
+                    />
+                    {oct}
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <button className="start-btn" onClick={startPractice}>Start Practice</button>
         </div>
       </nav>
 
@@ -93,13 +116,16 @@ const PingPongMelodySettings = () => {
           You chose notes to practice:{' '}
           <strong>{selectedNotes.map(n => noteDisplayMap[n]).join(', ') || 'None'}</strong>
         </p>
+        <p>
+          Practicing in octaves: <strong>{octaves.sort().join(', ')}</strong>
+        </p>
       </div>
 
       <div
         className="letter-buttons-area"
         style={{
           gridTemplateRows: `repeat(${rows}, 1fr)`,
-          gridTemplateColumns: `repeat(${columns}, 1fr)`
+          gridTemplateColumns: `repeat(${columns}, 1fr)`,
         }}
       >
         {selectedNotes.map((note) => (
@@ -117,6 +143,7 @@ const PingPongMelodySettings = () => {
 };
 
 export default PingPongMelodySettings;
+
 
 
 
