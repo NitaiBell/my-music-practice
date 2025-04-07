@@ -7,7 +7,7 @@ const noteDisplayMap = {
   Cs: 'C#', Ds: 'D#', Fs: 'F#', Gs: 'G#', As: 'A#',
 };
 
-const getBaseNote = (note) => note.replace(/\d$/, ''); // e.g. C3 → C
+const getBaseNote = (note) => note.replace(/\d$/, '');
 
 const PingPongMelody = () => {
   const location = useLocation();
@@ -26,6 +26,7 @@ const PingPongMelody = () => {
   const [canAnswer, setCanAnswer] = useState(false);
   const [currentNote, setCurrentNote] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const [hasAnsweredWrong, setHasAnsweredWrong] = useState(false);
 
   const generateSequence = () => {
     const notesCount = selectedNotes.length;
@@ -73,7 +74,6 @@ const PingPongMelody = () => {
   };
 
   const playNote = (note) => {
-    // Special case: fixed C3 for the reference C button
     const isReferenceC = note === 'C-ref';
     const baseNote = isReferenceC ? 'C' : note;
     const octave = isReferenceC ? 3 : octaves[Math.floor(Math.random() * octaves.length)];
@@ -81,7 +81,6 @@ const PingPongMelody = () => {
     const audio = new Audio(`/clean_cut_notes/${filename}`);
     audio.play().catch((err) => console.error(`Error playing ${filename}:`, err));
   };
-  
 
   const handleStart = () => {
     const newSequence = generateSequence();
@@ -93,6 +92,7 @@ const PingPongMelody = () => {
     setCurrentRound(0);
     setCorrectCount(0);
     setWrongCount(0);
+    setHasAnsweredWrong(false);
     setTimeout(() => playCurrent(0), 200);
   };
 
@@ -118,7 +118,9 @@ const PingPongMelody = () => {
     }
 
     if (isCorrect) {
-      setCorrectCount((c) => c + 1);
+      if (!hasAnsweredWrong) {
+        setCorrectCount((c) => c + 1);
+      }
       setCanAnswer(false);
       if (currentRound + 1 >= sequence.length) {
         setTimeout(() => {
@@ -128,11 +130,13 @@ const PingPongMelody = () => {
       } else {
         setTimeout(() => {
           setCurrentRound((r) => r + 1);
+          setHasAnsweredWrong(false);
           playCurrent(currentRound + 1);
         }, 500);
       }
     } else {
       setWrongCount((w) => w + 1);
+      setHasAnsweredWrong(true);
       setCanAnswer(false);
     }
   };
@@ -146,7 +150,7 @@ const PingPongMelody = () => {
       <nav className="navbar">
         <div className="navbar-left">
           <div className="logo-title">Sabers melody</div>
-          <button className="c-note-btn" onClick={() => playNote('C')}>C</button>
+          <button className="c-note-btn" onClick={() => playNote('C-ref')}>C</button>
           <button className="current-btn" onClick={handleReplayCurrent}>Current</button>
         </div>
 
@@ -165,8 +169,8 @@ const PingPongMelody = () => {
       <div className="summary">
         <p>You are in the game now</p>
         <p>
-          You chose notes to practice:{' '}
-          <strong>{selectedNotes.map(n => noteDisplayMap[n]).join(', ') || 'None'}</strong>
+          You chose notes to practice:{" "}
+          <strong>{selectedNotes.map(n => noteDisplayMap[n]).join(', ')}</strong>
         </p>
         <p>
           Octaves: <strong>{octaves.sort().join(', ')}</strong>
@@ -211,6 +215,7 @@ const PingPongMelody = () => {
 };
 
 export default PingPongMelody;
+
 
 
 

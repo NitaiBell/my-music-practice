@@ -96,6 +96,10 @@
   gap: 4px;
 }
 
+.rounds-container label {
+  margin-bottom: 4px;
+}
+
 /* Round Input */
 input.rounds-input {
   width: 60px;

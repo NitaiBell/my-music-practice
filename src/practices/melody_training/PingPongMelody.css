@@ -125,12 +125,12 @@
   
   
   .letter-btn.correct-flash {
-    background-color: #7cff7c !important;
+    background-color: #00ff00 !important;
     transform: scale(1.05);
   }
   
   .letter-btn.wrong-flash {
-    background-color: #fd6666 !important;
+    background-color: #ff0000 !important;
     transform: scale(1.05);
   }
   

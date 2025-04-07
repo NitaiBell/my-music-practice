@@ -12,7 +12,7 @@ const notes = Object.keys(noteDisplayMap);
 const PingPongMelodySettings = () => {
   const [selectedNotes, setSelectedNotes] = useState(['C']);
   const [rounds, setRounds] = useState(1);
-  const [octaves, setOctaves] = useState([3]);
+  const [octaves, setOctaves] = useState([3]); // C3 is default
   const navigate = useNavigate();
 
   const playNote = (note) => {
@@ -49,6 +49,7 @@ const PingPongMelodySettings = () => {
   return (
     <div className="container_settings">
       <nav className="navbar">
+        {/* Note Dropdown */}
         <div className="dropdown">
           <button className="dropbtn">🎵 Notes</button>
           <div className="dropdown-content">
@@ -68,7 +69,9 @@ const PingPongMelodySettings = () => {
           </div>
         </div>
 
+        {/* Controls: Rounds / Octaves / Start */}
         <div className="nav-controls">
+          {/* Rounds Input */}
           <div className="rounds-container">
             <label>Rounds</label>
             <input
@@ -81,8 +84,9 @@ const PingPongMelodySettings = () => {
             />
           </div>
 
+          {/* Octave Dropdown */}
           <div className="octave-dropdown">
-            <button className="dropbtn">Octaves⬇️</button>
+            <button className="dropbtn">Octaves ⬇️</button>
             <div className="dropdown-content">
               <div className="column">
                 {[1, 2, 3, 4, 5, 6].map((oct) => (
@@ -96,6 +100,10 @@ const PingPongMelodySettings = () => {
                           setOctaves(octaves.filter((o) => o !== oct));
                         } else {
                           setOctaves([...octaves, oct]);
+                          const audio = new Audio(`/clean_cut_notes/C${oct}.wav`);
+                          audio.play().catch(err =>
+                            console.error(`Error playing C${oct}.wav`, err)
+                          );
                         }
                       }}
                     />
@@ -106,10 +114,14 @@ const PingPongMelodySettings = () => {
             </div>
           </div>
 
-          <button className="start-btn" onClick={startPractice}>Start Practice</button>
+          {/* Start Button */}
+          <button className="start-btn" onClick={startPractice}>
+            Start Practice
+          </button>
         </div>
       </nav>
 
+      {/* Summary Info */}
       <div className="summary">
         <p>You chose <strong>{rounds}</strong> rounds</p>
         <p>
@@ -121,6 +133,7 @@ const PingPongMelodySettings = () => {
         </p>
       </div>
 
+      {/* Note Playback Grid */}
       <div
         className="letter-buttons-area"
         style={{
