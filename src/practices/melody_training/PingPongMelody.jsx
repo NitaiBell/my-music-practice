@@ -85,7 +85,8 @@ const PingPongMelody = () => {
   const handleStart = () => {
     const newSequence = generateSequence();
     if (!newSequence) return;
-
+  
+    // Set state for the sequence and game details
     setSequence(newSequence);
     setIsPlaying(true);
     setShowPopup(false);
@@ -93,8 +94,13 @@ const PingPongMelody = () => {
     setCorrectCount(0);
     setWrongCount(0);
     setHasAnsweredWrong(false);
-    setTimeout(() => playCurrent(0), 200);
+  
+    // Play the first note immediately after setting up the game
+    playNote(newSequence[0]);
+    setCurrentNote(newSequence[0]);
+    setCanAnswer(true);
   };
+  
 
   const playCurrent = (index = currentRound) => {
     const note = sequence[index];
