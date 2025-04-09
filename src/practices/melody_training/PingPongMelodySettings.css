@@ -186,3 +186,8 @@ input.rounds-input {
 
 
   
+
+.scale-dropdown .dropbtn.scale {
+  background-color: #cce4ff;
+  font-weight: bold;
+}

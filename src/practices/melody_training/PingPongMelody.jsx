@@ -9,6 +9,15 @@ const noteDisplayMap = {
 
 const getBaseNote = (note) => note.replace(/\d$/, '');
 
+const scales = {
+  C: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+  G: ['G', 'A', 'B', 'C', 'D', 'E', 'Fs'],
+  D: ['D', 'E', 'Fs', 'G', 'A', 'B', 'Cs'],
+  A: ['A', 'B', 'Cs', 'D', 'E', 'Fs', 'Gs'],
+  E: ['E', 'Fs', 'Gs', 'A', 'B', 'Cs', 'Ds'],
+  F: ['F', 'G', 'A', 'As', 'C', 'D', 'E'],
+};
+
 const PingPongMelody = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,7 +25,11 @@ const PingPongMelody = () => {
     selectedNotes = [],
     rounds = 1,
     octaves = [3],
+    selectedScale = 'C',
   } = location.state || {};
+
+  const scaleNotes = selectedNotes.length > 0 ? selectedNotes : scales[selectedScale];
+  const tonicNote = selectedScale; // use this as the new reference note
 
   const [sequence, setSequence] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -29,37 +42,38 @@ const PingPongMelody = () => {
   const [hasAnsweredWrong, setHasAnsweredWrong] = useState(false);
 
   const generateSequence = () => {
-    const notesCount = selectedNotes.length;
-    const minC = Math.ceil(rounds / notesCount);
-    const nonCNotes = selectedNotes.filter(n => n !== 'C');
+    const notesCount = scaleNotes.length;
+    const minTonic = Math.ceil(rounds / notesCount);
+    const nonTonicNotes = scaleNotes.filter(n => n !== tonicNote);
 
-    if (!selectedNotes.includes('C') || nonCNotes.length === 0) {
-      alert("C must be included and there must be at least one other note.");
+    if (!scaleNotes.includes(tonicNote) || nonTonicNotes.length === 0) {
+      alert(`${tonicNote} must be included and at least one other note.`);
       return;
     }
 
-    const otherRounds = rounds - minC;
+    const otherRounds = rounds - minTonic;
     let pool = [];
 
-    const cMiddleCount = Math.max(minC - 2, 0);
-    for (let i = 0; i < cMiddleCount; i++) pool.push('C');
+    const tonicMiddleCount = Math.max(minTonic - 2, 0);
+    for (let i = 0; i < tonicMiddleCount; i++) pool.push(tonicNote);
 
-    const minPerNote = Math.floor(otherRounds / nonCNotes.length);
-    const remainder = otherRounds % nonCNotes.length;
+    const minPerNote = Math.floor(otherRounds / nonTonicNotes.length);
+    const remainder = otherRounds % nonTonicNotes.length;
 
-    nonCNotes.forEach((note, i) => {
+    nonTonicNotes.forEach((note, i) => {
       const extra = i < remainder ? 1 : 0;
       for (let j = 0; j < minPerNote + extra; j++) {
         pool.push(note);
       }
     });
 
+    // Shuffle the pool
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
 
-    const result = ['C'];
+    const result = [tonicNote];
     while (pool.length) {
       const last = result[result.length - 1];
       const secondLast = result[result.length - 2];
@@ -69,14 +83,14 @@ const PingPongMelody = () => {
       pool.splice(nextIndex, 1);
     }
 
-    result.push('C');
+    result.push(tonicNote);
     return result;
   };
 
   const playNote = (note) => {
-    const isReferenceC = note === 'C-ref';
-    const baseNote = isReferenceC ? 'C' : note;
-    const octave = isReferenceC ? 3 : octaves[Math.floor(Math.random() * octaves.length)];
+    const isReference = note === 'TONIC-ref';
+    const baseNote = isReference ? tonicNote : note;
+    const octave = isReference ? 3 : octaves[Math.floor(Math.random() * octaves.length)];
     const filename = `${baseNote}${octave}.wav`;
     const audio = new Audio(`/clean_cut_notes/${filename}`);
     audio.play().catch((err) => console.error(`Error playing ${filename}:`, err));
@@ -85,8 +99,7 @@ const PingPongMelody = () => {
   const handleStart = () => {
     const newSequence = generateSequence();
     if (!newSequence) return;
-  
-    // Set state for the sequence and game details
+
     setSequence(newSequence);
     setIsPlaying(true);
     setShowPopup(false);
@@ -94,13 +107,10 @@ const PingPongMelody = () => {
     setCorrectCount(0);
     setWrongCount(0);
     setHasAnsweredWrong(false);
-  
-    // Play the first note immediately after setting up the game
     playNote(newSequence[0]);
     setCurrentNote(newSequence[0]);
     setCanAnswer(true);
   };
-  
 
   const playCurrent = (index = currentRound) => {
     const note = sequence[index];
@@ -124,9 +134,7 @@ const PingPongMelody = () => {
     }
 
     if (isCorrect) {
-      if (!hasAnsweredWrong) {
-        setCorrectCount((c) => c + 1);
-      }
+      if (!hasAnsweredWrong) setCorrectCount((c) => c + 1);
       setCanAnswer(false);
       if (currentRound + 1 >= sequence.length) {
         setTimeout(() => {
@@ -156,7 +164,9 @@ const PingPongMelody = () => {
       <nav className="navbar">
         <div className="navbar-left">
           <div className="logo-title">Sabers melody</div>
-          <button className="c-note-btn" onClick={() => playNote('C-ref')}>C</button>
+          <button className="c-note-btn" onClick={() => playNote('TONIC-ref')}>
+            {noteDisplayMap[tonicNote]}
+          </button>
           <button className="current-btn" onClick={handleReplayCurrent}>Current</button>
         </div>
 
@@ -173,24 +183,19 @@ const PingPongMelody = () => {
       </nav>
 
       <div className="summary">
-        <p>You are in the game now</p>
-        <p>
-          You chose notes to practice:{" "}
-          <strong>{selectedNotes.map(n => noteDisplayMap[n]).join(', ')}</strong>
-        </p>
-        <p>
-          Octaves: <strong>{octaves.sort().join(', ')}</strong>
-        </p>
+        <p>You are practicing in the <strong>{selectedScale} Major</strong> scale</p>
+        <p>Notes: <strong>{scaleNotes.map(n => noteDisplayMap[n]).join(', ')}</strong></p>
+        <p>Octaves: <strong>{octaves.sort().join(', ')}</strong></p>
       </div>
 
       <div
         className="letter-buttons-area"
         style={{
-          gridTemplateRows: `repeat(${Math.min(4, Math.ceil(selectedNotes.length / 6))}, 1fr)`,
-          gridTemplateColumns: `repeat(${Math.ceil(selectedNotes.length / Math.min(4, Math.ceil(selectedNotes.length / 6)))}, 1fr)`
+          gridTemplateRows: `repeat(${Math.min(4, Math.ceil(scaleNotes.length / 6))}, 1fr)`,
+          gridTemplateColumns: `repeat(${Math.ceil(scaleNotes.length / Math.min(4, Math.ceil(scaleNotes.length / 6)))}, 1fr)`
         }}
       >
-        {selectedNotes.map((note) => (
+        {scaleNotes.map((note) => (
           <button
             key={note}
             id={`note-btn-${note}`}
@@ -221,6 +226,7 @@ const PingPongMelody = () => {
 };
 
 export default PingPongMelody;
+
 
 
 

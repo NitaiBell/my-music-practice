@@ -7,13 +7,25 @@ const noteDisplayMap = {
   Cs: 'C#', Ds: 'D#', Fs: 'F#', Gs: 'G#', As: 'A#',
 };
 
-const notes = Object.keys(noteDisplayMap);
+const allNotes = Object.keys(noteDisplayMap);
+
+const scales = {
+  C: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+  G: ['G', 'A', 'B', 'C', 'D', 'E', 'Fs'],
+  D: ['D', 'E', 'Fs', 'G', 'A', 'B', 'Cs'],
+  A: ['A', 'B', 'Cs', 'D', 'E', 'Fs', 'Gs'],
+  E: ['E', 'Fs', 'Gs', 'A', 'B', 'Cs', 'Ds'],
+  F: ['F', 'G', 'A', 'As', 'C', 'D', 'E'],
+};
 
 const PingPongMelodySettings = () => {
-  const [selectedNotes, setSelectedNotes] = useState(['C']);
+  const [selectedScale, setSelectedScale] = useState('C');
+  const [selectedNotes, setSelectedNotes] = useState(scales['C']);
   const [rounds, setRounds] = useState(1);
-  const [octaves, setOctaves] = useState([3]); // C3 is default
+  const [octaves, setOctaves] = useState([3]);
   const navigate = useNavigate();
+
+  const tonicNote = selectedScale;
 
   const playNote = (note) => {
     const encodedNote = encodeURIComponent(`${note}4.wav`);
@@ -22,11 +34,17 @@ const PingPongMelodySettings = () => {
   };
 
   const toggleNote = (note) => {
+    if (!scales[selectedScale].includes(note)) return;
     if (note === 'C') return;
     playNote(note);
     setSelectedNotes((prev) =>
       prev.includes(note) ? prev.filter((n) => n !== note) : [...prev, note]
     );
+  };
+
+  const handleScaleChange = (scale) => {
+    setSelectedScale(scale);
+    setSelectedNotes(scales[scale]);
   };
 
   const startPractice = () => {
@@ -35,6 +53,7 @@ const PingPongMelodySettings = () => {
         selectedNotes,
         rounds,
         octaves,
+        selectedScale,
       },
     });
   };
@@ -49,12 +68,33 @@ const PingPongMelodySettings = () => {
   return (
     <div className="container_settings">
       <nav className="navbar">
-        {/* Note Dropdown */}
+
+        {/* Scale Dropdown */}
+        <div className="dropdown scale-dropdown">
+          <button className="dropbtn scale">🎼 Scale</button>
+          <div className="dropdown-content">
+            <div className="column">
+              {Object.keys(scales).map((scale) => (
+                <label key={scale}>
+                  <input
+                    type="radio"
+                    name="scale"
+                    checked={selectedScale === scale}
+                    onChange={() => handleScaleChange(scale)}
+                  />
+                  {scale} Major
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Notes Dropdown */}
         <div className="dropdown">
           <button className="dropbtn">🎵 Notes</button>
           <div className="dropdown-content">
             <div className="column">
-              {notes.map((note) => (
+              {scales[selectedScale].map((note) => (
                 <label key={note}>
                   <input
                     type="checkbox"
@@ -69,9 +109,9 @@ const PingPongMelodySettings = () => {
           </div>
         </div>
 
-        {/* Controls: Rounds / Octaves / Start */}
+        {/* Rounds / Octaves / Start */}
         <div className="nav-controls">
-          {/* Rounds Input */}
+          {/* Rounds */}
           <div className="rounds-container">
             <label>Rounds</label>
             <input
@@ -84,7 +124,7 @@ const PingPongMelodySettings = () => {
             />
           </div>
 
-          {/* Octave Dropdown */}
+          {/* Octaves */}
           <div className="octave-dropdown">
             <button className="dropbtn">Octaves ⬇️</button>
             <div className="dropdown-content">
@@ -100,9 +140,10 @@ const PingPongMelodySettings = () => {
                           setOctaves(octaves.filter((o) => o !== oct));
                         } else {
                           setOctaves([...octaves, oct]);
-                          const audio = new Audio(`/clean_cut_notes/C${oct}.wav`);
+                          const encodedNote = encodeURIComponent(`${tonicNote}${oct}.wav`);
+                          const audio = new Audio(`/clean_cut_notes/${encodedNote}`);
                           audio.play().catch(err =>
-                            console.error(`Error playing C${oct}.wav`, err)
+                            console.error(`Error playing ${encodedNote}:`, err)
                           );
                         }
                       }}
@@ -125,15 +166,15 @@ const PingPongMelodySettings = () => {
       <div className="summary">
         <p>You chose <strong>{rounds}</strong> rounds</p>
         <p>
-          You chose notes to practice:{' '}
-          <strong>{selectedNotes.map(n => noteDisplayMap[n]).join(', ') || 'None'}</strong>
+          Practicing scale: <strong>{selectedScale}</strong><br />
+          Notes: <strong>{selectedNotes.map(n => noteDisplayMap[n]).join(', ')}</strong>
         </p>
         <p>
-          Practicing in octaves: <strong>{octaves.sort().join(', ')}</strong>
+          Octaves: <strong>{octaves.sort().join(', ')}</strong>
         </p>
       </div>
 
-      {/* Note Playback Grid */}
+      {/* Playback Buttons */}
       <div
         className="letter-buttons-area"
         style={{
