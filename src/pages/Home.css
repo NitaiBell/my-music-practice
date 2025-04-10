@@ -1,58 +1,67 @@
-.home-container {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(to bottom right, #f8f8f8, #eccf68);
-    min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  .home-title {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    color: #333;
-  }
-  
-  .home-description {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: #555;
-  }
-  
-  .home-button {
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  /* 🎯 Style for the first button */
-  .home-button.practice {
-    background-color: #ff9e2c;
-  }
-  
-  .home-button.practice:hover {
-    background-color: #e67e00;
-    transform: scale(1.05);
-  }
-  
-  /* 🎵 Style for the second button */
-  .home-button.melody {
-    background-color: #00b2b2;
-  }
-  
-  .home-button.melody:hover {
-    background-color: #008b8b;
-    transform: scale(1.05);
-  }
+/* Base reset and layout */
+.welcome-page {
+  background: linear-gradient(to bottom right, #ffffff, #f5e487);
+  min-height: 100vh;
+  padding: 5rem 2rem;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-  .home-buttons {
-    display: flex;
-    flex-direction: column; /* Stack vertically */
-    gap: 20px;               /* More space between buttons */
-    margin-top: 30px;
-    align-items: center;
-  }
+/* Headings and text */
+.welcome-heading {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.welcome-text {
+  font-size: 1.25rem;
+  color: #444;
+  margin-bottom: 3rem;
+}
+
+/* Button group layout */
+.button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Base button style */
+.action-btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.15rem;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* Button colors */
+.orange-btn {
+  background-color: #ff9e2c;
+}
+.orange-btn:hover {
+  background-color: #e67e00;
+  transform: scale(1.05);
+}
+
+.teal-btn {
+  background-color: #00b2b2;
+}
+.teal-btn:hover {
+  background-color: #008b8b;
+  transform: scale(1.05);
+}
+
+.purple-btn {
+  background-color: #7c4dff;
+}
+.purple-btn:hover {
+  background-color: #5e35b1;
+  transform: scale(1.05);
+}
+

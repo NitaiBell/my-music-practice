@@ -6,27 +6,24 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="home-container">
-      <h1 className="home-title">🎵 Welcome to Music Practice</h1>
-      <p className="home-description">
-        Train your ears and improve your musicianship with interactive note and chord exercises.
+    <main className="welcome-page">
+      <h1 className="welcome-heading">🎶 Music Practice App</h1>
+      <p className="welcome-text">
+        Sharpen your ears, train your fingers, and master musical patterns.
       </p>
 
-      <div className="home-buttons">
-        <button
-          className="home-button practice"
-          onClick={() => navigate("/play")}
-        >
+      <section className="button-stack">
+        <button className="action-btn orange-btn" onClick={() => navigate("/play")}>
           Start Practicing
         </button>
-        <button
-          className="home-button melody"
-          onClick={() => navigate("/melody")}
-        >
+        <button className="action-btn teal-btn" onClick={() => navigate("/melody")}>
           Ping Pong Melody
         </button>
-      </div>
-    </div>
+        <button className="action-btn purple-btn" onClick={() => navigate("/keyboard")}>
+          Keyboard for All
+        </button>
+      </section>
+    </main>
   );
 };
 

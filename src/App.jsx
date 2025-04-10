@@ -3,7 +3,7 @@ import Home from "./pages/Home.jsx";
 import PlayNote from "./practices/playnote/PlayNote.jsx";
 import PingPongMelodyContainer from "./practices/melody_training/PingPongMelodyContainer.jsx";
 import Keyboard from "./practices/keyboard/Keyboard.jsx";
-
+import MusicalStaff from "./practices/MusicalStaff/MusicalStaff.jsx";
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
         <Route path="/play" element={<PlayNote />} />
         <Route path="/melody" element={<PingPongMelodyContainer />} />
         <Route path="/keyboard" element={<Keyboard />} />
+        <Route path="/staff" element={<MusicalStaff />} />
       </Routes>
     </Router>
   );
