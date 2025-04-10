@@ -11,11 +11,12 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 10px;
+  padding: 14px;
   background-color: transparent;
   color: black;
   z-index: 2;
   position: relative;
+  font-size: 1.15rem;
 }
 
 /* Allow multiple dropdowns to work independently */
@@ -40,10 +41,10 @@
 .dropbtn {
   background: linear-gradient(to right, #a2d4f3, #d0cfff);
   color: #222;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
+  border-radius: 12px;
+  font-size: 1.15rem;
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -63,20 +64,20 @@
   top: 110%;
   left: 0;
   background-color: white;
-  padding: 10px;
+  padding: 12px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .dropdown-content .column {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .dropdown-content label {
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 
@@ -84,7 +85,7 @@
 .nav-controls {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 /* Round + Octave containers */
@@ -92,8 +93,8 @@
 .octave-control {
   display: flex;
   flex-direction: column;
-  font-size: 0.95rem;
-  gap: 4px;
+  font-size: 1rem;
+  gap: 6px;
 }
 
 .rounds-container label {
@@ -102,9 +103,9 @@
 
 /* Round Input */
 input.rounds-input {
-  width: 60px;
-  font-size: 1rem;
-  padding: 5px;
+  width: 80px;
+  font-size: 1.1rem;
+  padding: 6px 10px;
   border-radius: 10px;
   border: 2px solid black;
   text-align: center;
@@ -114,39 +115,41 @@ input.rounds-input {
 .octave-checkboxes {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .octave-checkboxes label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  font-size: 1rem;
   cursor: pointer;
 }
 
 /* Start Button */
 .start-btn {
-  background: linear-gradient(to right, #a2f3b8, #cfffd0);
-  color: #222;
-  padding: 10px 15px;
+  background: linear-gradient(to right, #6a82fb, #fc5c7d); /* Smooth vibrant gradient */
+  color: white;
+  padding: 12px 24px;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
+  border-radius: 14px;
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .start-btn:hover {
-  background: linear-gradient(to right, #8df2aa, #bcffb8);
-  transform: scale(1.05);
+  background: linear-gradient(to right, #00c9ff, #92fe9d); /* Soft neon-y hover */
+  transform: scale(1.07);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
 }
 
 /* Summary */
 .summary {
-  padding: 10px 20px;
-  font-size: 1.1rem;
+  padding: 12px 24px;
+  font-size: 1.2rem;
   text-align: center;
 }
 
@@ -154,9 +157,9 @@ input.rounds-input {
 .letter-buttons-area {
   height: 30vh;
   background-color: transparent;
-  padding: 10px;
+  padding: 14px;
   display: grid;
-  gap: 10px;
+  gap: 12px;
   align-items: stretch;
   justify-items: stretch;
 }
@@ -165,10 +168,10 @@ input.rounds-input {
 .letter-btn {
   width: 100%;
   height: 100%;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: bold;
   border: 2px solid black;
-  border-radius: 8px;
+  border-radius: 10px;
   background: linear-gradient(
     135deg,
     rgba(0, 247, 255, 0.5),
@@ -184,10 +187,79 @@ input.rounds-input {
   transform: scale(1.03);
 }
 
+/* Flashing feedback */
+.letter-btn.correct-flash {
+  background-color: #00ff00 !important;
+  transform: scale(1.05);
+}
 
-  
+.letter-btn.wrong-flash {
+  background-color: #ff0000 !important;
+  transform: scale(1.05);
+}
 
+/* Special dropdown styling */
 .scale-dropdown .dropbtn.scale {
   background-color: #cce4ff;
   font-weight: bold;
+}
+
+/* Grouping scale + note pickers */
+.scale-note-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Horizontal rounds container */
+.rounds-container.horizontal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: rgba(0, 0, 255, 0.1); /* Semi-transparent blue */
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #a2d4f3;
+}
+
+
+.rounds-container.horizontal label {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Enhanced round input inside .horizontal */
+.rounds-container.horizontal input.rounds-input {
+  width: 80px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 2px solid #333;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  transition: all 0.2s ease;
+}
+
+.rounds-container.horizontal input.rounds-input:focus {
+  border-color: #4aa1ff;
+  outline: none;
+  box-shadow: 0 0 6px #4aa1ff;
+}
+
+/* Scale Dropdown */
+.scale-dropdown .dropbtn {
+  background: linear-gradient(to right, #bbfafc, #aaaef0f6);
+}
+
+/* Notes Dropdown */
+.note-dropdown .dropbtn {
+  background: linear-gradient(to right, #bbfafc, #b7faa3);
+}
+
+/* Octaves Dropdown */
+.octave-dropdown .dropbtn {
+  background: linear-gradient(to right, #00ff8c, #c8f7dc);
 }

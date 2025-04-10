@@ -5,6 +5,7 @@ import './PingPongMelody.css';
 const noteDisplayMap = {
   C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B',
   Cs: 'C#', Ds: 'D#', Fs: 'F#', Gs: 'G#', As: 'A#',
+  Bb: 'Bb', Eb: 'Eb', Ab: 'Ab', Db: 'Db',
 };
 
 const getBaseNote = (note) => note.replace(/\d$/, '');
@@ -15,7 +16,13 @@ const scales = {
   D: ['D', 'E', 'Fs', 'G', 'A', 'B', 'Cs'],
   A: ['A', 'B', 'Cs', 'D', 'E', 'Fs', 'Gs'],
   E: ['E', 'Fs', 'Gs', 'A', 'B', 'Cs', 'Ds'],
-  F: ['F', 'G', 'A', 'As', 'C', 'D', 'E'],
+  F: ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'],
+  Am: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+  Dm: ['D', 'E', 'F', 'G', 'A', 'Bb', 'C'],
+  Em: ['E', 'Fs', 'G', 'A', 'B', 'C', 'D'],
+  Fm: ['F', 'G', 'Gs', 'As', 'C', 'Cs', 'Ds'],
+  Gm: ['G', 'A', 'Bb', 'C', 'D', 'Eb', 'F'],
+  Bm: ['B', 'Cs', 'D', 'E', 'Fs', 'G', 'A'],
 };
 
 const PingPongMelody = () => {
@@ -29,7 +36,7 @@ const PingPongMelody = () => {
   } = location.state || {};
 
   const scaleNotes = selectedNotes.length > 0 ? selectedNotes : scales[selectedScale];
-  const tonicNote = selectedScale; // use this as the new reference note
+  const tonicNote = selectedScale.replace(/m$/, '');
 
   const [sequence, setSequence] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -42,56 +49,40 @@ const PingPongMelody = () => {
   const [hasAnsweredWrong, setHasAnsweredWrong] = useState(false);
 
   const generateSequence = () => {
-    const notesCount = scaleNotes.length;
-    const minTonic = Math.ceil(rounds / notesCount);
+    if (rounds < 2) {
+      alert("Please choose at least 2 rounds (to include start and end on the tonic).");
+      return;
+    }
+    const middleRounds = rounds - 2;
     const nonTonicNotes = scaleNotes.filter(n => n !== tonicNote);
-
     if (!scaleNotes.includes(tonicNote) || nonTonicNotes.length === 0) {
       alert(`${tonicNote} must be included and at least one other note.`);
       return;
     }
-
-    const otherRounds = rounds - minTonic;
     let pool = [];
-
-    const tonicMiddleCount = Math.max(minTonic - 2, 0);
-    for (let i = 0; i < tonicMiddleCount; i++) pool.push(tonicNote);
-
-    const minPerNote = Math.floor(otherRounds / nonTonicNotes.length);
-    const remainder = otherRounds % nonTonicNotes.length;
-
+    const minPerNote = Math.floor(middleRounds / nonTonicNotes.length);
+    const remainder = middleRounds % nonTonicNotes.length;
     nonTonicNotes.forEach((note, i) => {
       const extra = i < remainder ? 1 : 0;
-      for (let j = 0; j < minPerNote + extra; j++) {
-        pool.push(note);
-      }
+      for (let j = 0; j < minPerNote + extra; j++) pool.push(note);
     });
-
-    // Shuffle the pool
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
-
-    const result = [tonicNote];
-    while (pool.length) {
-      const last = result[result.length - 1];
-      const secondLast = result[result.length - 2];
-      let nextIndex = pool.findIndex(n => !(n === last && last === secondLast));
-      if (nextIndex === -1) nextIndex = 0;
-      result.push(pool[nextIndex]);
-      pool.splice(nextIndex, 1);
-    }
-
-    result.push(tonicNote);
-    return result;
+    return [tonicNote, ...pool, tonicNote];
   };
 
   const playNote = (note) => {
     const isReference = note === 'TONIC-ref';
     const baseNote = isReference ? tonicNote : note;
     const octave = isReference ? 3 : octaves[Math.floor(Math.random() * octaves.length)];
-    const filename = `${baseNote}${octave}.wav`;
+    const fileNote = baseNote
+      .replace('C#', 'Cs').replace('D#', 'Ds').replace('F#', 'Fs')
+      .replace('G#', 'Gs').replace('A#', 'As')
+      .replace('Db', 'Cs').replace('Eb', 'Ds').replace('Gb', 'Fs')
+      .replace('Ab', 'Gs').replace('Bb', 'As');
+    const filename = `${fileNote}${octave}.wav`;
     const audio = new Audio(`/clean_cut_notes/${filename}`);
     audio.play().catch((err) => console.error(`Error playing ${filename}:`, err));
   };
@@ -99,7 +90,6 @@ const PingPongMelody = () => {
   const handleStart = () => {
     const newSequence = generateSequence();
     if (!newSequence) return;
-
     setSequence(newSequence);
     setIsPlaying(true);
     setShowPopup(false);
@@ -121,10 +111,8 @@ const PingPongMelody = () => {
 
   const handleAnswer = (note) => {
     if (!isPlaying || !canAnswer) return;
-
     const currentExpected = sequence[currentRound];
     const isCorrect = getBaseNote(note) === getBaseNote(currentExpected);
-
     const button = document.getElementById(`note-btn-${note}`);
     if (button) {
       button.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
@@ -132,7 +120,6 @@ const PingPongMelody = () => {
         button.classList.remove('correct-flash', 'wrong-flash');
       }, 400);
     }
-
     if (isCorrect) {
       if (!hasAnsweredWrong) setCorrectCount((c) => c + 1);
       setCanAnswer(false);
@@ -165,44 +152,40 @@ const PingPongMelody = () => {
         <div className="navbar-left">
           <div className="logo-title">Sabers melody</div>
           <button className="c-note-btn" onClick={() => playNote('TONIC-ref')}>
-            {noteDisplayMap[tonicNote]}
+            {noteDisplayMap[tonicNote] || tonicNote}
           </button>
           <button className="current-btn" onClick={handleReplayCurrent}>Current</button>
         </div>
-
         <div className="navbar-stats">
           <span className="stat total">{rounds}</span>/
           <span className="stat current">{currentRound}</span>/
           <span className="stat correct">{correctCount}</span>/
           <span className="stat wrong">{wrongCount}</span>
         </div>
-
         <button className="start-btn" onClick={handleStart}>
           {isPlaying ? 'Restart' : 'Start'}
         </button>
       </nav>
 
       <div className="summary">
-        <p>You are practicing in the <strong>{selectedScale} Major</strong> scale</p>
-        <p>Notes: <strong>{scaleNotes.map(n => noteDisplayMap[n]).join(', ')}</strong></p>
+        <p>You are practicing in the <strong>{selectedScale}</strong> scale</p>
+        <p>Notes: <strong>{scaleNotes.map(n => noteDisplayMap[n] || n).join(', ')}</strong></p>
         <p>Octaves: <strong>{octaves.sort().join(', ')}</strong></p>
+        <p>(Starts and ends on the tonic — total notes played: <strong>{rounds}</strong>)</p>
       </div>
 
-      <div
-        className="letter-buttons-area"
+      <div className="letter-buttons-area"
         style={{
           gridTemplateRows: `repeat(${Math.min(4, Math.ceil(scaleNotes.length / 6))}, 1fr)`,
           gridTemplateColumns: `repeat(${Math.ceil(scaleNotes.length / Math.min(4, Math.ceil(scaleNotes.length / 6)))}, 1fr)`
-        }}
-      >
+        }}>
         {scaleNotes.map((note) => (
           <button
             key={note}
             id={`note-btn-${note}`}
             className="letter-btn"
-            onClick={() => handleAnswer(note)}
-          >
-            {noteDisplayMap[note]}
+            onClick={() => handleAnswer(note)}>
+            {noteDisplayMap[note] || note}
           </button>
         ))}
       </div>
