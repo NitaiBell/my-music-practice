@@ -22,10 +22,14 @@ const Home = () => {
         <button className="action-btn purple-btn" onClick={() => navigate("/keyboard")}>
           Keyboard for All
         </button>
+        <button className="action-btn blue-btn" onClick={() => navigate("/staff")}>
+          Musical Staff
+        </button>
       </section>
     </main>
   );
 };
 
 export default Home;
+
 

@@ -9,7 +9,7 @@ body {
   font-family: 'Arial', sans-serif;
   color: #333;
   line-height: 1.6;
-  background: #111;
+  background: #000000;
   overflow-x: hidden; /* prevent horizontal glitching */
   overflow-y: auto;   /* allow vertical scroll if needed */
 }

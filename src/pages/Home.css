@@ -65,3 +65,11 @@
   transform: scale(1.05);
 }
 
+
+.blue-btn {
+  background-color: #4285f4;
+}
+.blue-btn:hover {
+  background-color: #3367d6;
+  transform: scale(1.05);
+}

@@ -1,5 +1,8 @@
+// Update: Full logic for keyboard + buttons input, with full game behavior
+
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import KeyboardView from './KeyboardView';
 import './PingPongMelody.css';
 
 const noteDisplayMap = {
@@ -33,6 +36,7 @@ const PingPongMelody = () => {
     rounds = 1,
     octaves = [3],
     selectedScale = 'C',
+    viewMode = 'buttons',
   } = location.state || {};
 
   const scaleNotes = selectedNotes.length > 0 ? selectedNotes : scales[selectedScale];
@@ -49,16 +53,10 @@ const PingPongMelody = () => {
   const [hasAnsweredWrong, setHasAnsweredWrong] = useState(false);
 
   const generateSequence = () => {
-    if (rounds < 2) {
-      alert("Please choose at least 2 rounds (to include start and end on the tonic).");
-      return;
-    }
     const middleRounds = rounds - 2;
     const nonTonicNotes = scaleNotes.filter(n => n !== tonicNote);
-    if (!scaleNotes.includes(tonicNote) || nonTonicNotes.length === 0) {
-      alert(`${tonicNote} must be included and at least one other note.`);
-      return;
-    }
+    if (!scaleNotes.includes(tonicNote) || nonTonicNotes.length === 0) return;
+
     let pool = [];
     const minPerNote = Math.floor(middleRounds / nonTonicNotes.length);
     const remainder = middleRounds % nonTonicNotes.length;
@@ -84,7 +82,7 @@ const PingPongMelody = () => {
       .replace('Ab', 'Gs').replace('Bb', 'As');
     const filename = `${fileNote}${octave}.wav`;
     const audio = new Audio(`/clean_cut_notes/${filename}`);
-    audio.play().catch((err) => console.error(`Error playing ${filename}:`, err));
+    audio.play();
   };
 
   const handleStart = () => {
@@ -111,15 +109,31 @@ const PingPongMelody = () => {
 
   const handleAnswer = (note) => {
     if (!isPlaying || !canAnswer) return;
+
     const currentExpected = sequence[currentRound];
     const isCorrect = getBaseNote(note) === getBaseNote(currentExpected);
-    const button = document.getElementById(`note-btn-${note}`);
-    if (button) {
-      button.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
+
+    const flashClass = isCorrect ? 'correct-flash' : 'wrong-flash';
+    const baseNote = getBaseNote(note);
+
+    // Flash the button
+    const btnTarget = document.getElementById(`note-btn-${baseNote}`);
+    if (btnTarget) {
+      btnTarget.classList.add(flashClass);
       setTimeout(() => {
-        button.classList.remove('correct-flash', 'wrong-flash');
+        btnTarget.classList.remove('correct-flash', 'wrong-flash');
       }, 400);
     }
+
+    // Flash the keyboard key
+    const keyTarget = document.getElementById(`key-${note}`);
+    if (keyTarget) {
+      keyTarget.classList.add(flashClass);
+      setTimeout(() => {
+        keyTarget.classList.remove('correct-flash', 'wrong-flash');
+      }, 400);
+    }
+
     if (isCorrect) {
       if (!hasAnsweredWrong) setCorrectCount((c) => c + 1);
       setCanAnswer(false);
@@ -142,10 +156,6 @@ const PingPongMelody = () => {
     }
   };
 
-  const handleReplayCurrent = () => {
-    if (isPlaying) playCurrent();
-  };
-
   return (
     <div className="container_game">
       <nav className="navbar">
@@ -154,7 +164,7 @@ const PingPongMelody = () => {
           <button className="c-note-btn" onClick={() => playNote('TONIC-ref')}>
             {noteDisplayMap[tonicNote] || tonicNote}
           </button>
-          <button className="current-btn" onClick={handleReplayCurrent}>Current</button>
+          <button className="current-btn" onClick={() => playCurrent()}>Current</button>
         </div>
         <div className="navbar-stats">
           <span className="stat total">{rounds}</span>/
@@ -174,21 +184,35 @@ const PingPongMelody = () => {
         <p>(Starts and ends on the tonic — total notes played: <strong>{rounds}</strong>)</p>
       </div>
 
-      <div className="letter-buttons-area"
-        style={{
-          gridTemplateRows: `repeat(${Math.min(4, Math.ceil(scaleNotes.length / 6))}, 1fr)`,
-          gridTemplateColumns: `repeat(${Math.ceil(scaleNotes.length / Math.min(4, Math.ceil(scaleNotes.length / 6)))}, 1fr)`
-        }}>
-        {scaleNotes.map((note) => (
-          <button
-            key={note}
-            id={`note-btn-${note}`}
-            className="letter-btn"
-            onClick={() => handleAnswer(note)}>
-            {noteDisplayMap[note] || note}
-          </button>
-        ))}
-      </div>
+      {viewMode === 'buttons' ? (
+        <div
+          className="letter-buttons-area"
+          style={{
+            gridTemplateRows: `repeat(${Math.min(4, Math.ceil(scaleNotes.length / 6))}, 1fr)`,
+            gridTemplateColumns: `repeat(${Math.ceil(scaleNotes.length / Math.min(4, Math.ceil(scaleNotes.length / 6)))}, 1fr)`
+          }}>
+          {scaleNotes.map((note) => (
+            <button
+              key={note}
+              id={`note-btn-${note}`}
+              className="letter-btn"
+              onClick={() => handleAnswer(note)}>
+              {noteDisplayMap[note] || note}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <KeyboardView
+          mode="game"
+          selectedScale={selectedScale}
+          selectedNotes={selectedNotes}
+          tonic={tonicNote}
+          playNote={(note) => {
+            playNote(note);
+            handleAnswer(note);
+          }}
+        />
+      )}
 
       {showPopup && (
         <div className="popup-overlay">
@@ -209,15 +233,3 @@ const PingPongMelody = () => {
 };
 
 export default PingPongMelody;
-
-
-
-
-
-
-
-
-
-
-
-

@@ -263,3 +263,10 @@ input.rounds-input {
 .octave-dropdown .dropbtn {
   background: linear-gradient(to right, #00ff8c, #c8f7dc);
 }
+
+/* View Mode Dropdown */
+.viewmode-dropdown .dropbtn {
+  background: linear-gradient(to right, #fdfd96, #b8f5b0);
+  font-weight: bold;
+}
+

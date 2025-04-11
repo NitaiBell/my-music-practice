@@ -219,3 +219,24 @@
 }
 
   
+.correct-flash {
+  background-color: #4cff4c !important; /* Green */
+  box-shadow: 0 0 12px #4cff4c;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.wrong-flash {
+  background-color: #ff4c4c !important; /* Red */
+  box-shadow: 0 0 12px #ff4c4c;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+@keyframes flash-green {
+  0% { background-color: #4cff4c !important; }
+  100% { background-color: inherit; }
+}
+
+@keyframes flash-red {
+  0% { background-color: #ff4c4c !important; }
+  100% { background-color: inherit; }
+}

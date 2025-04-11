@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './PingPongMelodySettings.css';
 import { useNavigate } from 'react-router-dom';
+import KeyboardView from './KeyboardView';
 
 const noteDisplayMap = {
   C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B',
@@ -15,7 +16,6 @@ const scales = {
   A: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#'],
   E: ['E', 'F#', 'G#', 'A', 'B', 'C#', 'D#'],
   F: ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'],
-
   Am: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
   Dm: ['D', 'E', 'F', 'G', 'A', 'Bb', 'C'],
   Em: ['E', 'F#', 'G', 'A', 'B', 'C', 'D'],
@@ -29,22 +29,22 @@ const PingPongMelodySettings = () => {
   const [selectedNotes, setSelectedNotes] = useState(scales['C']);
   const [rounds, setRounds] = useState(5);
   const [octaves, setOctaves] = useState([3]);
+  const [viewMode, setViewMode] = useState('buttons');
   const navigate = useNavigate();
 
-  const flatToSharpMap = {
-    Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
-    'C#': 'Cs', 'D#': 'Ds', 'F#': 'Fs', 'G#': 'Gs', 'A#': 'As',
-  };
-
-  const tonic = selectedScale.replace(/m$/, '');
-
   const playNote = (note) => {
-    const convertedNote = flatToSharpMap[note] || note;
-    const encodedNote = encodeURIComponent(`${convertedNote}4.wav`);
-    const audio = new Audio(`/clean_cut_notes/${encodedNote}`);
-    audio.play().catch((err) =>
-      console.error(`Error playing ${encodedNote}:`, err)
-    );
+    const match = note.match(/^([A-Ga-g][#b]?)(\d)?$/);
+    if (!match) return;
+    let [, base, octave] = match;
+    const flatToSharpMap = {
+      Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
+      'C#': 'Cs', 'D#': 'Ds', 'F#': 'Fs', 'G#': 'Gs', 'A#': 'As',
+    };
+    if (!octave) octave = '4';
+    const sharpName = flatToSharpMap[base] || base;
+    const filename = `${sharpName}${octave}.wav`;
+    const audio = new Audio(`/clean_cut_notes/${filename}`);
+    audio.play().catch((err) => console.error(`Error playing ${filename}:`, err));
   };
 
   const toggleNote = (note) => {
@@ -67,6 +67,7 @@ const PingPongMelodySettings = () => {
         rounds,
         octaves,
         selectedScale,
+        viewMode, // ←✅ Pass the view mode to the game
       },
     });
   };
@@ -82,7 +83,6 @@ const PingPongMelodySettings = () => {
     <div className="container_settings">
       <nav className="navbar">
         <div className="scale-note-wrapper">
-          {/* Scale Dropdown */}
           <div className="dropdown scale-dropdown">
             <button className="dropbtn scale">🎼 Scale</button>
             <div className="dropdown-content">
@@ -102,7 +102,6 @@ const PingPongMelodySettings = () => {
             </div>
           </div>
 
-          {/* Notes Dropdown */}
           <div className="dropdown note-dropdown">
             <button className="dropbtn">🎵 Notes</button>
             <div className="dropdown-content">
@@ -113,7 +112,7 @@ const PingPongMelodySettings = () => {
                       type="checkbox"
                       checked={selectedNotes.includes(note)}
                       onChange={() => toggleNote(note)}
-                      disabled={!selectedScale.endsWith('m') && note === tonic}
+                      disabled={!selectedScale.endsWith('m') && note === selectedScale}
                     />
                     {noteDisplayMap[note]}
                   </label>
@@ -121,9 +120,34 @@ const PingPongMelodySettings = () => {
               </div>
             </div>
           </div>
+
+          <div className="dropdown viewmode-dropdown">
+            <button className="dropbtn">🎹 View Mode</button>
+            <div className="dropdown-content">
+              <div className="column">
+                <label>
+                  <input
+                    type="radio"
+                    name="viewmode"
+                    checked={viewMode === 'buttons'}
+                    onChange={() => setViewMode('buttons')}
+                  />
+                  Buttons
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="viewmode"
+                    checked={viewMode === 'keyboard'}
+                    onChange={() => setViewMode('keyboard')}
+                  />
+                  Keyboard
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Rounds / Octaves / Start */}
         <div className="nav-controls">
           <div className="rounds-container horizontal">
             <label htmlFor="rounds-input">Number of rounds:</label>
@@ -153,13 +177,7 @@ const PingPongMelodySettings = () => {
                           ? octaves.filter((o) => o !== oct)
                           : [...octaves, oct];
                         setOctaves(newOctaves);
-
-                        const converted = flatToSharpMap[tonic] || tonic;
-                        const encodedNote = encodeURIComponent(`${converted}${oct}.wav`);
-                        const audio = new Audio(`/clean_cut_notes/${encodedNote}`);
-                        audio.play().catch((err) =>
-                          console.error(`Error playing ${encodedNote}:`, err)
-                        );
+                        playNote(`${selectedScale}${oct}`);
                       }}
                     />
                     {oct}
@@ -186,34 +204,35 @@ const PingPongMelodySettings = () => {
         </p>
       </div>
 
-      <div
-        className="letter-buttons-area"
-        style={{
-          gridTemplateRows: `repeat(${rows}, 1fr)`,
-          gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        }}
-      >
-        {selectedNotes.map((note) => (
-          <button
-            key={note}
-            className="letter-btn"
-            onClick={() => playNote(note)}
-          >
-            {noteDisplayMap[note]}
-          </button>
-        ))}
-      </div>
+      {viewMode === 'buttons' ? (
+        <div
+          className="letter-buttons-area"
+          style={{
+            gridTemplateRows: `repeat(${rows}, 1fr)`,
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          }}
+        >
+          {selectedNotes.map((note) => (
+            <button
+              key={note}
+              className="letter-btn"
+              onClick={() => playNote(note)}
+            >
+              {noteDisplayMap[note]}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <KeyboardView
+          selectedScale={selectedScale}
+          selectedNotes={selectedNotes}
+          tonic={selectedScale.replace(/m$/, '')}
+          playNote={playNote}
+        />
+      )}
     </div>
   );
 };
 
 export default PingPongMelodySettings;
-
-
-
-
-
-
-
-
 

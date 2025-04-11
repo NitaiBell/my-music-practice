@@ -1,0 +1,163 @@
+:root {
+    --white-key-width: 90px;
+    --white-key-height: 360px;
+    --black-key-width: 50px;
+    --black-key-height: 242px;
+  }
+  
+  .keyboard-view-container {
+    background-color: transparent !important;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    height: 30vh;
+    padding: 14px;
+    margin: 0;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow-x: auto;
+  }
+  
+  .octave {
+    position: relative;
+    width: calc(var(--white-key-width) * 7);
+    display: flex;
+    flex-shrink: 0;
+  }
+  
+  .white-keys {
+    display: flex;
+    z-index: 1;
+    width: 100%;
+  }
+  
+  .white-key {
+    width: var(--white-key-width);
+    height: var(--white-key-height);
+    background: linear-gradient(to bottom, #ffffff, #eaeaea);
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 2px solid #999;
+    margin: 0;
+    border-radius: 0;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: inset 0 -3px 4px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .white-key:first-child {
+    border-left: 1px solid #bbb;
+  }
+  .white-key:last-child {
+    border-right: 1px solid #bbb;
+  }
+  
+  .white-key:hover {
+    background: linear-gradient(to bottom, #eaeaea, #dcdcdc);
+    box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.12);
+  }
+  
+  .white-key:active {
+    background: #ccc;
+  }
+  
+  .white-key .label {
+    padding: 6px;
+    color: #222;
+  }
+  
+  .black-keys {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--black-key-height);
+    z-index: 2;
+    pointer-events: none;
+  }
+  
+  .black-key {
+    position: absolute;
+    width: var(--black-key-width);
+    height: var(--black-key-height);
+    background: linear-gradient(to bottom, #333, #000);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 3;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  
+  .black-key:hover {
+    background: linear-gradient(to bottom, #444, #111);
+    transform: translateX(-50%) scaleY(1.02) translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65);
+  }
+  
+  .black-key:active {
+    background: #111;
+    transform: translateX(-50%) scaleY(0.98) translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Black key positioning */
+  .black-key.Cs { left: 12.85%; }
+  .black-key.Ds { left: 27.1%; }
+  .black-key.Fs { left: 56.6%; }
+  .black-key.Gs { left: 70.85%; }
+  .black-key.As { left: 85.15%; }
+  
+  /* Highlighted Notes (static) */
+  .key-green {
+    background: #4cff4c !important;
+    color: black;
+    box-shadow: 0 0 10px #4cff4c88;
+  }
+  
+  .key-turquoise {
+    background: #30d5c8 !important;
+    color: white;
+    box-shadow: 0 0 10px #30d5c888;
+  }
+  
+  .key-lightblue {
+    background: #9ad0ec !important;
+    color: white;
+    box-shadow: 0 0 10px #9ad0ec88;
+  }
+  
+  .key-blue {
+    background: #4ab4ff !important;
+    color: white;
+    box-shadow: 0 0 10px #4ab4ff88;
+  }
+  
+  /* FLASHING Keys – these override all */
+  .white-key.correct-flash,
+  .black-key.correct-flash {
+    background-color: #4cff4c !important;
+    background-image: none !important;
+    color: black !important;
+    box-shadow: 0 0 12px #4cff4c !important;
+    z-index: 9999;
+  }
+  
+  .white-key.wrong-flash,
+  .black-key.wrong-flash {
+    background-color: #ff4c4c !important;
+    background-image: none !important;
+    color: white !important;
+    box-shadow: 0 0 12px #ff4c4c !important;
+    z-index: 9999;
+  }
+  

@@ -26,21 +26,17 @@ const MusicalStaff = () => {
         previousLayer.remove();
       }
 
-      const hasSharp = note.includes('#');
-      const hasFlat = note.includes('b');
-      const baseNote = note.replace('#', '').replace('b', '');
-
       const staveNote = new StaveNote({
         clef: 'treble',
-        keys: [baseNote],
+        keys: [note], // Use the full note string like "b/4"
         duration: 'q',
         auto_stem: true,
       });
 
-      if (hasSharp) {
+      if (note.includes('#')) {
         staveNote.addAccidental(0, new Accidental('#'));
       }
-      if (hasFlat) {
+      if (note.includes('b')) {
         staveNote.addAccidental(0, new Accidental('b'));
       }
 
@@ -50,9 +46,8 @@ const MusicalStaff = () => {
 
       new Formatter().joinVoices([voice]).format([voice], 600);
 
-      // 🔥 Group starts here — everything drawn will go inside it
       const noteGroup = context.openGroup();
-      noteGroup.classList.add('vf-note-layer'); // Give it a class so we can remove later
+      noteGroup.classList.add('vf-note-layer');
       voice.draw(context, stave);
       context.closeGroup();
     };
@@ -118,9 +113,3 @@ const MusicalStaff = () => {
 };
 
 export default MusicalStaff;
-
-
-
-
-
-
