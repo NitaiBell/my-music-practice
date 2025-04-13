@@ -24,24 +24,29 @@ const scales = {
   Bm: ['B', 'C#', 'D', 'E', 'F#', 'G', 'A'],
 };
 
+// Normalize to sharp notes for consistency
+const normalizeNote = (note) => {
+  const enharmonicMap = {
+    Db: 'C#', Eb: 'D#', Gb: 'F#', Ab: 'G#', Bb: 'A#',
+    'C#': 'C#', 'D#': 'D#', 'F#': 'F#', 'G#': 'G#', 'A#': 'A#',
+  };
+  return enharmonicMap[note] || note;
+};
+
 const PingPongMelodySettings = () => {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedNotes, setSelectedNotes] = useState(scales['C']);
-  const [rounds, setRounds] = useState(5);
+  const [rounds, setRounds] = useState(15);
   const [octaves, setOctaves] = useState([3]);
-  const [viewMode, setViewMode] = useState('buttons');
+  const [viewMode, setViewMode] = useState('keyboard');
   const navigate = useNavigate();
 
   const playNote = (note) => {
     const match = note.match(/^([A-Ga-g][#b]?)(\d)?$/);
     if (!match) return;
     let [, base, octave] = match;
-    const flatToSharpMap = {
-      Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
-      'C#': 'Cs', 'D#': 'Ds', 'F#': 'Fs', 'G#': 'Gs', 'A#': 'As',
-    };
     if (!octave) octave = '4';
-    const sharpName = flatToSharpMap[base] || base;
+    const sharpName = normalizeNote(base);
     const filename = `${sharpName}${octave}.wav`;
     const audio = new Audio(`/clean_cut_notes/${filename}`);
     audio.play().catch((err) => console.error(`Error playing ${filename}:`, err));
@@ -67,7 +72,7 @@ const PingPongMelodySettings = () => {
         rounds,
         octaves,
         selectedScale,
-        viewMode, // ←✅ Pass the view mode to the game
+        viewMode,
       },
     });
   };
@@ -112,7 +117,6 @@ const PingPongMelodySettings = () => {
                       type="checkbox"
                       checked={selectedNotes.includes(note)}
                       onChange={() => toggleNote(note)}
-                      disabled={!selectedScale.endsWith('m') && note === selectedScale}
                     />
                     {noteDisplayMap[note]}
                   </label>
@@ -235,4 +239,3 @@ const PingPongMelodySettings = () => {
 };
 
 export default PingPongMelodySettings;
-

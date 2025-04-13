@@ -1,5 +1,3 @@
-// Update: Full logic for keyboard + buttons input, with full game behavior
-
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import KeyboardView from './KeyboardView';
@@ -9,6 +7,15 @@ const noteDisplayMap = {
   C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B',
   Cs: 'C#', Ds: 'D#', Fs: 'F#', Gs: 'G#', As: 'A#',
   Bb: 'Bb', Eb: 'Eb', Ab: 'Ab', Db: 'Db',
+};
+
+// Normalize to sharp notes for consistency
+const normalizeNote = (note) => {
+  const enharmonicMap = {
+    Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
+    'C#': 'Cs', 'D#': 'Ds', 'F#': 'Fs', 'G#': 'Gs', 'A#': 'As',
+  };
+  return enharmonicMap[note] || note;
 };
 
 const getBaseNote = (note) => note.replace(/\d$/, '');
@@ -47,6 +54,7 @@ const PingPongMelody = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
+  const [triesCount, setTriesCount] = useState(0);
   const [canAnswer, setCanAnswer] = useState(false);
   const [currentNote, setCurrentNote] = useState('');
   const [showPopup, setShowPopup] = useState(false);
@@ -75,11 +83,7 @@ const PingPongMelody = () => {
     const isReference = note === 'TONIC-ref';
     const baseNote = isReference ? tonicNote : note;
     const octave = isReference ? 3 : octaves[Math.floor(Math.random() * octaves.length)];
-    const fileNote = baseNote
-      .replace('C#', 'Cs').replace('D#', 'Ds').replace('F#', 'Fs')
-      .replace('G#', 'Gs').replace('A#', 'As')
-      .replace('Db', 'Cs').replace('Eb', 'Ds').replace('Gb', 'Fs')
-      .replace('Ab', 'Gs').replace('Bb', 'As');
+    const fileNote = normalizeNote(baseNote);
     const filename = `${fileNote}${octave}.wav`;
     const audio = new Audio(`/clean_cut_notes/${filename}`);
     audio.play();
@@ -94,6 +98,7 @@ const PingPongMelody = () => {
     setCurrentRound(0);
     setCorrectCount(0);
     setWrongCount(0);
+    setTriesCount(0);
     setHasAnsweredWrong(false);
     playNote(newSequence[0]);
     setCurrentNote(newSequence[0]);
@@ -111,12 +116,11 @@ const PingPongMelody = () => {
     if (!isPlaying || !canAnswer) return;
 
     const currentExpected = sequence[currentRound];
-    const isCorrect = getBaseNote(note) === getBaseNote(currentExpected);
+    const isCorrect = normalizeNote(getBaseNote(note)) === normalizeNote(getBaseNote(currentExpected));
 
     const flashClass = isCorrect ? 'correct-flash' : 'wrong-flash';
-    const baseNote = getBaseNote(note);
+    const baseNote = normalizeNote(getBaseNote(note));
 
-    // Flash the button
     const btnTarget = document.getElementById(`note-btn-${baseNote}`);
     if (btnTarget) {
       btnTarget.classList.add(flashClass);
@@ -125,7 +129,6 @@ const PingPongMelody = () => {
       }, 400);
     }
 
-    // Flash the keyboard key
     const keyTarget = document.getElementById(`key-${note}`);
     if (keyTarget) {
       keyTarget.classList.add(flashClass);
@@ -150,7 +153,8 @@ const PingPongMelody = () => {
         }, 500);
       }
     } else {
-      setWrongCount((w) => w + 1);
+      setWrongCount((w) => w + (hasAnsweredWrong ? 0 : 1));
+      setTriesCount((t) => t + 1);
       setHasAnsweredWrong(true);
       setCanAnswer(false);
     }
@@ -170,7 +174,8 @@ const PingPongMelody = () => {
           <span className="stat total">{rounds}</span>/
           <span className="stat current">{currentRound}</span>/
           <span className="stat correct">{correctCount}</span>/
-          <span className="stat wrong">{wrongCount}</span>
+          <span className="stat wrong">{wrongCount}</span>/
+          <span className="stat">{triesCount} </span>
         </div>
         <button className="start-btn" onClick={handleStart}>
           {isPlaying ? 'Restart' : 'Start'}
@@ -221,6 +226,7 @@ const PingPongMelody = () => {
             <p>You completed the melody practice!</p>
             <p><strong>Correct:</strong> {correctCount}</p>
             <p><strong>Wrong:</strong> {wrongCount}</p>
+            <p><strong>Total Tries:</strong> {triesCount}</p>
             <div className="popup-buttons">
               <button onClick={handleStart}>🔁 Restart</button>
               <button onClick={() => navigate('/melody')}>⚙️ Back to Settings</button>

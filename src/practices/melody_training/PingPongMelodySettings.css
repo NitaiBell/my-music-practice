@@ -3,7 +3,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: linear-gradient(to bottom, #56f6f9, #bdf6f9);
+  background: linear-gradient(to bottom, #99e06c, #18230F);
+  color: #F1EFEC;
 }
 
 /* Navbar */
@@ -13,13 +14,10 @@
   align-items: flex-start;
   padding: 14px;
   background-color: transparent;
-  color: black;
-  z-index: 2;
-  position: relative;
   font-size: 1.15rem;
 }
 
-/* Allow multiple dropdowns to work independently */
+/* Dropdown structure */
 .dropdown,
 .octave-dropdown {
   position: relative;
@@ -37,24 +35,24 @@
   top: 100%;
 }
 
-/* Dropdown Button */
+/* Dropdown Buttons */
 .dropbtn {
-  background: linear-gradient(to right, #a2d4f3, #d0cfff);
-  color: #222;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
   padding: 12px 24px;
   border: none;
   border-radius: 12px;
   font-size: 1.15rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
 
 .dropbtn:hover {
   transform: scale(1.05);
-  background: linear-gradient(to right, #8ec9f2, #bcb8ff);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
 /* Dropdown Content */
@@ -63,9 +61,10 @@
   position: absolute;
   top: 110%;
   left: 0;
-  background-color: white;
+  background-color: #F1EFEC;
+  color: #18230F;
   padding: 12px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
   z-index: 1;
   border-radius: 12px;
 }
@@ -81,14 +80,13 @@
   cursor: pointer;
 }
 
-/* Right controls wrapper */
+/* Control areas */
 .nav-controls {
   display: flex;
   align-items: center;
   gap: 24px;
 }
 
-/* Round + Octave containers */
 .round-control,
 .octave-control {
   display: flex;
@@ -97,17 +95,14 @@
   gap: 6px;
 }
 
-.rounds-container label {
-  margin-bottom: 4px;
-}
-
-/* Round Input */
 input.rounds-input {
   width: 80px;
   font-size: 1.1rem;
   padding: 6px 10px;
   border-radius: 10px;
-  border: 2px solid black;
+  border: 2px solid #F1EFEC;
+  background-color: #27391C;
+  color: #F1EFEC;
   text-align: center;
 }
 
@@ -128,8 +123,8 @@ input.rounds-input {
 
 /* Start Button */
 .start-btn {
-  background: linear-gradient(to right, #6a82fb, #fc5c7d); /* Smooth vibrant gradient */
-  color: white;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
   padding: 12px 24px;
   border: none;
   border-radius: 14px;
@@ -137,13 +132,13 @@ input.rounds-input {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
 .start-btn:hover {
-  background: linear-gradient(to right, #00c9ff, #92fe9d); /* Soft neon-y hover */
+  background: linear-gradient(to right, #255F38, #1F7D53);
   transform: scale(1.07);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
 }
 
 /* Summary */
@@ -151,6 +146,7 @@ input.rounds-input {
   padding: 12px 24px;
   font-size: 1.2rem;
   text-align: center;
+  color: #F1EFEC;
 }
 
 /* Buttons Grid */
@@ -170,103 +166,57 @@ input.rounds-input {
   height: 100%;
   font-size: 2.2rem;
   font-weight: bold;
-  border: 2px solid black;
+  border: 2px solid #F1EFEC;
   border-radius: 10px;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 247, 255, 0.5),
-    rgba(0, 50, 150, 0.5)
-  );
+  background: linear-gradient(135deg, #1F7D53, #255F38);
+  color: #F1EFEC;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .letter-btn:hover {
-  background-color: #090859;
-  color: white;
+  background-color: #27391C;
   transform: scale(1.03);
 }
 
 /* Flashing feedback */
 .letter-btn.correct-flash {
-  background-color: #00ff00 !important;
+  background-color: #5CFF70 !important;
+  color: #18230F !important;
   transform: scale(1.05);
 }
 
 .letter-btn.wrong-flash {
-  background-color: #ff0000 !important;
+  background-color: #FF4C4C !important;
+  color: #F1EFEC !important;
   transform: scale(1.05);
 }
 
-/* Special dropdown styling */
-.scale-dropdown .dropbtn.scale {
-  background-color: #cce4ff;
-  font-weight: bold;
-}
-
-/* Grouping scale + note pickers */
+/* Round picker section */
 .scale-note-wrapper {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-/* Horizontal rounds container */
+/* Horizontal input styling */
 .rounds-container.horizontal {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 1.1rem;
   font-weight: 600;
-  background: rgba(0, 0, 255, 0.1); /* Semi-transparent blue */
+  background: #1F7D53;
   padding: 10px 14px;
   border-radius: 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  border: 2px solid #a2d4f3;
-}
-
-
-.rounds-container.horizontal label {
-  margin: 0;
-  white-space: nowrap;
-}
-
-/* Enhanced round input inside .horizontal */
-.rounds-container.horizontal input.rounds-input {
-  width: 80px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: 2px solid #333;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
-  transition: all 0.2s ease;
+  border: 2px solid #F1EFEC;
+  color: #F1EFEC;
 }
 
 .rounds-container.horizontal input.rounds-input:focus {
-  border-color: #4aa1ff;
+  border-color: #F1EFEC;
   outline: none;
-  box-shadow: 0 0 6px #4aa1ff;
+  box-shadow: 0 0 6px #F1EFEC;
 }
 
-/* Scale Dropdown */
-.scale-dropdown .dropbtn {
-  background: linear-gradient(to right, #bbfafc, #aaaef0f6);
-}
-
-/* Notes Dropdown */
-.note-dropdown .dropbtn {
-  background: linear-gradient(to right, #bbfafc, #b7faa3);
-}
-
-/* Octaves Dropdown */
-.octave-dropdown .dropbtn {
-  background: linear-gradient(to right, #00ff8c, #c8f7dc);
-}
-
-/* View Mode Dropdown */
-.viewmode-dropdown .dropbtn {
-  background: linear-gradient(to right, #fdfd96, #b8f5b0);
-  font-weight: bold;
-}
 

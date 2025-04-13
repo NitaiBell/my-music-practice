@@ -3,22 +3,21 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: linear-gradient(to bottom, #ddf2f2, #1bd9e3af);
+  background: linear-gradient(to bottom, #99e06c, #18230F);
+  color: #F1EFEC;
 }
 
-/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
   background-color: transparent;
-  color: black;
+  color: #F1EFEC;
   z-index: 2;
   position: relative;
 }
 
-/* Left side of the navbar */
 .navbar-left {
   display: flex;
   align-items: center;
@@ -29,9 +28,10 @@
   font-size: 1.5rem;
   font-weight: bold;
   padding: 5px 10px;
-  background-color: #ffffff;
+  background-color: #27391C;
   border-radius: 10px;
-  border: 2px solid #000;
+  border: 2px solid #F1EFEC;
+  color: #F1EFEC;
 }
 
 .c-note-btn,
@@ -42,7 +42,8 @@
   border-radius: 8px;
   font-size: 1rem;
   font-weight: bold;
-  background-color: #e0f7fa;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -51,75 +52,76 @@
 .current-btn:hover,
 .start-btn:hover {
   transform: scale(1.05);
-  background-color: #b2ebf2;
+  background: linear-gradient(to right, #255F38, #1F7D53);
 }
 
-/* Game progress stats - upgraded */
 .navbar-stats {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 1.2rem;
   font-weight: bold;
-  background: #ffffffcc;
+  background: #27391C;
   padding: 8px 16px;
   border-radius: 12px;
-  border: 2px solid #000;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3px);
-  transition: all 0.3s ease;
+  border: 2px solid #F1EFEC;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
+  color: #F1EFEC;
 }
 
 .stat {
   padding: 6px 14px;
   border-radius: 8px;
-  border: 2px solid black;
+  border: 2px solid #F1EFEC;
   min-width: 42px;
   text-align: center;
-  background-color: white;
+  background-color: #27391C;
   transition: transform 0.25s ease, background-color 0.3s ease;
   animation: pulseFade 0.35s ease;
+  color: #F1EFEC;
 }
 
 .stat.correct {
-  background-color: #b2f5b2;
-  border-color: #2ecc71;
+  background-color: #5CFF70;
+  border-color: #1F7D53;
+  color: #18230F;
 }
 
 .stat.wrong {
-  background-color: #ffb3b3;
-  border-color: #e74c3c;
+  background-color: #FF4C4C;
+  border-color: #C0392B;
+  color: #F1EFEC;
 }
 
 .stat.current {
-  background-color: #ffe8a1;
+  background-color: #FFE99E;
   border-color: #f39c12;
+  color: #18230F;
 }
 
 .stat.total {
-  background-color: #eaeaea;
+  background-color: #D4C9BE;
   border-color: #666;
 }
 
-@keyframes pulseFade {
-  0% {
-    transform: scale(1.15);
-    opacity: 0.4;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.stat.tries {
+  background-color: #B5C2A4;
+  border-color: #255F38;
+  color: #18230F;
 }
 
-/* Summary */
+@keyframes pulseFade {
+  0% { transform: scale(1.15); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 .summary {
   padding: 10px 20px;
   font-size: 1.1rem;
   text-align: center;
+  color: #F1EFEC;
 }
 
-/* Note buttons grid */
 .letter-buttons-area {
   height: 30vh;
   background-color: transparent;
@@ -134,33 +136,31 @@
   width: 100%;
   height: 100%;
   font-size: 2rem;
-  border: 2px solid black;
+  border: 2px solid #F1EFEC;
   border-radius: 8px;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 247, 255, 0.5),
-    rgba(0, 50, 150, 0.5)
-  );
+  background: linear-gradient(135deg, #1F7D53, #255F38);
+  color: #F1EFEC;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
 .letter-btn:hover {
-  background-color: #090859;
+  background-color: #27391C;
   transform: scale(1.03);
 }
 
 .letter-btn.correct-flash {
-  background-color: #00ff00 !important;
+  background-color: #5CFF70 !important;
+  color: #18230F !important;
   transform: scale(1.05);
 }
 
 .letter-btn.wrong-flash {
-  background-color: #ff0000 !important;
+  background-color: #FF4C4C !important;
+  color: #F1EFEC !important;
   transform: scale(1.05);
 }
 
-/* Game over popup */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -175,23 +175,25 @@
 }
 
 .popup {
-  background: rgb(198, 234, 201);
+  background: #D4C9BE;
   padding: 2rem;
   border-radius: 15px;
   text-align: center;
   width: 90%;
   max-width: 400px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  color: #18230F;
 }
 
 .popup h2 {
   margin-bottom: 1rem;
-  color: #333;
+  color: #18230F;
 }
 
 .popup p {
   font-size: 1.1rem;
   margin: 0.5rem 0;
+  color: #18230F;
 }
 
 .popup-buttons {
@@ -209,26 +211,14 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  background: linear-gradient(to right, #a2f3b8, #cfffd0);
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .popup-buttons button:hover {
-  background: linear-gradient(to right, #8df2aa, #bcffb8);
+  background: linear-gradient(to right, #255F38, #1F7D53);
   transform: scale(1.05);
-}
-
-  
-.correct-flash {
-  background-color: #4cff4c !important; /* Green */
-  box-shadow: 0 0 12px #4cff4c;
-  transition: background-color 0.2s, box-shadow 0.2s;
-}
-
-.wrong-flash {
-  background-color: #ff4c4c !important; /* Red */
-  box-shadow: 0 0 12px #ff4c4c;
-  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 @keyframes flash-green {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './KeyboardView.css';
 
 const whiteNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -6,7 +6,12 @@ const blackNotesMap = {
   C: 'C#', D: 'D#', F: 'F#', G: 'G#', A: 'A#',
 };
 
-const getBaseNote = (note) => note.replace(/\d/, '');
+// Map flats to sharps for consistency
+const enharmonicMap = {
+  Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
+};
+const normalizeNote = (note) => enharmonicMap[note] || note;
+const getBaseNote = (note) => normalizeNote(note.replace(/\d/, ''));
 
 const KeyboardView = ({ selectedNotes, selectedScale, tonic, playNote, mode = 'settings' }) => {
   const octaves = [2, 3, 4];
@@ -14,9 +19,9 @@ const KeyboardView = ({ selectedNotes, selectedScale, tonic, playNote, mode = 's
   const getKeyColorClass = (note) => {
     const base = getBaseNote(note);
 
-    if (base === tonic) return mode === 'settings' ? 'key-green' : 'key-blue';
-    if (mode === 'settings' && selectedNotes.includes(base)) {
-      const index = selectedNotes.indexOf(base);
+    if (base === normalizeNote(tonic)) return mode === 'settings' ? 'key-green' : 'key-blue';
+    if (mode === 'settings' && selectedNotes.map(normalizeNote).includes(base)) {
+      const index = selectedNotes.map(normalizeNote).indexOf(base);
       return index % 2 === 0 ? 'key-turquoise' : 'key-lightblue';
     }
     return '';
@@ -32,12 +37,10 @@ const KeyboardView = ({ selectedNotes, selectedScale, tonic, playNote, mode = 's
   };
 
   const handleKeyClick = (note) => {
-    if (mode === 'settings') {
-      playNote(note);
-    } else {
-      // Game mode: pass base note
-      playNote(note);
-      const btn = document.getElementById(`note-btn-${getBaseNote(note)}`);
+    playNote(note);
+    if (mode === 'game') {
+      const baseNote = getBaseNote(note);
+      const btn = document.getElementById(`note-btn-${baseNote}`);
       if (btn) {
         btn.click();
       }
