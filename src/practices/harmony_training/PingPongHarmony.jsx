@@ -1,11 +1,198 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './PingPongHarmony.css';
+import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
+
+const chordNoteMap = {
+  C: ['C3', 'E3', 'G3'], D: ['D3', 'Fs3', 'A3'], Dm: ['D3', 'F3', 'A3'],
+  Em: ['E3', 'G3', 'B3'], F: ['F3', 'A3', 'C4'], G: ['G3', 'B3', 'D4'],
+  Am: ['A3', 'C4', 'E4'], Bdim: ['B3', 'D4', 'F4'], Bm: ['B3', 'D4', 'Fs4'],
+  'F#dim': ['Fs3', 'A3', 'C4'], Gm: ['G3', 'As3', 'D4'], Bb: ['As2', 'D3', 'F3'],
+  Edim: ['E3', 'G3', 'As3'],
+};
 
 const PingPongHarmony = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
+  const tonic = selectedScale.replace(/m$/, '');
+
+  const [sequence, setSequence] = useState([]);
+  const [currentRound, setCurrentRound] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
+  const [triesCount, setTriesCount] = useState(0);
+  const [currentChord, setCurrentChord] = useState('');
+  const [notesToFlash, setNotesToFlash] = useState([]);
+  const [canAnswer, setCanAnswer] = useState(false);
+  const [roundMistakeMade, setRoundMistakeMade] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const playNote = (note) => {
+    const encoded = encodeURIComponent(`${note}.wav`);
+    const audio = new Audio(`/clean_cut_notes/${encoded}`);
+    audio.play().catch((err) => console.error(`Error playing ${note}:`, err));
+  };
+
+  const playChord = (chord) => {
+    const notes = chordNoteMap[chord];
+    notes.forEach(playNote);
+  };
+
+  const startGame = () => {
+    if (!selectedChords.includes(tonic)) {
+      console.warn(`Tonic "${tonic}" not found in selectedChords!`);
+      return;
+    }
+
+    const middleRounds = rounds - 2;
+    const nonTonicChords = selectedChords.filter((chord) => chord !== tonic);
+
+    if (middleRounds < 0 || nonTonicChords.length === 0) {
+      console.warn('Not enough chords or rounds to build sequence.');
+      return;
+    }
+
+    const middle = Array.from({ length: middleRounds }, () =>
+      nonTonicChords[Math.floor(Math.random() * nonTonicChords.length)]
+    );
+
+    const fullSequence = [tonic, ...middle, tonic];
+
+    setSequence(fullSequence);
+    setCurrentRound(0);
+    setCorrectCount(0);
+    setWrongCount(0);
+    setTriesCount(0);
+    setIsPlaying(true);
+    setCanAnswer(false);
+    setRoundMistakeMade(false);
+    setShowPopup(false);
+
+    setTimeout(() => playNextChord(fullSequence[0]), 300);
+  };
+
+  const playNextChord = (chord) => {
+    setCurrentChord(chord);
+    playChord(chord);
+    setCanAnswer(true);
+    setRoundMistakeMade(false);
+  };
+
+  const handleCurrent = () => {
+    if (sequence[currentRound]) {
+      playChord(sequence[currentRound]);
+    }
+  };
+
+  const handleAnswer = (chord) => {
+    if (!canAnswer || !isPlaying) return;
+
+    const expectedChord = sequence[currentRound];
+    const isCorrect = chord === expectedChord;
+    const flashClass = isCorrect ? 'harmonygame-flash-correct' : 'harmonygame-flash-wrong';
+    const notes = chordNoteMap[chord];
+
+    notes.forEach((note) => {
+      const el = document.getElementById(`key-${note}`);
+      if (el) {
+        el.classList.add(flashClass);
+        setTimeout(() => {
+          el.classList.remove(flashClass);
+        }, 500);
+      }
+    });
+
+    setTriesCount((t) => t + 1);
+
+    if (isCorrect) {
+      if (!roundMistakeMade) {
+        setCorrectCount((c) => c + 1);
+      }
+      setCanAnswer(false);
+      if (currentRound + 1 >= sequence.length) {
+        setIsPlaying(false);
+        setShowPopup(true);
+      } else {
+        setTimeout(() => {
+          const next = sequence[currentRound + 1];
+          setCurrentRound((r) => r + 1);
+          playNextChord(next);
+        }, 600);
+      }
+    } else {
+      if (!roundMistakeMade) {
+        setWrongCount((w) => w + 1);
+        setRoundMistakeMade(true);
+      }
+    }
+  };
+
+  const rows = selectedChords.length > 12 ? 2 : 1;
+  const columns = Math.ceil(selectedChords.length / rows || 1);
+
   return (
-    <div className="harmony-game-container">
-      <h1>Ping Pong Harmony Game</h1>
-      <p>Game logic will go here later.</p>
+    <div className="harmonygame-container">
+      <nav className="harmonygame-navbar">
+        <div className="harmonygame-navbar-left">
+          <div className="harmonygame-logo">Sabers Harmony</div>
+          <button className="harmonygame-btn" onClick={() => playChord(tonic)}>{tonic}</button>
+          <button className="harmonygame-btn" onClick={handleCurrent}>Current</button>
+        </div>
+        <div className="harmonygame-stats">
+          <span className="harmonygame-stat total">{rounds}</span>/
+          <span className="harmonygame-stat current">{currentRound}</span>/
+          <span className="harmonygame-stat correct">{correctCount}</span>/
+          <span className="harmonygame-stat wrong">{wrongCount}</span>/
+          <span className="harmonygame-stat tries">{triesCount}</span>
+        </div>
+        <button className="harmonygame-btn harmonygame-start-btn" onClick={startGame}>
+          {isPlaying ? 'Restart' : 'Start'}
+        </button>
+      </nav>
+
+      <div className="harmonygame-fill-space" />
+
+      <div className="harmonygame-bottom">
+        <div
+          className="harmonygame-chords"
+          style={{
+            gridTemplateRows: `repeat(${rows}, 1fr)`,
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          }}
+        >
+          {selectedChords.map((chord) => (
+            <button
+              key={chord}
+              className="harmonygame-chord-btn"
+              onClick={() => handleAnswer(chord)}
+            >
+              {chord}
+            </button>
+          ))}
+        </div>
+
+        <div className="harmonygame-keyboard">
+          <PingPongHarmonyKeyboardView flashNotes={notesToFlash} />
+        </div>
+      </div>
+
+      {showPopup && (
+        <div className="harmonygame-popup-overlay">
+          <div className="harmonygame-popup">
+            <h2>🎉 Game Over!</h2>
+            <p>You completed the harmony practice!</p>
+            <p><strong>Correct:</strong> {correctCount}</p>
+            <p><strong>Wrong:</strong> {wrongCount}</p>
+            <p><strong>Total Tries:</strong> {triesCount}</p>
+            <div className="harmonygame-popup-buttons">
+              <button onClick={startGame}>🔁 Restart</button>
+              <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

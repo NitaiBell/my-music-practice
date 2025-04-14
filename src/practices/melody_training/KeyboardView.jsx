@@ -6,23 +6,21 @@ const blackNotesMap = {
   C: 'Cs', D: 'Ds', F: 'Fs', G: 'Gs', A: 'As',
 };
 
-// Normalize flats to sharps for consistency
 const enharmonicMap = {
   Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
 };
 const normalizeNote = (note) => enharmonicMap[note] || note;
-
 const getBaseNote = (note) => normalizeNote(note.replace(/\d/, ''));
 
 const KeyboardView = ({ selectedNotes, selectedScale, tonic, playNote, mode = 'settings' }) => {
   const octaves = [2, 3, 4];
+  const normalizedSelectedNotes = selectedNotes.map(normalizeNote);
 
-  // Determine the key's color based on the mode and selected notes
   const getKeyColorClass = (note) => {
     const base = getBaseNote(note);
     if (base === normalizeNote(tonic)) return mode === 'settings' ? 'key-green' : 'key-blue';
-    if (mode === 'settings' && selectedNotes.map(normalizeNote).includes(base)) {
-      const index = selectedNotes.map(normalizeNote).indexOf(base);
+    if (mode === 'settings' && normalizedSelectedNotes.includes(base)) {
+      const index = normalizedSelectedNotes.indexOf(base);
       return index % 2 === 0 ? 'key-turquoise' : 'key-lightblue';
     }
     return '';
@@ -37,16 +35,9 @@ const KeyboardView = ({ selectedNotes, selectedScale, tonic, playNote, mode = 's
     return '';
   };
 
-  // Handle key click event (plays the note)
   const handleKeyClick = (note) => {
+    console.log("Clicked note:", note);
     playNote(note);
-    if (mode === 'game') {
-      const baseNote = getBaseNote(note);
-      const btn = document.getElementById(`note-btn-${baseNote}`);
-      if (btn) {
-        btn.click();
-      }
-    }
   };
 
   return (

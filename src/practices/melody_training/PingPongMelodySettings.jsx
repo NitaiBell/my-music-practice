@@ -24,7 +24,6 @@ const scales = {
   Bm: ['B', 'C#', 'D', 'E', 'F#', 'G', 'A'],
 };
 
-// Normalize to sharp notes for consistency
 const normalizeNote = (note) => {
   const enharmonicMap = {
     Db: 'C#', Eb: 'D#', Gb: 'F#', Ab: 'G#', Bb: 'A#',
@@ -181,7 +180,7 @@ const PingPongMelodySettings = () => {
                           ? octaves.filter((o) => o !== oct)
                           : [...octaves, oct];
                         setOctaves(newOctaves);
-                        playNote(`${selectedScale}${oct}`);
+                        playNote(`${selectedScale.replace('m', '')}${oct}`);
                       }}
                     />
                     {oct}

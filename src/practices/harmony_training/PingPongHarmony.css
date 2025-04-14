@@ -1,8 +1,213 @@
-.harmony-game-container {
-    padding: 2rem;
-    text-align: center;
-    background: linear-gradient(to right, #ffe8d6, #f9d5a7);
-    min-height: 100vh;
-    color: #333;
-  }
-  
+.harmonygame-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(to bottom, #99e06c, #18230F);
+  color: #F1EFEC;
+  overflow: hidden;
+}
+
+.harmonygame-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.harmonygame-navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.harmonygame-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 6px 12px;
+  background-color: #27391C;
+  border-radius: 10px;
+  border: 2px solid #F1EFEC;
+}
+
+.harmonygame-btn {
+  padding: 8px 14px;
+  font-size: 1rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.harmonygame-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #255F38, #1F7D53);
+}
+
+.harmonygame-start-btn {
+  padding: 10px 20px;
+}
+
+.harmonygame-stats {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  background: #27391C;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 2px solid #F1EFEC;
+}
+
+.harmonygame-stat {
+  background-color: #D4C9BE;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #18230F;
+  min-width: 30px;
+  text-align: center;
+}
+
+.harmonygame-stat.correct {
+  background-color: #5CFF70;
+}
+
+.harmonygame-stat.wrong {
+  background-color: #FF4C4C;
+  color: #fff;
+}
+
+.harmonygame-stat.current {
+  background-color: #FFE99E;
+}
+
+.harmonygame-stat.tries {
+  background-color: #ccc;
+}
+
+.harmonygame-fill-space {
+  flex-grow: 1;
+}
+
+.harmonygame-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.harmonygame-chords {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+  align-items: stretch;
+  justify-items: stretch;
+  height: 10vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.harmonygame-chord-btn {
+  width: 100%;
+  height: 100%;
+  font-size: 2.2rem;
+  font-weight: bold;
+  border: 2px solid #F1EFEC;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1F7D53, #255F38);
+  color: #F1EFEC;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.harmonygame-chord-btn:hover {
+  background-color: #27391C;
+  transform: scale(1.03);
+}
+
+.harmonygame-keyboard {
+  width: 100vw;
+  padding-bottom: 12px;
+  overflow-x: hidden;
+}
+
+/* Feedback */
+.harmonygame-flash-correct {
+  animation: harmonygameFlashGreen 0.4s ease;
+}
+
+.harmonygame-flash-wrong {
+  animation: harmonygameFlashRed 0.4s ease;
+}
+
+.harmonygame-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.harmonygame-popup {
+  background: #93fc79;
+  color: #18230F;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  max-width: 400px;
+  width: 90%;
+}
+
+.harmonygame-popup h2 {
+  margin-bottom: 1rem;
+}
+
+.harmonygame-popup p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.harmonygame-popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.harmonygame-popup-buttons button {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.harmonygame-popup-buttons button:hover {
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.05);
+}
+
+
+@keyframes harmonygameFlashGreen {
+  0% { background-color: #4cff4c !important; }
+  100% { background-color: inherit; }
+}
+
+@keyframes harmonygameFlashRed {
+  0% { background-color: #ff4c4c !important; }
+  100% { background-color: inherit; }
+}

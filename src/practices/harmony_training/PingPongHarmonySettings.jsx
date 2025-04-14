@@ -160,4 +160,3 @@ const PingPongHarmonySettings = () => {
 };
 
 export default PingPongHarmonySettings;
-
