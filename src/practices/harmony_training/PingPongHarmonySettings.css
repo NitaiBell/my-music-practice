@@ -1,0 +1,161 @@
+.harmony-container-settings {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, #99e06c, #18230F);
+    color: #F1EFEC;
+  }
+  
+  .harmony-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+  }
+  
+  /* Navbar */
+  .harmony-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 14px;
+    font-size: 1.15rem;
+  }
+  
+  /* Dropdowns */
+  .harmony-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 12px;
+  }
+  
+  .harmony-dropbtn {
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .harmony-dropbtn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  }
+  
+  .harmony-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: #F1EFEC;
+    color: #18230F;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    flex-direction: column;
+  }
+  
+  .harmony-dropdown:hover .harmony-dropdown-content {
+    display: flex;
+  }
+  
+  .harmony-dropdown-content label {
+    font-size: 1rem;
+    margin-bottom: 4px;
+    cursor: pointer;
+  }
+  
+  /* Controls */
+  .harmony-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .harmony-rounds-input {
+    width: 80px;
+    font-size: 1.1rem;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 2px solid #F1EFEC;
+    background-color: #27391C;
+    color: #F1EFEC;
+    text-align: center;
+  }
+  
+  .harmony-start-btn {
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .harmony-start-btn:hover {
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    transform: scale(1.07);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Summary */
+  .harmony-summary {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #F1EFEC;
+  }
+  
+  /* Chord Buttons */
+  .harmony-chord-buttons {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    align-items: stretch;
+    justify-items: stretch;
+    height: 10vh;
+  }
+  
+  .harmony-chord-btn {
+    width: 100%;
+    height: 100%;
+    font-size: 2.2rem;
+    font-weight: bold;
+    border: 2px solid #F1EFEC;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1F7D53, #255F38);
+    color: #F1EFEC;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .harmony-chord-btn:hover {
+    background-color: #27391C;
+    transform: scale(1.03);
+  }
+  
+  /* Scale + chord picker wrapper */
+  .harmony-scale-chord-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  /* Keyboard view pinned bottom */
+  .harmony-keyboard-wrapper {
+    width: 100%;
+    padding-bottom: 12px;
+  }
+  

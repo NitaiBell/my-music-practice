@@ -3,22 +3,23 @@ import './KeyboardView.css';
 
 const whiteNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 const blackNotesMap = {
-  C: 'C#', D: 'D#', F: 'F#', G: 'G#', A: 'A#',
+  C: 'Cs', D: 'Ds', F: 'Fs', G: 'Gs', A: 'As',
 };
 
-// Map flats to sharps for consistency
+// Normalize flats to sharps for consistency
 const enharmonicMap = {
   Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
 };
 const normalizeNote = (note) => enharmonicMap[note] || note;
+
 const getBaseNote = (note) => normalizeNote(note.replace(/\d/, ''));
 
 const KeyboardView = ({ selectedNotes, selectedScale, tonic, playNote, mode = 'settings' }) => {
   const octaves = [2, 3, 4];
 
+  // Determine the key's color based on the mode and selected notes
   const getKeyColorClass = (note) => {
     const base = getBaseNote(note);
-
     if (base === normalizeNote(tonic)) return mode === 'settings' ? 'key-green' : 'key-blue';
     if (mode === 'settings' && selectedNotes.map(normalizeNote).includes(base)) {
       const index = selectedNotes.map(normalizeNote).indexOf(base);
@@ -28,14 +29,15 @@ const KeyboardView = ({ selectedNotes, selectedScale, tonic, playNote, mode = 's
   };
 
   const getPositionClass = (note) => {
-    if (note.startsWith('C#')) return 'Cs';
-    if (note.startsWith('D#')) return 'Ds';
-    if (note.startsWith('F#')) return 'Fs';
-    if (note.startsWith('G#')) return 'Gs';
-    if (note.startsWith('A#')) return 'As';
+    if (note.startsWith('Cs')) return 'Cs';
+    if (note.startsWith('Ds')) return 'Ds';
+    if (note.startsWith('Fs')) return 'Fs';
+    if (note.startsWith('Gs')) return 'Gs';
+    if (note.startsWith('As')) return 'As';
     return '';
   };
 
+  // Handle key click event (plays the note)
   const handleKeyClick = (note) => {
     playNote(note);
     if (mode === 'game') {

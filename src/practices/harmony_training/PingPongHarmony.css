@@ -1,0 +1,8 @@
+.harmony-game-container {
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(to right, #ffe8d6, #f9d5a7);
+    min-height: 100vh;
+    color: #333;
+  }
+  
