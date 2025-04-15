@@ -10,29 +10,22 @@ const chordsByScale = {
 };
 
 const chordNoteMap = {
-  C: ['C3', 'E3', 'G3'],
-  D: ['D3', 'Fs3', 'A3'],
-  Dm: ['D3', 'F3', 'A3'],
-  Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'],
-  G: ['G3', 'B3', 'D4'],
-  Am: ['A3', 'C4', 'E4'],
-  Bdim: ['B3', 'D4', 'F4'],
-  Bm: ['B3', 'D4', 'Fs4'],
-  'F#dim': ['Fs3', 'A3', 'C4'],
-  Gm: ['G3', 'As3', 'D4'],
-  Bb: ['As2', 'D3', 'F3'],
+  C: ['C3', 'E3', 'G3'], D: ['D3', 'Fs3', 'A3'], Dm: ['D3', 'F3', 'A3'],
+  Em: ['E3', 'G3', 'B3'], F: ['F3', 'A3', 'C4'], G: ['G3', 'B3', 'D4'],
+  Am: ['A3', 'C4', 'E4'], Bdim: ['B3', 'D4', 'F4'], Bm: ['B3', 'D4', 'Fs4'],
+  'F#dim': ['Fs3', 'A3', 'C4'], Gm: ['G3', 'As3', 'D4'], Bb: ['As2', 'D3', 'F3'],
   Edim: ['E3', 'G3', 'As3'],
 };
 
 const PingPongHarmonySettings = () => {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedChords, setSelectedChords] = useState(chordsByScale['C']);
-  const [rounds, setRounds] = useState(10);
+  const [rounds, setRounds] = useState(15);
   const [notesToFlash, setNotesToFlash] = useState([]);
   const navigate = useNavigate();
 
   const toggleChord = (chord) => {
+    if (chord === selectedScale) return; // ✅ prevent removing tonic
     setSelectedChords((prev) =>
       prev.includes(chord) ? prev.filter((c) => c !== chord) : [...prev, chord]
     );
@@ -60,9 +53,18 @@ const PingPongHarmonySettings = () => {
       console.warn(`Chord "${chord}" is missing from chordNoteMap`);
       return;
     }
-
-    setNotesToFlash(notes); // trigger key flashes
+    setNotesToFlash(notes);
     notes.forEach(playNote);
+  };
+
+  const handleScaleChange = (scale) => {
+    setSelectedScale(scale);
+    const newChords = chordsByScale[scale];
+    const tonic = scale;
+    const reordered = newChords.includes(tonic)
+      ? [tonic, ...newChords.filter((c) => c !== tonic)]
+      : newChords;
+    setSelectedChords(reordered);
   };
 
   const numButtons = selectedChords.length;
@@ -83,10 +85,7 @@ const PingPongHarmonySettings = () => {
                       type="radio"
                       name="scale"
                       checked={selectedScale === scale}
-                      onChange={() => {
-                        setSelectedScale(scale);
-                        setSelectedChords(chordsByScale[scale]); // ✅ update buttons dynamically
-                      }}
+                      onChange={() => handleScaleChange(scale)}
                     />
                     {scale} Major
                   </label>
@@ -102,6 +101,7 @@ const PingPongHarmonySettings = () => {
                     <input
                       type="checkbox"
                       checked={selectedChords.includes(chord)}
+                      disabled={chord === selectedScale} // ✅ tonic cannot be unchecked
                       onChange={() => toggleChord(chord)}
                     />
                     {chord}
@@ -112,21 +112,28 @@ const PingPongHarmonySettings = () => {
           </div>
 
           <div className="harmony-controls">
-            <label htmlFor="rounds-input">Rounds:</label>
-            <input
-              id="rounds-input"
-              type="number"
-              min="1"
-              max="20"
-              value={rounds}
-              onChange={(e) => setRounds(Number(e.target.value))}
-              className="harmony-rounds-input"
-            />
-            <button className="harmony-start-btn" onClick={startPractice}>
-              Start Practice
-            </button>
-          </div>
+  <div className="rounds-group">
+    <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
+    <input
+      id="rounds-input"
+      type="number"
+      min="1"
+      max="20"
+      value={rounds}
+      onChange={(e) => setRounds(Number(e.target.value))}
+      className="harmony-rounds-input"
+    />
+  </div>
+  <button className="harmony-start-btn" onClick={startPractice}>
+    Start Practice
+  </button>
+</div>
+
         </nav>
+        <div className="harmony-floating-setup-message">
+  🎯 Set your scale and chords, then click "Start Practice" when ready!
+</div>
+
 
         <div className="harmony-summary">
           <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>

@@ -1,37 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import './PingPongHarmonyKeyboardView.css';
 
 const whiteNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 const blackNotesMap = { C: 'Cs', D: 'Ds', F: 'Fs', G: 'Gs', A: 'As' };
 
-const PingPongHarmonyKeyboardView = ({ flashNotes = [] }) => {
+const PingPongHarmonyKeyboardView = forwardRef(({ flashNotes = [] }, ref) => {
   const octaves = [2, 3, 4];
   const [flashedKeys, setFlashedKeys] = useState([]);
+  const [correctFlash, setCorrectFlash] = useState([]);
+  const [wrongFlash, setWrongFlash] = useState([]);
 
-  // Handle flashes from chord button
   useEffect(() => {
     if (flashNotes.length === 0) return;
-
     setFlashedKeys(flashNotes);
-
-    const timer = setTimeout(() => {
-      setFlashedKeys([]);
-    }, 600);
-
+    const timer = setTimeout(() => setFlashedKeys([]), 600);
     return () => clearTimeout(timer);
   }, [flashNotes]);
 
-  // Play sound and flash note when clicking directly on key
+  useImperativeHandle(ref, () => ({
+    setFlashRight: (notes) => {
+      setCorrectFlash(notes);
+      setTimeout(() => setCorrectFlash([]), 500);
+    },
+    setFlashWrong: (notes) => {
+      setWrongFlash(notes);
+      setTimeout(() => setWrongFlash([]), 500);
+    },
+  }));
+
   const handleNoteClick = (note) => {
     const encoded = encodeURIComponent(`${note}.wav`);
     const audio = new Audio(`/clean_cut_notes/${encoded}`);
     audio.play().catch((err) => console.error(`Error playing ${note}:`, err));
-
-    setFlashedKeys([note]); // trigger flash for this one note
+    setFlashedKeys([note]);
     setTimeout(() => setFlashedKeys([]), 600);
   };
 
   const getFlashClass = (note) => {
+    if (correctFlash.includes(note)) return 'flash-correct';
+    if (wrongFlash.includes(note)) return 'flash-wrong';
     const index = flashedKeys.indexOf(note);
     return index !== -1 ? `harmony-flash-${index % 3}` : '';
   };
@@ -75,6 +87,6 @@ const PingPongHarmonyKeyboardView = ({ flashNotes = [] }) => {
       ))}
     </div>
   );
-};
+});
 
 export default PingPongHarmonyKeyboardView;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './PingPongHarmony.css';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
@@ -14,6 +14,8 @@ const chordNoteMap = {
 const PingPongHarmony = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const keyboardRef = useRef();
+
   const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
   const tonic = selectedScale.replace(/m$/, '');
 
@@ -24,10 +26,14 @@ const PingPongHarmony = () => {
   const [wrongCount, setWrongCount] = useState(0);
   const [triesCount, setTriesCount] = useState(0);
   const [currentChord, setCurrentChord] = useState('');
-  const [notesToFlash, setNotesToFlash] = useState([]);
   const [canAnswer, setCanAnswer] = useState(false);
   const [roundMistakeMade, setRoundMistakeMade] = useState(false);
+  const [roundOutcomeSet, setRoundOutcomeSet] = useState(false);
+  const [awaitingRetry, setAwaitingRetry] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [buttonFlashes, setButtonFlashes] = useState({});
+  const [statFlash, setStatFlash] = useState('');
+  const [statusMessage, setStatusMessage] = useState(''); // ✅ New status message
 
   const playNote = (note) => {
     const encoded = encodeURIComponent(`${note}.wav`);
@@ -40,19 +46,19 @@ const PingPongHarmony = () => {
     notes.forEach(playNote);
   };
 
+  const setButtonFlash = (chord, type) => {
+    setButtonFlashes((prev) => ({ ...prev, [chord]: type }));
+    setTimeout(() => {
+      setButtonFlashes((prev) => ({ ...prev, [chord]: null }));
+    }, 500);
+  };
+
   const startGame = () => {
-    if (!selectedChords.includes(tonic)) {
-      console.warn(`Tonic "${tonic}" not found in selectedChords!`);
-      return;
-    }
+    if (!selectedChords.includes(tonic)) return;
 
     const middleRounds = rounds - 2;
     const nonTonicChords = selectedChords.filter((chord) => chord !== tonic);
-
-    if (middleRounds < 0 || nonTonicChords.length === 0) {
-      console.warn('Not enough chords or rounds to build sequence.');
-      return;
-    }
+    if (middleRounds < 0 || nonTonicChords.length === 0) return;
 
     const middle = Array.from({ length: middleRounds }, () =>
       nonTonicChords[Math.floor(Math.random() * nonTonicChords.length)]
@@ -68,6 +74,9 @@ const PingPongHarmony = () => {
     setIsPlaying(true);
     setCanAnswer(false);
     setRoundMistakeMade(false);
+    setRoundOutcomeSet(false);
+    setAwaitingRetry(false);
+    setStatusMessage('');
     setShowPopup(false);
 
     setTimeout(() => playNextChord(fullSequence[0]), 300);
@@ -78,11 +87,18 @@ const PingPongHarmony = () => {
     playChord(chord);
     setCanAnswer(true);
     setRoundMistakeMade(false);
+    setRoundOutcomeSet(false);
+    setAwaitingRetry(false);
+    setStatusMessage('');
+    setStatFlash('current');
+    setTimeout(() => setStatFlash(''), 400);
   };
 
   const handleCurrent = () => {
     if (sequence[currentRound]) {
       playChord(sequence[currentRound]);
+      setAwaitingRetry(false);
+      setStatusMessage('🔁 Listen again...');
     }
   };
 
@@ -90,27 +106,25 @@ const PingPongHarmony = () => {
     if (!canAnswer || !isPlaying) return;
 
     const expectedChord = sequence[currentRound];
-    const isCorrect = chord === expectedChord;
-    const flashClass = isCorrect ? 'harmonygame-flash-correct' : 'harmonygame-flash-wrong';
     const notes = chordNoteMap[chord];
 
-    notes.forEach((note) => {
-      const el = document.getElementById(`key-${note}`);
-      if (el) {
-        el.classList.add(flashClass);
-        setTimeout(() => {
-          el.classList.remove(flashClass);
-        }, 500);
-      }
-    });
-
     setTriesCount((t) => t + 1);
+    setStatFlash('tries');
+    setTimeout(() => setStatFlash(''), 400);
 
-    if (isCorrect) {
-      if (!roundMistakeMade) {
+    if (chord === expectedChord) {
+      if (!roundOutcomeSet && !roundMistakeMade) {
         setCorrectCount((c) => c + 1);
+        setStatFlash('correct');
+        setTimeout(() => setStatFlash(''), 400);
+        setRoundOutcomeSet(true);
+        setStatusMessage("✅ You're right!");
       }
+
       setCanAnswer(false);
+      keyboardRef.current?.setFlashRight(notes);
+      setButtonFlash(chord, 'correct');
+
       if (currentRound + 1 >= sequence.length) {
         setIsPlaying(false);
         setShowPopup(true);
@@ -122,10 +136,18 @@ const PingPongHarmony = () => {
         }, 600);
       }
     } else {
-      if (!roundMistakeMade) {
+      if (!roundOutcomeSet) {
         setWrongCount((w) => w + 1);
-        setRoundMistakeMade(true);
+        setStatFlash('wrong');
+        setTimeout(() => setStatFlash(''), 400);
+        setRoundOutcomeSet(true);
+        setStatusMessage("❌ You're wrong! Click 'Current' to hear it again.");
       }
+
+      setRoundMistakeMade(true);
+      setAwaitingRetry(true);
+      keyboardRef.current?.setFlashWrong(notes);
+      setButtonFlash(chord, 'wrong');
     }
   };
 
@@ -138,19 +160,30 @@ const PingPongHarmony = () => {
         <div className="harmonygame-navbar-left">
           <div className="harmonygame-logo">Sabers Harmony</div>
           <button className="harmonygame-btn" onClick={() => playChord(tonic)}>{tonic}</button>
-          <button className="harmonygame-btn" onClick={handleCurrent}>Current</button>
+          <button
+            className={`harmonygame-btn ${awaitingRetry ? 'bounce-flash' : ''}`}
+            onClick={handleCurrent}
+          >
+            Current
+          </button>
         </div>
         <div className="harmonygame-stats">
           <span className="harmonygame-stat total">{rounds}</span>/
-          <span className="harmonygame-stat current">{currentRound}</span>/
-          <span className="harmonygame-stat correct">{correctCount}</span>/
-          <span className="harmonygame-stat wrong">{wrongCount}</span>/
-          <span className="harmonygame-stat tries">{triesCount}</span>
+          <span className={`harmonygame-stat current ${statFlash === 'current' ? 'stat-flash' : ''}`}>{currentRound}</span>/
+          <span className={`harmonygame-stat correct ${statFlash === 'correct' ? 'stat-flash' : ''}`}>{correctCount}</span>/
+          <span className={`harmonygame-stat wrong ${statFlash === 'wrong' ? 'stat-flash' : ''}`}>{wrongCount}</span>/
+          <span className={`harmonygame-stat tries ${statFlash === 'tries' ? 'stat-flash' : ''}`}>{triesCount}</span>
         </div>
         <button className="harmonygame-btn harmonygame-start-btn" onClick={startGame}>
           {isPlaying ? 'Restart' : 'Start'}
         </button>
       </nav>
+
+      {statusMessage && (
+        <div className="floating-message">
+          {statusMessage}
+        </div>
+      )}
 
       <div className="harmonygame-fill-space" />
 
@@ -165,7 +198,7 @@ const PingPongHarmony = () => {
           {selectedChords.map((chord) => (
             <button
               key={chord}
-              className="harmonygame-chord-btn"
+              className={`harmonygame-chord-btn ${buttonFlashes[chord] === 'correct' ? 'btn-flash-correct' : ''} ${buttonFlashes[chord] === 'wrong' ? 'btn-flash-wrong' : ''}`}
               onClick={() => handleAnswer(chord)}
             >
               {chord}
@@ -174,7 +207,7 @@ const PingPongHarmony = () => {
         </div>
 
         <div className="harmonygame-keyboard">
-          <PingPongHarmonyKeyboardView flashNotes={notesToFlash} />
+          <PingPongHarmonyKeyboardView ref={keyboardRef} />
         </div>
       </div>
 

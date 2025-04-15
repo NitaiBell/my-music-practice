@@ -211,3 +211,114 @@
   0% { background-color: #ff4c4c !important; }
   100% { background-color: inherit; }
 }
+
+
+.btn-flash-correct {
+  animation: flashCorrectBtn 0.4s ease;
+  background: #4cff4c !important;
+  border-color: #3bcf3b !important;
+  color: #18230F !important;
+  box-shadow: 0 0 12px #4cff4c;
+  transform: scale(1.03);
+  animation-fill-mode: forwards;
+}
+
+.btn-flash-wrong {
+  animation: flashWrongBtn 0.4s ease;
+  background: #ff4c4c !important;
+  border-color: #cc3939 !important;
+  color: #fff !important;
+  box-shadow: 0 0 12px #ff4c4c;
+  transform: scale(1.03);
+  animation-fill-mode: forwards;
+}
+
+@keyframes flashCorrectBtn {
+  0% {
+    background: #4cff4c;
+    color: #18230F;
+    transform: scale(1.05);
+  }
+  100% {
+    background: linear-gradient(135deg, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transform: scale(1.0);
+  }
+}
+
+@keyframes flashWrongBtn {
+  0% {
+    background: #ff4c4c;
+    color: #fff;
+    transform: scale(1.05);
+  }
+  100% {
+    background: linear-gradient(135deg, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transform: scale(1.0);
+  }
+}
+
+
+@keyframes statFlash {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0px transparent;
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px transparent;
+  }
+}
+
+.stat-flash {
+  animation: statFlash 0.4s ease-out;
+}
+
+@keyframes bounceFlash {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px transparent;
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 12px #fff;
+  }
+}
+
+.harmonygame-btn.bounce-flash {
+  animation: bounceFlash 0.6s infinite;
+}
+
+
+.floating-message {
+  position: absolute;
+  top: 150px; /* below navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 1.8rem; /* ⬆️ larger font */
+  font-weight: bold;
+  padding: 16px 28px; /* ⬆️ more padding */
+  border-radius: 16px; /* ⬆️ bigger bubble */
+  backdrop-filter: blur(6px); /* ⬆️ more blur */
+  pointer-events: none;
+  z-index: 10;
+  animation: messageFadeIn 0.3s ease;
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

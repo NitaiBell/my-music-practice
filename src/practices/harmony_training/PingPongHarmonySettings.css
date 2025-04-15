@@ -158,3 +158,101 @@
   width: 100%;
   padding-bottom: 12px;
 }
+
+
+/* Floating message */
+.harmony-floating-setup-message {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 14px 24px;
+  border-radius: 16px;
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+  z-index: 10;
+  animation: messageFadeIn 0.4s ease;
+}
+
+/* Message animation */
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Bounce + color animation */
+.harmony-start-btn {
+  animation: bouncePulse 2s infinite ease-in-out;
+  background: linear-gradient(45deg, #1F7D53, #38b27a, #255F38);
+  background-size: 200% 200%;
+  animation-name: bouncePulse, pulseGradient;
+  animation-duration: 2s, 4s;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes bouncePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+
+@keyframes pulseGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.rounds-group {
+  display: flex;
+  align-items: center;
+  background: #27391C;
+  border: 2px solid #F1EFEC;
+  padding: 8px 14px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+}
+
+.rounds-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #F1EFEC;
+}
+
+.harmony-rounds-input {
+  width: 80px;
+  font-size: 1.2rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #1a2714;
+  color: #F1EFEC;
+  text-align: center;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.harmony-rounds-input:focus {
+  box-shadow: 0 0 6px #99e06c;
+}
