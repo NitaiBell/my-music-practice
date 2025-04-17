@@ -1,0 +1,346 @@
+.real-melodygame-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(to bottom, #99e06c, #18230F);
+    color: #F1EFEC;
+    overflow: hidden;
+  }
+  
+  .real-melodygame-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+  }
+  
+  .real-melodygame-navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .real-melodygame-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 6px 12px;
+    background-color: #27391C;
+    border-radius: 10px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .real-melodygame-btn {
+    padding: 8px 14px;
+    font-size: 1rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .real-melodygame-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #255F38, #1F7D53);
+  }
+  
+  .real-melodygame-start-btn {
+    padding: 10px 20px;
+  }
+  
+  .real-melodygame-stats {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    background: #27391C;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .real-melodygame-stat {
+    background-color: #D4C9BE;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #18230F;
+    min-width: 30px;
+    text-align: center;
+  }
+  
+  .real-melodygame-stat.correct {
+    background-color: #5CFF70;
+  }
+  
+  .real-melodygame-stat.wrong {
+    background-color: #FF4C4C;
+    color: #fff;
+  }
+  
+  .real-melodygame-stat.current {
+    background-color: #FFE99E;
+  }
+  
+  .real-melodygame-stat.tries {
+    background-color: #ccc;
+  }
+  
+  .real-melodygame-fill-space {
+    flex-grow: 1;
+  }
+  
+  .real-melodygame-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  .real-melodygame-keyboard {
+    width: 100vw;
+    padding-bottom: 12px;
+    overflow-x: hidden;
+  }
+  
+  /* Flash & feedback */
+  .real-melodygame-flash-correct {
+    animation: realMelodyFlashGreen 0.4s ease;
+  }
+  
+  .real-melodygame-flash-wrong {
+    animation: realMelodyFlashRed 0.4s ease;
+  }
+  
+  /* Floating message */
+  .real-melodygame-floating-message {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 16px 28px;
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    z-index: 10;
+    animation: messageFadeIn 0.3s ease;
+  }
+  
+  @keyframes messageFadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+  
+  /* Popup */
+  .real-melodygame-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+  
+  .real-melodygame-popup {
+    background: #93fc79;
+    color: #18230F;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .real-melodygame-popup h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .real-melodygame-popup p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .real-melodygame-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .real-melodygame-popup-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .real-melodygame-popup-buttons button:hover {
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    transform: scale(1.05);
+  }
+  
+  /* Flashing buttons */
+  .btn-flash-correct {
+    animation: flashCorrectBtn 0.4s ease;
+    background: #4cff4c !important;
+    border-color: #3bcf3b !important;
+    color: #18230F !important;
+    box-shadow: 0 0 12px #4cff4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  .btn-flash-wrong {
+    animation: flashWrongBtn 0.4s ease;
+    background: #ff4c4c !important;
+    border-color: #cc3939 !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px #ff4c4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes flashCorrectBtn {
+    0% {
+      background: #4cff4c;
+      color: #18230F;
+      transform: scale(1.05);
+    }
+    100% {
+      background: linear-gradient(135deg, #1F7D53, #255F38);
+      color: #F1EFEC;
+      transform: scale(1.0);
+    }
+  }
+  
+  @keyframes flashWrongBtn {
+    0% {
+      background: #ff4c4c;
+      color: #fff;
+      transform: scale(1.05);
+    }
+    100% {
+      background: linear-gradient(135deg, #1F7D53, #255F38);
+      color: #F1EFEC;
+      transform: scale(1.0);
+    }
+  }
+  
+  /* Stat flash */
+  @keyframes statFlash {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0px transparent;
+    }
+    50% {
+      transform: scale(1.15);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0px transparent;
+    }
+  }
+  
+  .stat-flash {
+    animation: statFlash 0.4s ease-out;
+  }
+  
+  /* Replay button flash */
+  @keyframes bounceFlash {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 0px transparent;
+    }
+    50% {
+      transform: scale(1.15);
+      box-shadow: 0 0 12px #fff;
+    }
+  }
+  
+  .real-melodygame-btn.bounce-flash {
+    animation: bounceFlash 0.6s infinite;
+  }
+  
+  /* Optional: fancy start button */
+  .real-melodygame-start-btn.start-active {
+    font-weight: bold;
+    transform: scale(1.1);
+    background: linear-gradient(45deg, #9fff92, #13ff91, #15f50d);
+    background-size: 300% 300%;
+    color: #18230F;
+    border: 2px solid #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 18px rgba(255, 230, 0, 0.8);
+    animation: bouncePulse 1.6s infinite ease-in-out, gradientGlow 5s infinite alternate;
+    transition: all 0.3s ease;
+  }
+  
+  .real-melodygame-start-btn.start-active:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 26px rgba(255, 230, 0, 0.95);
+    background: linear-gradient(45deg, #f8f8f8, #241e1c, #293332);
+    background-size: 300% 300%;
+  }
+  
+  @keyframes bouncePulse {
+    0%, 100% { transform: scale(1.1); }
+    50%     { transform: scale(1.18); }
+  }
+  
+  @keyframes gradientGlow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes realMelodyFlashGreen {
+    0% { background-color: #4cff4c !important; }
+    100% { background-color: inherit; }
+  }
+  
+  @keyframes realMelodyFlashRed {
+    0% { background-color: #ff4c4c !important; }
+    100% { background-color: inherit; }
+  }
+  
+
+  .tonic-btn {
+    background: linear-gradient(to right, #3e7d4d, #295a3a);
+    color: #f1efec;
+    margin-left: 10px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+  }
+  
+  .tonic-btn:hover {
+    background: linear-gradient(to right, #295a3a, #3e7d4d);
+    box-shadow: 0 0 8px rgba(92, 255, 112, 0.4);
+    transform: scale(1.05);
+  }
+  

@@ -3,6 +3,7 @@ import Home from "./pages/Home.jsx";
 import PlayNote from "./practices/playnote/PlayNote.jsx";
 import PingPongMelodyContainer from "./practices/melody_training/PingPongMelodyContainer.jsx";
 import PingPongHarmonyContainer from "./practices/harmony_training/PingPongHarmonyContainer.jsx";
+import RealMelodyContainer from "./practices/real_melody_training/RealMelodyContainer.jsx";
 import Keyboard from "./practices/keyboard/Keyboard.jsx";
 import MusicalStaff from "./practices/MusicalStaff/MusicalStaff.jsx";
 
@@ -14,6 +15,7 @@ function App() {
         <Route path="/play" element={<PlayNote />} />
         <Route path="/melody" element={<PingPongMelodyContainer />} />
         <Route path="/harmony" element={<PingPongHarmonyContainer />} />
+        <Route path="/real-melody" element={<RealMelodyContainer />} />
         <Route path="/keyboard" element={<Keyboard />} />
         <Route path="/staff" element={<MusicalStaff />} />
       </Routes>
@@ -22,6 +24,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

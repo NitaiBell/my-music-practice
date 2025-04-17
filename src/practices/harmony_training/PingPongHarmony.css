@@ -322,3 +322,44 @@
     transform: translate(-50%, 0);
   }
 }
+
+.harmonygame-start-btn.start-active {
+  font-weight: bold;
+  transform: scale(1.1);
+  background: linear-gradient(45deg, #9fff92, #13ff91, #15f50d);
+  background-size: 300% 300%;
+  color: #18230F;
+  border: 2px solid #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 18px rgba(255, 230, 0, 0.8);
+  animation: bouncePulse 1.6s infinite ease-in-out, gradientGlow 5s infinite alternate;
+  transition: all 0.3s ease;
+}
+
+.harmonygame-start-btn.start-active:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 26px rgba(255, 230, 0, 0.95);
+  background: linear-gradient(45deg, #f8f8f8, #241e1c, #293332);
+  background-size: 300% 300%;
+}
+
+@keyframes bouncePulse {
+  0%, 100% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes gradientGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
