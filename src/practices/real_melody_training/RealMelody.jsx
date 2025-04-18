@@ -13,7 +13,7 @@ export default function RealMelody() {
     selectedNotes = [],
     rounds = 10,
     octaves = [4],
-    beginnerMode = false,
+    normalMode = true, // ✅ renamed from beginnerMode
   } = state || {};
 
   const [sequence, setSequence] = useState([]);
@@ -33,23 +33,17 @@ export default function RealMelody() {
     selectedNotes.forEach((note) =>
       octaves.forEach((oct) => allChoices.push(`${note}${oct}`))
     );
-  
+
     const tonicChoices = octaves.map((oct) => `${selectedScale}${oct}`);
-    const randomTonic =
-      tonicChoices[Math.floor(Math.random() * tonicChoices.length)];
-  
     const sequence = Array.from({ length: rounds - 2 }, () =>
       allChoices[Math.floor(Math.random() * allChoices.length)]
     );
-  
-    const firstTonic =
-      tonicChoices[Math.floor(Math.random() * tonicChoices.length)];
-    const lastTonic =
-      tonicChoices[Math.floor(Math.random() * tonicChoices.length)];
-  
+
+    const firstTonic = tonicChoices[Math.floor(Math.random() * tonicChoices.length)];
+    const lastTonic = tonicChoices[Math.floor(Math.random() * tonicChoices.length)];
+
     return [firstTonic, ...sequence, lastTonic];
   };
-  
 
   const startGame = () => {
     if (selectedNotes.length === 0) return;
@@ -70,7 +64,7 @@ export default function RealMelody() {
     setCurrentNote(note);
     keyboardRef.current.playNote(note, false);
     setCanAnswer(true);
-    setHasFailedThisRound(false); // reset for new round
+    setHasFailedThisRound(false);
     setStatusMessage('');
   };
 
@@ -91,7 +85,7 @@ export default function RealMelody() {
     if (!isPlaying || !canAnswer) return;
     setTriesCount((t) => t + 1);
 
-    const isCorrect = beginnerMode
+    const isCorrect = normalMode
       ? getNoteBase(note) === getNoteBase(currentNote)
       : note === currentNote;
 
@@ -100,7 +94,6 @@ export default function RealMelody() {
       setStatusMessage("✅ Correct!");
       setCanAnswer(false);
 
-      // Only count correct if this round hasn't failed yet
       if (!hasFailedThisRound) {
         setCorrectCount((c) => c + 1);
       }
@@ -119,7 +112,6 @@ export default function RealMelody() {
       keyboardRef.current.setFlashWrong(note);
       setStatusMessage("❌ Wrong! Hit Replay");
 
-      // Only count wrong once per round
       if (!hasFailedThisRound) {
         setWrongCount((w) => w + 1);
         setHasFailedThisRound(true);
@@ -167,7 +159,7 @@ export default function RealMelody() {
           <RealMelodyKeyboardView
             ref={keyboardRef}
             onKeyClick={handleAnswer}
-            octaves={beginnerMode ? [3, 4, 5] : octaves}
+            octaves={normalMode ? [3, 4, 5] : octaves}
           />
         </div>
       </div>
@@ -176,7 +168,7 @@ export default function RealMelody() {
         <div className="real-melodygame-popup-overlay">
           <div className="real-melodygame-popup">
             <h2>🎉 Practice Complete!</h2>
-            <p><strong>rounds:</strong> {rounds}</p>
+            <p><strong>Rounds:</strong> {rounds}</p>
             <p><strong>Correct:</strong> {correctCount}</p>
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Attempts:</strong> {triesCount}</p>

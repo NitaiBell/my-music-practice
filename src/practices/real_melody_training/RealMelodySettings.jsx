@@ -3,10 +3,38 @@ import { useNavigate } from 'react-router-dom';
 import RealMelodyKeyboardView from './RealMelodyKeyboardView';
 import './RealMelodySettings.css';
 
+// ✅ Enharmonic normalization
+const normalizeNote = (note) => {
+  const enharmonics = {
+    Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
+    'C#': 'Cs', 'D#': 'Ds', 'F#': 'Fs', 'G#': 'Gs', 'A#': 'As',
+  };
+  return enharmonics[note] || note;
+};
+
+// ✅ Keys that prefer flat notation
+const flatKeys = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'];
+
+// ✅ Display note per scale context
+const displayNote = (note, key) => {
+  const preferFlat = flatKeys.includes(key);
+  const displayMapSharps = {
+    Cs: 'C♯', Ds: 'D♯', Fs: 'F♯', Gs: 'G♯', As: 'A♯',
+  };
+  const displayMapFlats = {
+    Cs: 'D♭', Ds: 'E♭', Fs: 'G♭', Gs: 'A♭', As: 'B♭',
+  };
+  const naturalNames = {
+    C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B',
+  };
+
+  return naturalNames[note] || (preferFlat ? displayMapFlats[note] : displayMapSharps[note]) || note;
+};
+
 const notesByScale = {
   C: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
-  F: ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'],
-  G: ['G', 'A', 'B', 'C', 'D', 'E', 'F#'],
+  F: ['F', 'G', 'A', 'As', 'C', 'D', 'E'],
+  G: ['G', 'A', 'B', 'C', 'D', 'E', 'Fs'],
 };
 
 const DEFAULT_DEGREES = [0, 2, 4];
@@ -16,7 +44,7 @@ export default function RealMelodySettings() {
   const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
   const [rounds, setRounds] = useState(15);
   const [octaves, setOctaves] = useState([3, 4]);
-  const [beginnerMode, setBeginnerMode] = useState(false);
+  const [normalMode, setNormalMode] = useState(true); // ✅ renamed and default true
   const keyboardRef = useRef();
   const navigate = useNavigate();
 
@@ -33,7 +61,8 @@ export default function RealMelodySettings() {
   }
 
   const playNote3 = (note) => {
-    keyboardRef.current?.playNote(`${note}3`);
+    const normalized = normalizeNote(note);
+    keyboardRef.current?.playNote(`${normalized}3`);
   };
 
   const handleScaleChange = (newScale) => {
@@ -65,7 +94,7 @@ export default function RealMelodySettings() {
 
   const startPractice = () => {
     navigate('/real-melody', {
-      state: { selectedScale, selectedNotes, rounds, octaves, beginnerMode },
+      state: { selectedScale, selectedNotes, rounds, octaves, normalMode },
     });
   };
 
@@ -104,19 +133,19 @@ export default function RealMelodySettings() {
                       disabled={note === tonic}
                       onChange={() => toggleNote(note)}
                     />
-                    {note}
+                    {displayNote(note, selectedScale)}
                   </label>
                 ))}
               </div>
             </div>
 
-            {/* ✅ Beginner Mode Button */}
+            {/* ✅ Normal Mode Button (formerly Beginner) */}
             <button
-              className={`real-melody-beginner-toggle ${beginnerMode ? 'on' : 'off'}`}
-              title="Beginner mode: allows any octave for correct note — easier for training"
-              onClick={() => setBeginnerMode((b) => !b)}
+              className={`real-melody-beginner-toggle ${normalMode ? 'on' : 'off'}`}
+              title="Normal Mode: Any octave is accepted. Pro Mode: exact octave match required."
+              onClick={() => setNormalMode((m) => !m)}
             >
-              {beginnerMode ? '✅ Beginner Mode' : 'Beginner Mode'}
+              {normalMode ? '✅ Normal Mode' : 'Pro Mode'}
             </button>
           </div>
 
@@ -166,9 +195,9 @@ export default function RealMelodySettings() {
 
         <div className="real-melody-summary">
           <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
-          <p>Notes: <strong>{selectedNotes.join(', ')}</strong></p>
+          <p>Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
           <p>Octaves: <strong>{octaves.join(', ')}</strong></p>
-          <p>Beginner Mode: <strong>{beginnerMode ? 'On' : 'Off'}</strong></p>
+          <p>Mode: <strong>{normalMode ? 'Normal' : 'Pro'}</strong></p>
         </div>
       </div>
 
@@ -176,7 +205,7 @@ export default function RealMelodySettings() {
         <RealMelodyKeyboardView
           ref={keyboardRef}
           highlightNotes={selectedNotes}
-          octaves={beginnerMode ? [3, 4, 5] : octaves}
+          octaves={normalMode ? [3, 4, 5] : octaves}
         />
       </div>
     </div>
