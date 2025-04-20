@@ -1,0 +1,207 @@
+/* Container */
+.degree-notice-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(to bottom, #c2f86a, #18230F);
+    color: #F1EFEC;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Navbar */
+  .degree-notice-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    min-height: 80px;
+  }
+  
+  .degree-notice-navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  .degree-notice-logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 12px 16px;
+    background-color: #27391C;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .degree-notice-stats {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.15rem;
+    background: #27391C;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .degree-notice-stat {
+    background-color: #D4C9BE;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #18230F;
+    min-width: 32px;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  
+  .degree-notice-stat.correct { background-color: #5CFF70; }
+  .degree-notice-stat.wrong { background-color: #FF4C4C; color: #fff; }
+  .degree-notice-stat.current { background-color: #FFE99E; }
+  .degree-notice-stat.tries { background-color: #ccc; }
+  
+  /* Question Area */
+  .degree-notice-question-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 50px;
+  }
+  
+  .degree-notice-scale-label {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #F1EFEC;
+    padding: 8px 20px;
+    border: 2px solid #F1EFEC;
+    border-radius: 12px;
+    background-color: #27391C;
+  }
+  
+  .degree-notice-question-box {
+    font-size: 3rem;
+    font-weight: bold;
+    padding: 16px 32px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Options */
+  .degree-notice-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 420px;
+    margin-top: 20px;
+  }
+  
+  .degree-notice-option-btn {
+    padding: 16px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+    background: linear-gradient(135deg, #1F7D53, #255F38);
+    color: #F1EFEC;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  
+  .degree-notice-option-btn:hover:not(:disabled) {
+    background-color: #27391C;
+    transform: scale(1.03);
+  }
+  
+  .degree-notice-option-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* Flash Animations */
+  .btn-flash-correct {
+    animation: flashCorrectBtn 0.4s ease;
+    background: #4cff4c !important;
+    border-color: #3bcf3b !important;
+    color: #18230F !important;
+    box-shadow: 0 0 12px #4cff4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  .btn-flash-wrong {
+    animation: flashWrongBtn 0.4s ease;
+    background: #ff4c4c !important;
+    border-color: #cc3939 !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px #ff4c4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes flashCorrectBtn {
+    0% { background: #4cff4c; transform: scale(1.05); }
+    100% { background: linear-gradient(135deg, #1F7D53, #255F38); transform: scale(1.0); }
+  }
+  
+  @keyframes flashWrongBtn {
+    0% { background: #ff4c4c; transform: scale(1.05); }
+    100% { background: linear-gradient(135deg, #1F7D53, #255F38); transform: scale(1.0); }
+  }
+  
+  /* Popup */
+  .degree-notice-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+  
+  .degree-notice-popup {
+    background: #93fc79;
+    color: #18230F;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .degree-notice-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .degree-notice-popup-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .degree-notice-popup-buttons button:hover {
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    transform: scale(1.05);
+  }
+  

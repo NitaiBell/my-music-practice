@@ -9,6 +9,15 @@ import './RealMelodyKeyboardView.css';
 const whiteNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 const blackNotesMap = { C: 'Cs', D: 'Ds', F: 'Fs', G: 'Gs', A: 'As' };
 
+// ✅ Enharmonic normalization
+const normalizeNote = (note) => {
+  const enharmonics = {
+    Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
+    'C#': 'Cs', 'D#': 'Ds', 'F#': 'Fs', 'G#': 'Gs', 'A#': 'As',
+  };
+  return enharmonics[note] || note;
+};
+
 const RealMelodyKeyboardView = forwardRef(
   ({ highlightNotes = [], onKeyClick, octaves = [4] }, ref) => {
     const [flashedKeys, setFlashedKeys] = useState([]);
@@ -24,7 +33,8 @@ const RealMelodyKeyboardView = forwardRef(
 
     useImperativeHandle(ref, () => ({
       playNote: (note, shouldFlash = true) => {
-        const url = encodeURIComponent(`${note}.wav`);
+        const normalized = normalizeNote(note); // ✅
+        const url = encodeURIComponent(`${normalized}.wav`);
         new Audio(`/clean_cut_notes/${url}`).play();
         if (shouldFlash) {
           setFlashedKeys([note]);
@@ -44,10 +54,11 @@ const RealMelodyKeyboardView = forwardRef(
     }));
 
     const handleClick = (note) => {
+      const normalized = normalizeNote(note); // ✅
       if (onKeyClick) {
         onKeyClick(note);
       } else {
-        const url = encodeURIComponent(`${note}.wav`);
+        const url = encodeURIComponent(`${normalized}.wav`);
         new Audio(`/clean_cut_notes/${url}`).play();
         setFlashedKeys([note]);
         setTimeout(() => setFlashedKeys([]), 600);

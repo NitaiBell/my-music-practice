@@ -1,0 +1,206 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './DegreeNoticeSettings.css';
+
+const allScales = ['C', 'G', 'D', 'A', 'E', 'B', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb'];
+const allDegrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+const displayNote = (note) => {
+  const map = {
+    'C#': 'C♯', 'D#': 'D♯', 'F#': 'F♯', 'G#': 'G♯', 'A#': 'A♯',
+    'Db': 'D♭', 'Eb': 'E♭', 'Gb': 'G♭', 'Ab': 'A♭', 'Bb': 'B♭',
+    'Cb': 'C♭',
+  };
+  return map[note] || note;
+};
+
+const scaleDegreeNoteMap = {
+  C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
+  G: ['G', 'Am', 'Bm', 'C', 'D', 'Em', 'F#dim'],
+  D: ['D', 'Em', 'F#m', 'G', 'A', 'Bm', 'C#dim'],
+  A: ['A', 'Bm', 'C#m', 'D', 'E', 'F#m', 'G#dim'],
+  E: ['E', 'F#m', 'G#m', 'A', 'B', 'C#m', 'D#dim'],
+  B: ['B', 'C#m', 'D#m', 'E', 'F#', 'G#m', 'A#dim'],
+  F: ['F', 'Gm', 'Am', 'Bb', 'C', 'Dm', 'Edim'],
+  Bb: ['Bb', 'Cm', 'Dm', 'Eb', 'F', 'Gm', 'Adim'],
+  Eb: ['Eb', 'Fm', 'Gm', 'Ab', 'Bb', 'Cm', 'Ddim'],
+  Ab: ['Ab', 'Bbm', 'Cm', 'Db', 'Eb', 'Fm', 'Gdim'],
+  Db: ['Db', 'Ebm', 'Fm', 'Gb', 'Ab', 'Bbm', 'Cdim'],
+  Gb: ['Gb', 'Abm', 'Bbm', 'Cb', 'Db', 'Ebm', 'Fdim'],
+};
+
+const degreeIndex = {
+  I: 0,
+  II: 1,
+  III: 2,
+  IV: 3,
+  V: 4,
+  VI: 5,
+  VII: 6,
+};
+
+export default function DegreeNoticeSettings() {
+  const navigate = useNavigate();
+  const [selectedScales, setSelectedScales] = useState([]);
+  const [selectedDegrees, setSelectedDegrees] = useState([]);
+  const [rounds, setRounds] = useState(10);
+  const [scaleToDegree, setScaleToDegree] = useState(true);
+  const [scaleToNote, setScaleToNote] = useState(false);
+
+  const toggleScale = (scale) => {
+    setSelectedScales((prev) =>
+      prev.includes(scale) ? prev.filter((s) => s !== scale) : [...prev, scale]
+    );
+  };
+
+  const toggleDegree = (degree) => {
+    setSelectedDegrees((prev) =>
+      prev.includes(degree) ? prev.filter((d) => d !== degree) : [...prev, degree]
+    );
+  };
+
+  const toggleMode = (mode) => {
+    if (mode === 'scaleToDegree') {
+      if (scaleToDegree && !scaleToNote) return; // prevent turning both off
+      setScaleToDegree(!scaleToDegree);
+    } else {
+      if (scaleToNote && !scaleToDegree) return; // prevent turning both off
+      setScaleToNote(!scaleToNote);
+    }
+  };
+
+  const startPractice = () => {
+    navigate('/degree-notice', {
+      state: {
+        selectedScales,
+        selectedDegrees,
+        questionStyles: {
+          scaleToDegree,
+          scaleToNote,
+        },
+        rounds,
+      },
+    });
+  };
+
+  return (
+    <div className="degree_notice_settings-container">
+      <div className="degree_notice_settings-navbar">
+        <div className="degree_notice_settings-dropdown">
+          <button className="degree_notice_settings-dropbtn">🎼 Scales</button>
+          <div className="degree_notice_settings-dropdown-content">
+            {allScales.map((scale) => (
+              <label key={scale}>
+                <input
+                  type="checkbox"
+                  checked={selectedScales.includes(scale)}
+                  onChange={() => toggleScale(scale)}
+                />{' '}
+                {displayNote(scale)} Major
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="degree_notice_settings-dropdown">
+          <button className="degree_notice_settings-dropbtn">🎯 Degrees</button>
+          <div className="degree_notice_settings-dropdown-content">
+            {allDegrees.map((deg) => (
+              <label key={deg}>
+                <input
+                  type="checkbox"
+                  checked={selectedDegrees.includes(deg)}
+                  onChange={() => toggleDegree(deg)}
+                />{' '}
+                {deg}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="degree_notice_settings-dropdown">
+          <button className="degree_notice_settings-dropbtn">❓ Mode</button>
+          <div className="degree_notice_settings-dropdown-content">
+            <label>
+              <input
+                type="checkbox"
+                checked={scaleToDegree}
+                onChange={() => toggleMode('scaleToDegree')}
+              />{' '}
+              Scale → Degree
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={scaleToNote}
+                onChange={() => toggleMode('scaleToNote')}
+              />{' '}
+              Scale → Roman Numeral
+            </label>
+          </div>
+        </div>
+
+        <div className="degree_notice_settings-rounds-group">
+          <label className="degree_notice_settings-rounds-label">Rounds:</label>
+          <input
+            type="number"
+            min="1"
+            max="30"
+            value={rounds}
+            onChange={(e) => setRounds(Number(e.target.value))}
+            className="degree_notice_settings-rounds-input"
+          />
+        </div>
+
+        <button
+          className="degree_notice_settings-start-btn"
+          onClick={startPractice}
+          disabled={
+            selectedScales.length === 0 ||
+            selectedDegrees.length === 0 ||
+            (!scaleToDegree && !scaleToNote)
+          }
+        >
+          Start Practice
+        </button>
+      </div>
+
+      <div className="degree_notice_settings-bottom-section">
+        <div className="degree_notice_settings-summary">
+          <p>
+            <strong>{rounds}</strong> rounds | Scales:{' '}
+            <strong>{selectedScales.map(displayNote).join(', ')}</strong>
+          </p>
+          <p>
+            Degrees: <strong>{selectedDegrees.join(', ')}</strong>
+          </p>
+          <p>
+            Mode:{' '}
+            <strong>
+              {scaleToDegree ? 'Scale → Degree' : ''}
+              {scaleToDegree && scaleToNote ? ' & ' : ''}
+              {scaleToNote ? 'Scale → Roman Numeral' : ''}
+            </strong>
+          </p>
+        </div>
+
+        <div className="degree_notice_settings-grid">
+          {selectedScales.map((scale) => (
+            <div key={scale} className="degree_notice_settings-scale-box">
+              <strong>{displayNote(scale)} Major</strong>:&nbsp;
+              {selectedDegrees.map((deg, i) => {
+  const note = scaleDegreeNoteMap[scale]?.[degreeIndex[deg]];
+  return (
+    <span key={i} style={{ marginRight: '8px', display: 'inline-block' }}>
+      <span className="degree_notice_settings-degree-badge">{deg}</span>
+      (<span>{note ? displayNote(note) : '?'}</span>)
+    </span>
+  );
+})}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

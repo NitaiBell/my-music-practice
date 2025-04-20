@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import RealMelodyKeyboardView from './RealMelodyKeyboardView';
 import './RealMelodySettings.css';
 
-// ✅ Enharmonic normalization
 const normalizeNote = (note) => {
   const enharmonics = {
     Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
@@ -12,10 +11,8 @@ const normalizeNote = (note) => {
   return enharmonics[note] || note;
 };
 
-// ✅ Keys that prefer flat notation
 const flatKeys = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'];
 
-// ✅ Display note per scale context
 const displayNote = (note, key) => {
   const preferFlat = flatKeys.includes(key);
   const displayMapSharps = {
@@ -33,21 +30,24 @@ const displayNote = (note, key) => {
 
 const notesByScale = {
   C: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+  D: ['D', 'E', 'Fs', 'G', 'A', 'B', 'Cs'],
+  E: ['E', 'Fs', 'Gs', 'A', 'B', 'Cs', 'Ds'],
   F: ['F', 'G', 'A', 'As', 'C', 'D', 'E'],
   G: ['G', 'A', 'B', 'C', 'D', 'E', 'Fs'],
+  A: ['A', 'B', 'Cs', 'D', 'E', 'Fs', 'Gs'],
+  B: ['B', 'Cs', 'Ds', 'E', 'Fs', 'Gs', 'As'],
 };
 
-const DEFAULT_DEGREES = [0, 2, 4];
+const DEFAULT_DEGREES = [0, 1, 2, 3, 4, 5, 6];
 
 export default function RealMelodySettings() {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
-  const [rounds, setRounds] = useState(15);
+  const [rounds, setRounds] = useState(30);
   const [octaves, setOctaves] = useState([3, 4]);
-  const [normalMode, setNormalMode] = useState(true); // ✅ renamed and default true
+  const [normalMode, setNormalMode] = useState(true);
   const keyboardRef = useRef();
   const navigate = useNavigate();
-
   const tonic = selectedScale;
 
   function getScaleDegrees(scale, degreeIndices) {
@@ -88,7 +88,8 @@ export default function RealMelodySettings() {
       setOctaves((prev) => prev.filter((o) => o !== oct));
     } else {
       setOctaves((prev) => [...prev, oct]);
-      keyboardRef.current?.playNote(`${tonic}${oct}`);
+      const normalized = normalizeNote(tonic);
+      keyboardRef.current?.playNote(`${normalized}${oct}`);
     }
   };
 
@@ -103,7 +104,6 @@ export default function RealMelodySettings() {
       <div className="real-melody-content-wrapper">
         <nav className="real-melody-navbar">
           <div className="real-melody-scale-note-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {/* 🎼 Scale Dropdown */}
             <div className="real-melody-dropdown">
               <button className="real-melody-dropbtn">🎼 Scale</button>
               <div className="real-melody-dropdown-content">
@@ -121,7 +121,6 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
-            {/* 🎵 Notes Dropdown */}
             <div className="real-melody-dropdown">
               <button className="real-melody-dropbtn">🎵 Notes</button>
               <div className="real-melody-dropdown-content">
@@ -139,7 +138,6 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
-            {/* ✅ Normal Mode Button (formerly Beginner) */}
             <button
               className={`real-melody-beginner-toggle ${normalMode ? 'on' : 'off'}`}
               title="Normal Mode: Any octave is accepted. Pro Mode: exact octave match required."
@@ -150,7 +148,6 @@ export default function RealMelodySettings() {
           </div>
 
           <div className="real-melody-controls">
-            {/* 🔢 Rounds Input */}
             <div className="real-melody-rounds-group">
               <label htmlFor="rounds-input" className="real-melody-rounds-label">Rounds:</label>
               <input
@@ -164,7 +161,6 @@ export default function RealMelodySettings() {
               />
             </div>
 
-            {/* 🔢 Octaves Dropdown */}
             <div className="real-melody-dropdown">
               <button className="real-melody-dropbtn">🔢 Octaves</button>
               <div className="real-melody-dropdown-content">
@@ -182,7 +178,6 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
-            {/* ▶️ Start Button */}
             <button className="real-melody-start-btn" onClick={startPractice}>
               Start Practice
             </button>
