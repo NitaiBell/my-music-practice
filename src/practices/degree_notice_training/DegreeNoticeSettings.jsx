@@ -39,35 +39,54 @@ const degreeIndex = {
   VII: 6,
 };
 
+const whooshSound = new Audio('/effects/swing-whoosh.mp3');
+whooshSound.volume = 0.5;
+
 export default function DegreeNoticeSettings() {
   const navigate = useNavigate();
-  const [selectedScales, setSelectedScales] = useState([]);
-  const [selectedDegrees, setSelectedDegrees] = useState([]);
+  const [selectedScales, setSelectedScales] = useState(['C']);
+  const [selectedDegrees, setSelectedDegrees] = useState(['II', 'III', 'IV', 'V', 'VI', 'VII']);
   const [rounds, setRounds] = useState(10);
   const [scaleToDegree, setScaleToDegree] = useState(true);
   const [scaleToNote, setScaleToNote] = useState(false);
 
   const toggleScale = (scale) => {
-    setSelectedScales((prev) =>
-      prev.includes(scale) ? prev.filter((s) => s !== scale) : [...prev, scale]
-    );
+    setSelectedScales((prev) => {
+      const isAdding = !prev.includes(scale);
+      const updated = isAdding ? [...prev, scale] : prev.filter((s) => s !== scale);
+      if (isAdding) {
+        whooshSound.currentTime = 0;
+        whooshSound.play();
+      }
+      return updated;
+    });
   };
 
   const toggleDegree = (degree) => {
-    setSelectedDegrees((prev) =>
-      prev.includes(degree) ? prev.filter((d) => d !== degree) : [...prev, degree]
-    );
+    setSelectedDegrees((prev) => {
+      const isAdding = !prev.includes(degree);
+      const updated = isAdding ? [...prev, degree] : prev.filter((d) => d !== degree);
+      if (isAdding) {
+        whooshSound.currentTime = 0;
+        whooshSound.play();
+      }
+      return updated;
+    });
   };
 
   const toggleMode = (mode) => {
     if (mode === 'scaleToDegree') {
-      if (scaleToDegree && !scaleToNote) return; // prevent turning both off
+      if (scaleToDegree && !scaleToNote) return;
       setScaleToDegree(!scaleToDegree);
     } else {
-      if (scaleToNote && !scaleToDegree) return; // prevent turning both off
+      if (scaleToNote && !scaleToDegree) return;
       setScaleToNote(!scaleToNote);
     }
+  
+    whooshSound.currentTime = 0;
+    whooshSound.play();
   };
+  
 
   const startPractice = () => {
     navigate('/degree-notice', {
@@ -165,6 +184,13 @@ export default function DegreeNoticeSettings() {
         </button>
       </div>
 
+      <div className="degree_notice_settings-instructions">
+        <p>✅ Select one or more <strong>scales</strong> from the dropdown.</p>
+        <p>✅ Choose the <strong>degrees</strong> you want to be tested on.</p>
+        <p>✅ Pick your preferred <strong>mode</strong>: identify the degree (I, IV, V) or the actual chord (C, Dm, etc.).</p>
+        <p>🎵 Click <strong>Start Practice</strong> when you're ready!</p>
+      </div>
+
       <div className="degree_notice_settings-bottom-section">
         <div className="degree_notice_settings-summary">
           <p>
@@ -189,14 +215,14 @@ export default function DegreeNoticeSettings() {
             <div key={scale} className="degree_notice_settings-scale-box">
               <strong>{displayNote(scale)} Major</strong>:&nbsp;
               {selectedDegrees.map((deg, i) => {
-  const note = scaleDegreeNoteMap[scale]?.[degreeIndex[deg]];
-  return (
-    <span key={i} style={{ marginRight: '8px', display: 'inline-block' }}>
-      <span className="degree_notice_settings-degree-badge">{deg}</span>
-      (<span>{note ? displayNote(note) : '?'}</span>)
-    </span>
-  );
-})}
+                const note = scaleDegreeNoteMap[scale]?.[degreeIndex[deg]];
+                return (
+                  <span key={i} style={{ marginRight: '8px', display: 'inline-block' }}>
+                    <span className="degree_notice_settings-degree-badge">{deg}</span>
+                    (<span>{note ? displayNote(note) : '?'}</span>)
+                  </span>
+                );
+              })}
             </div>
           ))}
         </div>

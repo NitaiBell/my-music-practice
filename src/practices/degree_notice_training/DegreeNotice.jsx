@@ -2,21 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './DegreeNotice.css';
 
-const fullNoteMap = {
-  C: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
-  G: ['G', 'A', 'B', 'C', 'D', 'E', 'F#'],
-  D: ['D', 'E', 'F#', 'G', 'A', 'B', 'C#'],
-  A: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#'],
-  E: ['E', 'F#', 'G#', 'A', 'B', 'C#', 'D#'],
-  B: ['B', 'C#', 'D#', 'E', 'F#', 'G#', 'A#'],
-  F: ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'],
-  Bb: ['Bb', 'C', 'D', 'Eb', 'F', 'G', 'A'],
-  Eb: ['Eb', 'F', 'G', 'Ab', 'Bb', 'C', 'D'],
-  Ab: ['Ab', 'Bb', 'C', 'Db', 'Eb', 'F', 'G'],
-  Db: ['Db', 'Eb', 'F', 'Gb', 'Ab', 'Bb', 'C'],
-  Gb: ['Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb', 'F']
-};
-
 const fullChordMap = {
   C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
   G: ['G', 'Am', 'Bm', 'C', 'D', 'Em', 'F#dim'],
@@ -43,6 +28,11 @@ const displayNote = (note) => {
   return map[note] || note;
 };
 
+const correctSound = new Audio('/wrong_right/correct.mp3');
+const wrongSound = new Audio('/wrong_right/wrong.mp3');
+const backgroundMusic = new Audio('/effects/background_music.mp3');
+const pageTurnSound = new Audio('/effects/page_turn.mp3');
+
 export default function DegreeNotice() {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -53,6 +43,8 @@ export default function DegreeNotice() {
     rounds = 10,
   } = state || {};
 
+  const [questionPool, setQuestionPool] = useState([]);
+  const [modeSequence, setModeSequence] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
@@ -62,91 +54,189 @@ export default function DegreeNotice() {
   const [disabledButtons, setDisabledButtons] = useState([]);
   const [flashCorrect, setFlashCorrect] = useState(false);
   const [flashWrong, setFlashWrong] = useState(false);
+  const [wasWrongThisRound, setWasWrongThisRound] = useState(false);
+  const [roundFlash, setRoundFlash] = useState(false);
+  const [musicMuted, setMusicMuted] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
 
-  const generateQuestion = () => {
-    const scale = selectedScales[Math.floor(Math.random() * selectedScales.length)];
-    const degreeIdx = Math.floor(Math.random() * selectedDegrees.length);
-    const degree = selectedDegrees[degreeIdx];
+  useEffect(() => {
+    backgroundMusic.volume = 0.15;
+    backgroundMusic.loop = true;
+    if (!musicMuted) {
+      backgroundMusic.play().catch(() => {});
+    }
+    return () => {
+      backgroundMusic.pause();
+      backgroundMusic.currentTime = 0;
+    };
+  }, [musicMuted]);
+
+  useEffect(() => {
+    const combinations = [];
+    selectedScales.forEach(scale => {
+      selectedDegrees.forEach(degree => {
+        combinations.push({ scale, degree });
+      });
+    });
+    const shuffledCombos = combinations.sort(() => 0.5 - Math.random()).slice(0, rounds);
+    setQuestionPool(shuffledCombos);
+
+    const modes = shuffledCombos.map(() => {
+      if (questionStyles.scaleToDegree && questionStyles.scaleToNote) {
+        return Math.random() < 0.5 ? 'scaleToDegree' : 'scaleToNote';
+      } else {
+        return questionStyles.scaleToDegree ? 'scaleToDegree' : 'scaleToNote';
+      }
+    });
+    setModeSequence(modes);
+    startRound(shuffledCombos[0], modes[0]);
+  }, []);
+
+  const generateQuestion = (scale, degree, mode) => {
     const degreeNum = degreeLabels.indexOf(degree);
-
-    const isDegreeQuestion = questionStyles.scaleToDegree && questionStyles.scaleToNote
-      ? Math.random() < 0.5
-      : questionStyles.scaleToDegree;
-
     const noteAnswer = fullChordMap[scale][degreeNum];
     const degreeAnswer = degreeLabels[degreeNum];
-
-    const correctAnswer = isDegreeQuestion ? degreeAnswer : noteAnswer;
-    const questionPrompt = isDegreeQuestion ? displayNote(noteAnswer) : degree;
+    const correctAnswer = mode === 'scaleToDegree' ? degreeAnswer : noteAnswer;
+    const questionPrompt = mode === 'scaleToDegree' ? displayNote(noteAnswer) : degree;
 
     const options = new Set([correctAnswer]);
     while (options.size < 4) {
       const randIdx = Math.floor(Math.random() * 7);
-      const choice = isDegreeQuestion ? degreeLabels[randIdx] : fullChordMap[scale][randIdx];
-      options.add(choice);
+      const distractor = mode === 'scaleToDegree' ? degreeLabels[randIdx] : fullChordMap[scale][randIdx];
+      options.add(distractor);
     }
 
     return {
       scale,
       degree,
-      mode: isDegreeQuestion ? 'scaleToDegree' : 'scaleToNote',
+      mode,
       correctAnswer,
       options: Array.from(options).sort(() => 0.5 - Math.random()),
       questionPrompt
     };
   };
 
-  const startRound = () => {
+  const startRound = (combo, mode) => {
     setFlashCorrect(false);
     setFlashWrong(false);
     setDisabledButtons([]);
-    setQuestion(generateQuestion());
+    setWasWrongThisRound(false);
+    setRoundFlash(true);
+    setTimeout(() => setRoundFlash(false), 400);
+    setFeedbackMessage('🎵 New round started!');
+
+    pageTurnSound.currentTime = 0;
+    pageTurnSound.play();
+
+    const { scale, degree } = combo;
+    setQuestion(generateQuestion(scale, degree, mode));
   };
 
   const handleAnswer = (answer) => {
     setTriesCount(prev => prev + 1);
+
     if (answer === question.correctAnswer) {
-      setCorrectCount(prev => prev + 1);
+      correctSound.currentTime = 0;
+      correctSound.play();
       setFlashCorrect(true);
+
+      if (!wasWrongThisRound) {
+        setCorrectCount(prev => prev + 1);
+        const encouragement = ['Nice!', 'Well done!', 'Great job!', '🎯 You nailed it!'];
+        setFeedbackMessage(encouragement[Math.floor(Math.random() * encouragement.length)]);
+      } else {
+        setWrongCount(prev => prev + 1);
+        setFeedbackMessage('Correct... after a few tries!');
+      }
+
       setTimeout(() => {
         if (currentIndex + 1 === rounds) {
           setShowPopup(true);
         } else {
-          setCurrentIndex(i => i + 1);
-          startRound();
+          const nextIndex = currentIndex + 1;
+          setCurrentIndex(nextIndex);
+          setFeedbackMessage('🎵 Next round!');
+          startRound(questionPool[nextIndex], modeSequence[nextIndex]);
         }
       }, 600);
     } else {
+      wrongSound.currentTime = 0;
+      wrongSound.play();
+      setWasWrongThisRound(true);
       setFlashWrong(true);
-      setWrongCount(prev => prev + 1);
       setDisabledButtons(prev => [...prev, answer]);
+      setFeedbackMessage('❌ Try again!');
       setTimeout(() => setFlashWrong(false), 400);
     }
   };
-
-  useEffect(() => {
-    startRound();
-  }, []);
 
   return (
     <div className="degree-notice-container">
       <nav className="degree-notice-navbar">
         <div className="degree-notice-logo">Degree Notice</div>
+        <button
+          className="degree-notice-restart-btn"
+          onClick={() => {
+            const combinations = [];
+            selectedScales.forEach(scale => {
+              selectedDegrees.forEach(degree => {
+                combinations.push({ scale, degree });
+              });
+            });
+            const shuffledCombos = combinations.sort(() => 0.5 - Math.random()).slice(0, rounds);
+            const modes = shuffledCombos.map(() => {
+              if (questionStyles.scaleToDegree && questionStyles.scaleToNote) {
+                return Math.random() < 0.5 ? 'scaleToDegree' : 'scaleToNote';
+              } else {
+                return questionStyles.scaleToDegree ? 'scaleToDegree' : 'scaleToNote';
+              }
+            });
+            setCurrentIndex(0);
+            setCorrectCount(0);
+            setWrongCount(0);
+            setTriesCount(0);
+            setQuestionPool(shuffledCombos);
+            setModeSequence(modes);
+            setShowPopup(false);
+            setFeedbackMessage('🎵 Practice restarted!');
+            startRound(shuffledCombos[0], modes[0]);
+          }}
+        >
+          🔁 Restart
+        </button>
+        <button
+          className="degree-notice-mute-btn"
+          onClick={() => {
+            setMusicMuted(prev => !prev);
+            if (!musicMuted) {
+              backgroundMusic.pause();
+            } else {
+              backgroundMusic.play().catch(() => {});
+            }
+          }}
+        >
+          {musicMuted ? '🔇' : '🎙️'}
+        </button>
         <div className="degree-notice-stats">
-          <span>Total: {rounds}</span>
-          <span>Current: {currentIndex + 1}</span>
-          <span>✔ {correctCount}</span>
-          <span>✖ {wrongCount}</span>
-          <span>🔁 {triesCount}</span>
+          <span className="degree-notice-stat current">Current: {currentIndex + 1}</span>
+          <span className="degree-notice-stat correct">✔ {correctCount}</span>
+          <span className="degree-notice-stat wrong">✖ {wrongCount}</span>
+          <span className="degree-notice-stat tries">🔁 {triesCount}</span>
+          <span className="degree-notice-stat total">Total: {rounds}</span>
         </div>
       </nav>
 
-      <div className="degree-notice-question-area">
-        <div className="degree-notice-scale-label">
-          {displayNote(question.scale)}
+      {feedbackMessage && (
+        <div className="degree-notice-feedback-message">
+          {feedbackMessage}
         </div>
-        <div className="degree-notice-question-box">
-          {question.questionPrompt}
+      )}
+
+      <div className="degree-notice-question-area">
+        <div className={`degree-notice-question-center ${roundFlash ? 'round-flash' : ''}`}>
+          <div className="degree-notice-box-label">{displayNote(question.scale)}</div>
+          <div className="degree-notice-divider" />
+          <div className="degree-notice-box-question">{question.questionPrompt}</div>
         </div>
 
         <div className="degree-notice-options">
