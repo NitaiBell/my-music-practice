@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ChordTypePractice.css';
 import ChordTypeKeyboard from './ChordTypeKeyboard';
@@ -17,7 +17,6 @@ const chordIntervals = {
 
 const noteOrder = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
 const baseNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const octaves = [2, 3, 4];
 
 const getMidiNumber = (note) => {
   const name = note.slice(0, -1);
@@ -32,32 +31,10 @@ const getNoteFromMidi = (midi) => {
   return noteOrder[index] + octave;
 };
 
-const KEYBOARD_LOWEST_MIDI = getMidiNumber('C1');
-const KEYBOARD_HIGHEST_MIDI = getMidiNumber('C7');
-
-const isChordPlayable = (notes) => {
-  return notes.every(note => {
-    const midi = getMidiNumber(note);
-    return midi >= KEYBOARD_LOWEST_MIDI && midi <= KEYBOARD_HIGHEST_MIDI;
-  });
-};
-
-const buildChord = (root, type, difficulty) => {
-  const rootMidi = getMidiNumber(root);
-  const baseIntervals = chordIntervals[type] || [];
-
-  if (difficulty === 'beginner') {
-    return baseIntervals.map(i => getNoteFromMidi(rootMidi + i));
-  }
-
-  let expanded = [...baseIntervals];
-  while (expanded.length < 5 || Math.max(...expanded) < 24) {
-    const extra = baseIntervals.map(i => i + 12 * Math.floor(expanded.length / baseIntervals.length));
-    expanded.push(...extra);
-  }
-
-  const length = 4 + Math.floor(Math.random() * 2);
-  return expanded.slice(0, length).map(i => getNoteFromMidi(rootMidi + i));
+const buildChord = (root, type) => {
+  const intervals = chordIntervals[type] || [];
+  const baseMidi = getMidiNumber(root);
+  return intervals.map((interval) => getNoteFromMidi(baseMidi + interval));
 };
 
 const ChordTypePractice = () => {
@@ -67,7 +44,6 @@ const ChordTypePractice = () => {
 
   const {
     selectedChordTypes = ['Major', 'Minor'],
-    difficulty = 'beginner',
     rounds = 10,
   } = state || {};
 
@@ -91,11 +67,10 @@ const ChordTypePractice = () => {
   };
 
   const getRandomBase = () => baseNotes[Math.floor(Math.random() * baseNotes.length)];
-  const getRandomOctave = () => octaves[Math.floor(Math.random() * octaves.length)];
 
-  const playChord = (base, type, octave, flash = true) => {
-    const root = base + octave;
-    const notes = buildChord(root, type, difficulty);
+  const playChord = (base, type, flash = true) => {
+    const root = base + '3';
+    const notes = buildChord(root, type);
     notes.forEach(playNote);
     if (flash) keyboardRef.current?.highlightChord(notes);
     return notes;
@@ -113,12 +88,9 @@ const ChordTypePractice = () => {
     while (newSequence.length < rounds && attempts < 1000) {
       const chordType = selectedChordTypes[Math.floor(Math.random() * selectedChordTypes.length)];
       const base = getRandomBase();
-      const octave = getRandomOctave();
-      const root = base + octave;
-      const chordNotes = buildChord(root, chordType, difficulty);
-      if (isChordPlayable(chordNotes)) {
-        newSequence.push({ chordType, base, octave });
-      }
+      const root = base + '3';
+      const chordNotes = buildChord(root, chordType);
+      newSequence.push({ chordType, base });
       attempts++;
     }
 
@@ -136,8 +108,8 @@ const ChordTypePractice = () => {
     setTimeout(() => playNextChord(newSequence[0]), 400);
   };
 
-  const playNextChord = ({ base, chordType, octave }) => {
-    playChord(base, chordType, octave, false);
+  const playNextChord = ({ base, chordType }) => {
+    playChord(base, chordType, false);
     setCanAnswer(true);
     setRoundMistake(false);
     setStatusMessage('');
@@ -146,8 +118,8 @@ const ChordTypePractice = () => {
   };
 
   const handleCurrent = () => {
-    const { base, chordType, octave } = sequence[currentRound];
-    playChord(base, chordType, octave, false);
+    const { base, chordType } = sequence[currentRound];
+    playChord(base, chordType, false);
     setStatusMessage('🔁 Listen again...');
   };
 
@@ -158,7 +130,7 @@ const ChordTypePractice = () => {
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 400);
 
-    const { base, chordType, octave } = sequence[currentRound];
+    const { base, chordType } = sequence[currentRound];
 
     if (type === chordType) {
       if (!roundMistake) {
@@ -172,7 +144,7 @@ const ChordTypePractice = () => {
       }
 
       setCanAnswer(false);
-      const notes = buildChord(base + octave, chordType, difficulty);
+      const notes = buildChord(base + '3', chordType);
       keyboardRef.current?.highlightChord(notes);
       keyboardRef.current?.flashCorrect();
       setButtonFlash(type, 'correct');
@@ -203,9 +175,20 @@ const ChordTypePractice = () => {
       <nav className="chord_type_game-navbar">
         <div className="chord_type_game-navbar-left">
           <div className="chord_type_game-logo">Sabers Chords</div>
-          <button className="chord_type_game-btn" onClick={() => playChord('C', 'Major', 3)}>
-            C Major
-          </button>
+          <button
+  className="chord_type_game-btn"
+  onClick={() => {
+    const current = sequence[currentRound];
+    if (!current) return;
+    const root = current.base + '3';
+    const notes = buildChord(root, current.chordType);
+    notes.forEach((note, index) => {
+      setTimeout(() => playNote(note), index * 400); // 400ms spacing between notes
+    });
+  }}
+>
+  Arpeggio
+</button>
           <button className="chord_type_game-btn" onClick={handleCurrent}>Current</button>
         </div>
         <div className="chord_type_game-stats">

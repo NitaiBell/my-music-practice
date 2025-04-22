@@ -7,12 +7,6 @@ const allChordTypes = [
   'Major', 'Minor', 'Maj7', '7', 'Min7', 'Min6', 'Sus4', 'Dim', 'Aug'
 ];
 
-const difficultyLevels = {
-  beginner: 'Single octave (3)',
-  intermediate: 'Base fixed, 3 octaves',
-  advanced: 'Free voicing, 3 octaves'
-};
-
 const chordIntervals = {
   Major: [0, 4, 7],
   Minor: [0, 3, 7],
@@ -48,7 +42,6 @@ const buildChord = (root, type) => {
 
 const ChordTypeSettings = () => {
   const [selectedChordTypes, setSelectedChordTypes] = useState(['Major', 'Minor']);
-  const [difficulty, setDifficulty] = useState('beginner');
   const [rounds, setRounds] = useState(10);
   const [notesToFlash, setNotesToFlash] = useState([]);
   const navigate = useNavigate();
@@ -63,7 +56,6 @@ const ChordTypeSettings = () => {
     navigate('/chord-type', {
       state: {
         selectedChordTypes,
-        difficulty,
         rounds,
       },
     });
@@ -76,7 +68,7 @@ const ChordTypeSettings = () => {
   };
 
   const playChordPreview = (type) => {
-    const notes = buildChord('C3', type);
+    const notes = buildChord('C3', type); // default root for preview
     notes.forEach(playNote);
     setNotesToFlash(notes);
   };
@@ -97,23 +89,6 @@ const ChordTypeSettings = () => {
                       onChange={() => toggleChordType(type)}
                     />
                     {type}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="chord_type_settings-dropdown">
-              <button className="chord_type_settings-dropbtn">🎯 Difficulty</button>
-              <div className="chord_type_settings-dropdown-content">
-                {Object.entries(difficultyLevels).map(([key, label]) => (
-                  <label key={key}>
-                    <input
-                      type="radio"
-                      name="difficulty"
-                      checked={difficulty === key}
-                      onChange={() => setDifficulty(key)}
-                    />
-                    {label}
                   </label>
                 ))}
               </div>
@@ -140,11 +115,11 @@ const ChordTypeSettings = () => {
         </nav>
 
         <div className="chord_type_settings-floating-message">
-          🎧 Choose chord types and difficulty, then click "Start Practice"!
+          🎧 Choose chord types and click "Start Practice"!
         </div>
 
         <div className="chord_type_settings-summary">
-          <p><strong>{rounds}</strong> rounds | Difficulty: <strong>{difficultyLevels[difficulty]}</strong></p>
+          <p><strong>{rounds}</strong> rounds</p>
           <p>Chord Types: <strong>{selectedChordTypes.join(', ')}</strong></p>
         </div>
 

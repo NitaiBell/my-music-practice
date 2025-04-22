@@ -1,0 +1,274 @@
+.learn_piano-game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(to bottom, #c2f86a, #18230F);
+    color: #F1EFEC;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .learn_piano-game-fill-space {
+    flex-grow: 1;
+  }
+  
+  .learn_piano-game-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 12px;
+    flex-shrink: 0;
+  }
+  
+  .learn_piano-keyboard-wrapper {
+    width: 100%;
+    padding-bottom: 12px;
+  }
+  
+  .learn_piano-game-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    min-height: 80px;
+  }
+  
+  .learn_piano-game-navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  .learn_piano-game-logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 12px 16px;
+    background-color: #27391C;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .learn_piano-game-btn {
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .learn_piano-game-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #255F38, #1F7D53);
+  }
+  
+  .learn_piano-game-start-btn,
+  .tonic-btn {
+    padding: 14px 24px !important;
+    font-size: 1.1rem;
+  }
+  
+  .learn_piano-game-stats {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.15rem;
+    background: #27391C;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .learn_piano-game-stat {
+    background-color: #D4C9BE;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #18230F;
+    min-width: 32px;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  
+  .learn_piano-game-stat.correct {
+    background-color: #5CFF70;
+  }
+  
+  .learn_piano-game-stat.wrong {
+    background-color: #FF4C4C;
+    color: #fff;
+  }
+  
+  .learn_piano-game-stat.current {
+    background-color: #FFE99E;
+  }
+  
+  .learn_piano-game-stat.tries {
+    background-color: #ccc;
+  }
+  
+  .learn_piano-game-fill-space {
+    flex-grow: 1;
+  }
+  
+  .learn_piano-game-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 12px;
+    flex-shrink: 0;
+  }
+  
+  .learn_piano-keyboard-wrapper {
+    width: 100%;
+    padding-bottom: 12px;
+  }
+  
+  .learn_piano-sequence-display {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 24px 0 10px;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+  
+  .learn_piano-sequence-note {
+    display: inline-block;
+    background: #1a2714;
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 1.7rem;
+    color: #F1EFEC;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .learn_piano-game-floating-message {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    padding: 12px 22px;
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    z-index: 10;
+    animation: messageFadeIn 0.3s ease;
+  }
+  
+  @keyframes messageFadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+  
+  /* Popup */
+  .learn_piano-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+  
+  .learn_piano-popup {
+    background: #93fc79;
+    color: #18230F;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .learn_piano-popup h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .learn_piano-popup p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .learn_piano-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .learn_piano-popup-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .learn_piano-popup-buttons button:hover {
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    transform: scale(1.05);
+  }
+  
+  /* Effects */
+  @keyframes bouncePulse {
+    0%, 100% { transform: scale(1.1); }
+    50%     { transform: scale(1.18); }
+  }
+  
+  @keyframes gradientGlow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes flashCorrectBtn {
+    0% { background: #4cff4c; color: #18230F; transform: scale(1.05); }
+    100% { background: linear-gradient(135deg, #1F7D53, #255F38); color: #F1EFEC; transform: scale(1.0); }
+  }
+  
+  @keyframes flashWrongBtn {
+    0% { background: #ff4c4c; color: #fff; transform: scale(1.05); }
+    100% { background: linear-gradient(135deg, #1F7D53, #255F38); color: #F1EFEC; transform: scale(1.0); }
+  }
+  
+  @keyframes statFlash {
+    0% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+    50% { transform: scale(1.15); box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+  }
+  
+  .stat-flash {
+    animation: statFlash 0.4s ease-out;
+  }
+  

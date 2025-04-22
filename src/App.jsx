@@ -5,9 +5,10 @@ import PingPongMelodyContainer from "./practices/melody_training/PingPongMelodyC
 import PingPongHarmonyContainer from "./practices/harmony_training/PingPongHarmonyContainer.jsx";
 import RealMelodyContainer from "./practices/real_melody_training/RealMelodyContainer.jsx";
 import DegreeNoticeContainer from "./practices/degree_notice_training/DegreeNoticeContainer.jsx";
-import ChordTypeContainer from "./practices/chord_type_practice/ChordTypeContainer.jsx"; // ✅ NEW
+import ChordTypeContainer from "./practices/chord_type_practice/ChordTypeContainer.jsx";
 import Keyboard from "./practices/keyboard/Keyboard.jsx";
 import MusicalStaff from "./practices/MusicalStaff/MusicalStaff.jsx";
+import LearnPianoContainer from "./practices/learn_piano/LearnPianoContainer.jsx"; // ✅ NEW
 
 function App() {
   return (
@@ -19,13 +20,13 @@ function App() {
         <Route path="/harmony" element={<PingPongHarmonyContainer />} />
         <Route path="/real-melody" element={<RealMelodyContainer />} />
         <Route path="/degree-notice" element={<DegreeNoticeContainer />} />
-        <Route path="/chord-type" element={<ChordTypeContainer />} /> {/* ✅ Added */}
+        <Route path="/chord-type" element={<ChordTypeContainer />} />
         <Route path="/keyboard" element={<Keyboard />} />
         <Route path="/staff" element={<MusicalStaff />} />
+        <Route path="/learn-piano" element={<LearnPianoContainer />} /> {/* ✅ NEW */}
       </Routes>
     </Router>
   );
 }
 
 export default App;
-
