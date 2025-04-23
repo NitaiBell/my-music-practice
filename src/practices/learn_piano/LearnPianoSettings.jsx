@@ -45,7 +45,6 @@ export default function LearnPianoSettings() {
   const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
   const [rounds, setRounds] = useState(10);
   const [sequenceLength, setSequenceLength] = useState(3);
-  const [normalMode, setNormalMode] = useState(true);
   const keyboardRef = useRef();
   const navigate = useNavigate();
   const tonic = selectedScale;
@@ -89,7 +88,6 @@ export default function LearnPianoSettings() {
         selectedNotes,
         rounds,
         sequenceLength,
-        normalMode,
       },
     });
   };
@@ -134,27 +132,17 @@ export default function LearnPianoSettings() {
             </div>
 
             <div className="learn_piano_settings-sequence-group">
-  <label htmlFor="sequenceLength" className="learn_piano_settings-sequence-label">
-    🔢 Sequence
-  </label>
-  <input
-    id="sequenceLength"
-    type="number"
-    min="1"
-    max="10"
-    value={sequenceLength}
-    onChange={(e) => setSequenceLength(Number(e.target.value))}
-    className="learn_piano_settings-sequence-input"
-  />
-</div>
-
-            <button
-              className={`learn_piano_settings-beginner-toggle ${normalMode ? 'on' : 'off'}`}
-              title="Normal Mode: Any octave accepted. Pro Mode: exact octave match required."
-              onClick={() => setNormalMode((m) => !m)}
-            >
-              {normalMode ? '✅ Normal Mode' : 'Pro Mode'}
-            </button>
+              <label htmlFor="sequenceLength" className="learn_piano_settings-sequence-label">🔢 Sequence</label>
+              <input
+                id="sequenceLength"
+                type="number"
+                min="1"
+                max="10"
+                value={sequenceLength}
+                onChange={(e) => setSequenceLength(Number(e.target.value))}
+                className="learn_piano_settings-sequence-input"
+              />
+            </div>
           </div>
 
           <div className="learn_piano_settings-controls">
@@ -184,7 +172,6 @@ export default function LearnPianoSettings() {
         <div className="learn_piano_settings-summary">
           <p><strong>{rounds}</strong> rounds | Sequence length: <strong>{sequenceLength}</strong></p>
           <p>Scale: <strong>{selectedScale}</strong> | Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
-          <p>Mode: <strong>{normalMode ? 'Normal' : 'Pro'}</strong></p>
         </div>
       </div>
 

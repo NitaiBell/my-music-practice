@@ -3,6 +3,18 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './LearnPiano.css';
 import LearnPianoKeyboard from './LearnPianoKeyboard';
 
+const displayNoteName = (note, key) => {
+    const base = note.replace(/\d/, '');
+    const preferFlat = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'].includes(key);
+  
+    const sharps = { Cs: 'C♯', Ds: 'D♯', Fs: 'F♯', Gs: 'G♯', As: 'A♯' };
+    const flats = { Cs: 'D♭', Ds: 'E♭', Fs: 'G♭', Gs: 'A♭', As: 'B♭' };
+    const natural = { C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B' };
+  
+    if (natural[base]) return natural[base];
+    return preferFlat ? flats[base] || base : sharps[base] || base;
+  };
+
 const getNoteBase = (note) => note.replace(/\d/, '');
 
 export default function LearnPiano() {
@@ -145,18 +157,19 @@ export default function LearnPiano() {
             const base = getNoteBase(note);
             return (
               <span key={idx} className="learn_piano-sequence-note">
-                {base}
+                {displayNoteName(note, selectedScale)}
               </span>
             );
           })}
         </div>
 
         <div className="learn_piano-keyboard-wrapper">
-          <LearnPianoKeyboard
-            ref={keyboardRef}
-            onKeyClick={handleAnswer}
-            octaves={octaves}
-          />
+        <LearnPianoKeyboard
+  ref={keyboardRef}
+  onKeyClick={handleAnswer}
+  octaves={octaves}
+  showLabels={false}
+/>
         </div>
       </div>
 

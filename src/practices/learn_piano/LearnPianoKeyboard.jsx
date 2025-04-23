@@ -18,7 +18,7 @@ import React, {
   };
   
   const LearnPianoKeyboard = forwardRef(
-    ({ onKeyClick, octaves = [3, 4, 5], tonic = 'C' }, ref) => {
+    ({ onKeyClick, octaves = [3, 4, 5], tonic = 'C', showLabels = true }, ref) => {
       const [flashBlue, setFlashBlue] = useState([]);
       const [flashGreen, setFlashGreen] = useState([]);
       const [flashRed, setFlashRed] = useState([]);
@@ -76,7 +76,7 @@ import React, {
                       onClick={() => handleClick(note)}
                     >
                       <div className="flash-overlay" />
-                      <span className="learn_piano-label">{note}</span>
+                      {showLabels && <span className="learn_piano-label">{note}</span>}
                     </div>
                   );
                 })}
@@ -92,6 +92,8 @@ import React, {
                       onClick={() => handleClick(note)}
                     >
                       <div className="flash-overlay" />
+                      {/* Optional black key label if desired:
+                      {showLabels && <span className="learn_piano-label">{note}</span>} */}
                     </div>
                   );
                 })}
