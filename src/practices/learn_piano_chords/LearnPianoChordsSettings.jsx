@@ -17,26 +17,6 @@ const chordNoteMap = {
   Edim: ['E3', 'G3', 'As3'],
 };
 
-const shiftOctave = (note, up = 1) => {
-  const match = note.match(/^([A-Ga-g][s]?)(\d)$/);
-  if (!match) return note;
-  const [_, base, octave] = match;
-  return `${base}${parseInt(octave) + up}`;
-};
-
-const getRandomInversion = (chord) => {
-  const notes = chordNoteMap[chord];
-  if (!notes) return [];
-
-  const inversions = [
-    notes, // root
-    [notes[1], notes[2], shiftOctave(notes[0], 1)], // first
-    [notes[2], shiftOctave(notes[0], 1), shiftOctave(notes[1], 1)], // second
-  ];
-
-  return inversions[Math.floor(Math.random() * inversions.length)];
-};
-
 const LearnPianoChordsSettings = () => {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedChords, setSelectedChords] = useState(chordsByScale['C']);
@@ -68,7 +48,11 @@ const LearnPianoChordsSettings = () => {
   };
 
   const playChord = (chord) => {
-    const notes = getRandomInversion(chord);
+    const notes = chordNoteMap[chord];
+    if (!notes) {
+      console.warn(`Chord "${chord}" is missing from chordNoteMap`);
+      return;
+    }
     setNotesToFlash(notes);
     notes.forEach(playNote);
   };
@@ -175,7 +159,8 @@ const LearnPianoChordsSettings = () => {
       </div>
 
       <div className="learn_piano_chords-keyboard-wrapper">
-        <LearnPianoChordsKeyboardView flashNotes={notesToFlash} showLabels={true} />
+      <LearnPianoChordsKeyboardView flashNotes={notesToFlash} showLabels={true} />
+
       </div>
     </div>
   );

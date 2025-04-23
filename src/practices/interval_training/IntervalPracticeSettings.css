@@ -1,0 +1,224 @@
+.interval_training_settings-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, #c2f86a, #18230F);
+  color: #F1EFEC;
+}
+
+.interval_training_settings-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/* Navbar */
+.interval_training_settings-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px;
+  font-size: 1.15rem;
+}
+
+/* Dropdowns */
+.interval_training_settings-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+}
+
+.interval_training_settings-dropbtn {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.interval_training_settings-dropbtn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.interval_training_settings-dropdown-content {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background-color: #F1EFEC;
+  color: #18230F;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  flex-direction: column;
+}
+
+.interval_training_settings-dropdown:hover .interval_training_settings-dropdown-content {
+  display: flex;
+}
+
+.interval_training_settings-dropdown-content label {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+/* Right controls container (Rounds + Start Button) */
+.interval_training_settings-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Rounds input */
+.interval_training_settings-rounds-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #27391C;
+  border: 2px solid #F1EFEC;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.interval_training_settings-rounds-group label {
+  color: #F1EFEC;
+  font-weight: bold;
+}
+
+.interval_training_settings-rounds-group input {
+  width: 64px;
+  text-align: center;
+  font-size: 1.15rem;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: none;
+  background: #1a2714;
+  color: #F1EFEC;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.interval_training_settings-rounds-group input:focus {
+  box-shadow: 0 0 8px #99e06c;
+}
+
+/* Start Button */
+.interval_training_settings-start-btn {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  background-size: 200% 200%;
+  animation: bouncePulse 2s infinite ease-in-out, pulseGradient 4s infinite ease-in-out;
+}
+
+.interval_training_settings-start-btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(to right, #255F38, #1F7D53);
+}
+
+/* Floating message */
+.interval_training_settings-floating-message {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 14px 24px;
+  border-radius: 16px;
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+  z-index: 10;
+  animation: messageFadeIn 0.4s ease;
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes bouncePulse {
+  0%, 100% { transform: scale(1); }
+  50%     { transform: scale(1.07); }
+}
+
+@keyframes pulseGradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Summary */
+.interval_training_settings-summary {
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #F1EFEC;
+}
+
+/* Keyboard wrapper */
+.interval_training_settings-keyboard-wrapper {
+  width: 100%;
+  padding-bottom: 12px;
+}
+
+/* Toggle styling */
+.interval_training_settings-toggle {
+  padding: 12px 24px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(to right, #27391C, #1f3c2b);
+  color: #f1efec;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  line-height: 1.3;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interval_training_settings-toggle.on {
+  background: linear-gradient(to right, #5CFF70, #3AC97C);
+  color: #18230F;
+  box-shadow: 0 0 10px rgba(92, 255, 112, 0.6);
+}
+
+.interval_training_settings-toggle.off:hover {
+  background: linear-gradient(to right, #3c3c3c, #1f3c2b);
+  box-shadow: 0 6px 14px rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}

@@ -9,7 +9,9 @@ import ChordTypeContainer from "./practices/chord_type_practice/ChordTypeContain
 import Keyboard from "./practices/keyboard/Keyboard.jsx";
 import MusicalStaff from "./practices/MusicalStaff/MusicalStaff.jsx";
 import LearnPianoContainer from "./practices/learn_piano/LearnPianoContainer.jsx";
-import LearnPianoChordsContainer from "./practices/learn_piano_chords/LearnPianoChordsContainer.jsx"; // ✅ NEW
+import LearnPianoChordsContainer from "./practices/learn_piano_chords/LearnPianoChordsContainer.jsx";
+import IntervalPracticeContainer from "./practices/interval_training/IntervalPracticeContainer.jsx";
+import SingNote from "./practices/sing_note/SingNote.jsx"; // ✅ NEW
 
 function App() {
   return (
@@ -25,7 +27,9 @@ function App() {
         <Route path="/keyboard" element={<Keyboard />} />
         <Route path="/staff" element={<MusicalStaff />} />
         <Route path="/learn-piano" element={<LearnPianoContainer />} />
-        <Route path="/learn-piano-chords" element={<LearnPianoChordsContainer />} /> {/* ✅ NEW */}
+        <Route path="/learn-piano-chords" element={<LearnPianoChordsContainer />} />
+        <Route path="/interval-practice" element={<IntervalPracticeContainer />} />
+        <Route path="/sing-note" element={<SingNote />} /> {/* ✅ NEW */}
       </Routes>
     </Router>
   );
