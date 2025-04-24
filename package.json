@@ -13,6 +13,7 @@
     "pitchy": "^4.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-multi-carousel": "^2.8.6",
     "react-router-dom": "^7.4.1",
     "vexflow": "^5.0.0"
   },

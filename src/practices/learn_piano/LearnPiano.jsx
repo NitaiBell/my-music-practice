@@ -152,16 +152,21 @@ export default function LearnPiano() {
       <div className="learn_piano-game-fill-space" />
 
       <div className="learn_piano-game-bottom">
-        <div className="learn_piano-sequence-display">
-          {currentSequence.map((note, idx) => {
-            const base = getNoteBase(note);
-            return (
-              <span key={idx} className="learn_piano-sequence-note">
-                {displayNoteName(note, selectedScale)}
-              </span>
-            );
-          })}
-        </div>
+      <div className="learn_piano-sequence-display">
+  {currentSequence.map((note, idx) => {
+    const base = getNoteBase(note);
+    const isCurrent = idx === userInput.length;
+
+    return (
+      <span
+        key={idx}
+        className={`learn_piano-sequence-note ${isCurrent ? 'highlighted' : ''}`}
+      >
+        {displayNoteName(note, selectedScale)}
+      </span>
+    );
+  })}
+</div>
 
         <div className="learn_piano-keyboard-wrapper">
         <LearnPianoKeyboard

@@ -12,6 +12,8 @@ import LearnPianoContainer from "./practices/learn_piano/LearnPianoContainer.jsx
 import LearnPianoChordsContainer from "./practices/learn_piano_chords/LearnPianoChordsContainer.jsx";
 import IntervalPracticeContainer from "./practices/interval_training/IntervalPracticeContainer.jsx";
 import SingNote from "./practices/sing_note/SingNote.jsx"; // ✅ NEW
+import NitaiPractices from "./pages/NitaiPractices"; // Adjust path if needed
+
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
         <Route path="/learn-piano-chords" element={<LearnPianoChordsContainer />} />
         <Route path="/interval-practice" element={<IntervalPracticeContainer />} />
         <Route path="/sing-note" element={<SingNote />} /> {/* ✅ NEW */}
+        <Route path="/nitai-practices" element={<NitaiPractices />} />
+
       </Routes>
     </Router>
   );
