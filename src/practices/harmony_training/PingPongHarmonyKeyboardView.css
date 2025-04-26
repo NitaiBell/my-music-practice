@@ -8,30 +8,30 @@
   width: 100%;
   height: 30vh;
   padding: 14px;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .harmony-octave {
-  position: relative;
-  width: calc(90px * 7);
   display: flex;
-  flex-shrink: 0;
+  flex: 1 1 0;
+  position: relative;
 }
 
 .harmony-white-keys {
   display: flex;
+  flex: 1;
   z-index: 1;
-  width: 100%;
 }
 
 .harmony-white-key {
-  width: 90px;
-  height: 360px;
+  flex: 1 1 0;
+  min-width: 40px;
+  max-width: 90px;
+  height: clamp(200px, 32vh, 360px);
   background: linear-gradient(to bottom, #F1EFEC, #D4C9BE);
   border-left: 1px solid #aaa;
   border-right: 1px solid #aaa;
   border-bottom: 2px solid #999;
-  margin: 0;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -57,7 +57,7 @@
 
 .harmony-label {
   padding: 6px;
-  z-index: 10; /* Highest, above overlay */
+  z-index: 10;
   position: relative;
   pointer-events: none;
 }
@@ -67,20 +67,18 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 242px;
+  height: clamp(140px, 24vh, 242px);
   z-index: 2;
-  pointer-events: none;
 }
 
 .harmony-black-key {
   position: absolute;
-  width: 50px;
-  height: 242px;
+  width: clamp(25px, 4vw, 50px);
+  height: clamp(140px, 24vh, 242px);
   background: linear-gradient(to bottom, #18230F, #0f1610);
   border-radius: 3px;
   transform: translateX(-50%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  pointer-events: auto;
   cursor: pointer;
   z-index: 3;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
@@ -99,7 +97,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* Black key positions */
+/* Black key positioning */
 .harmony-Cs { left: 12.85%; }
 .harmony-Ds { left: 27.1%; }
 .harmony-Fs { left: 56.6%; }
@@ -119,49 +117,33 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 5; /* Between background and label */
+  z-index: 5;
   pointer-events: none;
   animation: flashFade 0.6s ease-out;
   opacity: 0;
 }
 
-/* Flash color layers for white keys */
-.harmony-white-key.harmony-flash-0 .flash-overlay {
-  background-color: #a8ffb3;
-  opacity: 1;
-}
-.harmony-white-key.harmony-flash-1 .flash-overlay {
-  background-color: #5cff88;
-  opacity: 1;
-}
-.harmony-white-key.harmony-flash-2 .flash-overlay {
-  background-color: #00ff5c;
-  opacity: 1;
-}
+/* Flash layers for white keys */
+.harmony-white-key.harmony-flash-0 .flash-overlay { background-color: #a8ffb3; opacity: 1; }
+.harmony-white-key.harmony-flash-1 .flash-overlay { background-color: #5cff88; opacity: 1; }
+.harmony-white-key.harmony-flash-2 .flash-overlay { background-color: #00ff5c; opacity: 1; }
 
-/* Flash color layers for black keys */
-.harmony-black-key.harmony-flash-0 .flash-overlay {
-  background-color: #a8ffb3;
-  opacity: 1;
-}
-.harmony-black-key.harmony-flash-1 .flash-overlay {
-  background-color: #5cff88;
-  opacity: 1;
-}
-.harmony-black-key.harmony-flash-2 .flash-overlay {
-  background-color: #00ff5c;
-  opacity: 1;
-}
+/* Flash layers for black keys */
+.harmony-black-key.harmony-flash-0 .flash-overlay { background-color: #a8ffb3; opacity: 1; }
+.harmony-black-key.harmony-flash-1 .flash-overlay { background-color: #5cff88; opacity: 1; }
+.harmony-black-key.harmony-flash-2 .flash-overlay { background-color: #00ff5c; opacity: 1; }
 
-/* Feedback flashes via overlay */
+/* Feedback flashes */
 .harmony-white-key.flash-correct .flash-overlay,
-.harmony-black-key.flash-correct .flash-overlay {
-  background-color: #4cff4c;
-  opacity: 1;
-}
+.harmony-black-key.flash-correct .flash-overlay { background-color: #4cff4c; opacity: 1; }
 
 .harmony-white-key.flash-wrong .flash-overlay,
-.harmony-black-key.flash-wrong .flash-overlay {
-  background-color: #ff4c4c;
-  opacity: 1;
+.harmony-black-key.flash-wrong .flash-overlay { background-color: #ff4c4c; opacity: 1; }
+
+/* Laptop-specific moderate shrink for black keys */
+@media (max-width: 1600px) {
+  .harmony-black-key {
+    width: clamp(20px, 3.5vw, 40px);
+    height: clamp(120px, 20vh, 220px);
+  }
 }

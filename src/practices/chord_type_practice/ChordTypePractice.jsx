@@ -13,7 +13,11 @@ const chordIntervals = {
   Sus4: [0, 5, 7],
   Dim: [0, 3, 6],
   Aug: [0, 4, 8],
+  Dim7: [0, 3, 6, 9],
+  Maj6: [0, 4, 7, 9],
+  Min7b5: [0, 3, 6, 10] // ✅ Half-diminished seventh (Minor 7♭5)
 };
+
 
 const noteOrder = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
 const baseNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];

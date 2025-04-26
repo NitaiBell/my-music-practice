@@ -17,6 +17,23 @@ const chordNoteMap = {
   Gm: ['G3', 'As3', 'D4'],
   Bb: ['As2', 'D3', 'F3'],
   Edim: ['E3', 'G3', 'As3'],
+  A: ['A3', 'Cs4', 'E4'],
+  'C#m': ['Cs3', 'E3', 'Gs3'],
+  E: ['E3', 'Gs3', 'B3'],
+  'F#m': ['Fs3', 'A3', 'Cs4'],
+  'G#dim': ['Gs3', 'B3', 'D4'],
+  'G#m': ['Gs3', 'B3', 'Ds4'],
+  B: ['B3', 'Ds4', 'Fs4'],
+  'C#dim': ['Cs3', 'E3', 'G3'],
+  'D#dim': ['Ds3', 'Fs3', 'A3'],
+  'D#m': ['Ds3', 'Fs3', 'As3'],
+  'F#': ['Fs3', 'As3', 'Cs4'],
+  'A#dim': ['As3', 'Cs4', 'E4'],
+};
+
+const arraysEqual = (a, b) => {
+  if (a.length !== b.length) return false;
+  return a.every((val, index) => val === b[index]);
 };
 
 const LearnPianoChords = () => {
@@ -41,6 +58,7 @@ const LearnPianoChords = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [roundMistakeMade, setRoundMistakeMade] = useState(false);
   const [roundOutcomeSet, setRoundOutcomeSet] = useState(false);
+  const [canAnswer, setCanAnswer] = useState(false);
 
   const playNote = (note) => {
     const encoded = encodeURIComponent(`${note}.wav`);
@@ -78,12 +96,14 @@ const LearnPianoChords = () => {
     setStatusMessage('');
     setRoundMistakeMade(false);
     setRoundOutcomeSet(false);
+    setCanAnswer(false);
 
     setTimeout(() => showNextChord(generated[0]), 300);
   };
 
   const showNextChord = (chord) => {
     setCurrentChord(chord);
+    setCanAnswer(false);
     const notes = chordNoteMap[chord];
 
     let count = 0;
@@ -92,20 +112,24 @@ const LearnPianoChords = () => {
       count++;
       if (count < 3) {
         setTimeout(repeatFlash, 600);
+      } else {
+        setCanAnswer(true);
       }
     };
     repeatFlash();
   };
 
   const handleAnswer = (chord) => {
-    if (!isPlaying || !currentChord) return;
+    if (!isPlaying || !currentChord || !canAnswer) return;
 
-    const notes = chordNoteMap[chord];
+    const expectedNotes = chordNoteMap[currentChord].slice().sort();
+    const answerNotes = chordNoteMap[chord]?.slice().sort();
+
     setTriesCount(t => t + 1);
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 400);
 
-    if (chord === currentChord) {
+    if (arraysEqual(answerNotes, expectedNotes)) {
       if (!roundMistakeMade && !roundOutcomeSet) {
         setCorrectCount(c => c + 1);
         setStatFlash('correct');
@@ -114,7 +138,7 @@ const LearnPianoChords = () => {
         setStatusMessage("✅ You're right!");
       }
 
-      keyboardRef.current?.setFlashRight(notes);
+      keyboardRef.current?.setFlashRight(answerNotes);
       flashButton(chord, 'correct');
 
       if (currentRound + 1 >= sequence.length) {
@@ -141,7 +165,7 @@ const LearnPianoChords = () => {
 
       setRoundMistakeMade(true);
       setAwaitingRetry(true);
-      keyboardRef.current?.setFlashWrong(notes);
+      keyboardRef.current?.setFlashWrong(answerNotes);
       flashButton(chord, 'wrong');
     }
   };
@@ -151,39 +175,29 @@ const LearnPianoChords = () => {
 
   return (
     <div className="learn_piano_chords-container">
+      {/* Navigation bar */}
       <nav className="learn_piano_chords-navbar">
         <div className="learn_piano_chords-navbar-left">
           <div className="learn_piano_chords-logo">Learn Piano Chords</div>
-
-          {/* Tonic Button */}
-          <button
-            className="learn_piano_chords-btn"
-            onClick={() => {
-              const tonicNotes = chordNoteMap[tonic];
-              if (tonicNotes) {
-                keyboardRef.current?.setFlashBlue(tonicNotes);
-              }
-            }}
-          >
-            {tonic}
-          </button>
-
-          {/* Replay Button */}
-          <button
-            className={`learn_piano_chords-btn ${awaitingRetry ? 'bounce-flash' : ''}`}
-            onClick={() => {
-              if (currentChord) {
-                const notes = chordNoteMap[currentChord];
-                keyboardRef.current?.setFlashBlue(notes);
-                setStatusMessage('🔁 Listen again...');
-                setAwaitingRetry(false);
-              }
-            }}
-          >
-            Replay
-          </button>
+          <button className="learn_piano_chords-btn" onClick={() => {
+            const tonicNotes = chordNoteMap[tonic];
+            if (tonicNotes) {
+              setCanAnswer(false);
+              keyboardRef.current?.setFlashBlue(tonicNotes);
+              setTimeout(() => setCanAnswer(true), 1800);
+            }
+          }}>{tonic}</button>
+          <button className={`learn_piano_chords-btn ${awaitingRetry ? 'bounce-flash' : ''}`} onClick={() => {
+            if (currentChord) {
+              setCanAnswer(false);
+              const notes = chordNoteMap[currentChord];
+              keyboardRef.current?.setFlashBlue(notes);
+              setTimeout(() => setCanAnswer(true), 1800);
+              setStatusMessage('🔁 Listen again...');
+              setAwaitingRetry(false);
+            }
+          }}>Replay</button>
         </div>
-
         <div className="learn_piano_chords-stats">
           <span className="learn_piano_chords-stat total">{rounds}</span>/
           <span className={`learn_piano_chords-stat current ${statFlash === 'current' ? 'stat-flash' : ''}`}>{currentRound}</span>/
@@ -191,38 +205,25 @@ const LearnPianoChords = () => {
           <span className={`learn_piano_chords-stat wrong ${statFlash === 'wrong' ? 'stat-flash' : ''}`}>{wrongCount}</span>/
           <span className={`learn_piano_chords-stat tries ${statFlash === 'tries' ? 'stat-flash' : ''}`}>{triesCount}</span>
         </div>
-
-        <button className="learn_piano_chords-btn learn_piano_chords-start-btn" onClick={startGame}>
-          {isPlaying ? 'Restart' : 'Start'}
-        </button>
+        <button className="learn_piano_chords-btn learn_piano_chords-start-btn" onClick={startGame}>{isPlaying ? 'Restart' : 'Start'}</button>
       </nav>
 
       {statusMessage && <div className="floating-message">{statusMessage}</div>}
 
       <div className="learn_piano_chords-fill-space" />
 
+      {/* Bottom Section */}
       <div className="learn_piano_chords-bottom">
-        <div
-          className="learn_piano_chords-chords"
-          style={{
-            gridTemplateRows: `repeat(${rows}, 1fr)`,
-            gridTemplateColumns: `repeat(${columns}, 1fr)`,
-          }}
-        >
+        <div className="learn_piano_chords-chords" style={{ gridTemplateRows: `repeat(${rows}, 1fr)`, gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
           {selectedChords.map((chord) => (
             <button
               key={chord}
-              className={`learn_piano_chords-chord-btn ${buttonFlashes[chord] === 'correct' ? 'btn-flash-correct' : ''} ${buttonFlashes[chord] === 'wrong' ? 'btn-flash-wrong' : ''}`}
-              onClick={() => {
-                playChord(chord);
-                handleAnswer(chord);
-              }}
-            >
+              className={`learn_piano_chords-chord-btn ${!canAnswer ? 'disabled-answer' : ''} ${buttonFlashes[chord] === 'correct' ? 'btn-flash-correct' : ''} ${buttonFlashes[chord] === 'wrong' ? 'btn-flash-wrong' : ''}`}
+              onClick={() => { if (canAnswer) { playChord(chord); handleAnswer(chord); } }}>
               {chord}
             </button>
           ))}
         </div>
-
         <div className="learn_piano_chords-keyboard">
           <LearnPianoChordsKeyboardView ref={keyboardRef} showLabels={false} />
         </div>

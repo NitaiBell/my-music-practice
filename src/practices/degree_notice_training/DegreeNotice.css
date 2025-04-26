@@ -339,3 +339,13 @@
     }
   }
   
+
+  @media (max-width: 1200px) {
+    .degree-notice-options {
+      height: 50vh;
+    }
+  
+    .degree-notice-question-area {
+      padding-bottom: 50vh; /* match the new height */
+    }
+  }

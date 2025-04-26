@@ -1,3 +1,5 @@
+/* IntervalTrainingSettings.css */
+
 .interval_training_settings-container {
   height: 100vh;
   display: flex;
@@ -5,6 +7,7 @@
   justify-content: space-between;
   background: linear-gradient(to bottom, #c2f86a, #18230F);
   color: #F1EFEC;
+  position: relative;
 }
 
 .interval_training_settings-content-wrapper {
@@ -21,6 +24,8 @@
   align-items: flex-start;
   padding: 14px;
   font-size: 1.15rem;
+  position: relative;
+  /* removed z-index so dropdown can escape above floating message */
 }
 
 /* Dropdowns */
@@ -59,7 +64,7 @@
   padding: 12px;
   border-radius: 12px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-  z-index: 10;
+  z-index: 20; /* ensure dropdown covers floating message */
   flex-direction: column;
 }
 
@@ -157,24 +162,18 @@
 }
 
 @keyframes messageFadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -12px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 @keyframes bouncePulse {
   0%, 100% { transform: scale(1); }
-  50%     { transform: scale(1.07); }
+  50% { transform: scale(1.07); }
 }
 
 @keyframes pulseGradient {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
