@@ -56,7 +56,7 @@ const ChordTypeSettings = () => {
   };
 
   const startPractice = () => {
-    navigate('/chord-type', {
+    navigate('/chord-type/play', {
       state: {
         selectedChordTypes,
         rounds,

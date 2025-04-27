@@ -46,7 +46,7 @@ export default function IntervalPracticeSettings() {
   };
 
   const startPractice = () => {
-    navigate('/interval-practice', {
+    navigate('/interval-practice/play', {
       state: {
         selectedIntervals,
         baseNotes,

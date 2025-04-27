@@ -1,21 +1,16 @@
+// src/practices/degree_notice_training/DegreeNoticeContainer.jsx
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import DegreeNotice from './DegreeNotice';
 import DegreeNoticeSettings from './DegreeNoticeSettings';
 
 const DegreeNoticeContainer = () => {
-  const location = useLocation();
-  const { selectedScales, selectedDegrees, questionStyles } = location.state || {};
-
-  const isGameStarted =
-    Array.isArray(selectedScales) && selectedScales.length > 0 &&
-    Array.isArray(selectedDegrees) && selectedDegrees.length > 0 &&
-    (questionStyles?.scaleToDegree || questionStyles?.scaleToNote);
-
-  return isGameStarted ? (
-    <DegreeNotice />
-  ) : (
-    <DegreeNoticeSettings />
+  return (
+    <Routes>
+      <Route path="/settings" element={<DegreeNoticeSettings />} />
+      <Route path="/play" element={<DegreeNotice />} />
+      <Route path="*" element={<Navigate to="/degree-notice/settings" replace />} />
+    </Routes>
   );
 };
 

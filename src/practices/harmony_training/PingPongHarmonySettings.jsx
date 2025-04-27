@@ -56,7 +56,7 @@ const PingPongHarmonySettings = () => {
   };
 
   const startPractice = () => {
-    navigate('/harmony', {
+    navigate('/harmony/play', {
       state: {
         selectedScale,
         selectedChords,

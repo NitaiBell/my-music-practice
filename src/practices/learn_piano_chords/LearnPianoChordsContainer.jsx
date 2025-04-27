@@ -1,16 +1,16 @@
+// src/practices/learn_piano_chords/LearnPianoChordsContainer.jsx
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LearnPianoChords from './LearnPianoChords';
 import LearnPianoChordsSettings from './LearnPianoChordsSettings';
 
 const LearnPianoChordsContainer = () => {
-  const location = useLocation();
-  const isGameStarted = location.state?.selectedChords?.length > 0;
-
-  return isGameStarted ? (
-    <LearnPianoChords />
-  ) : (
-    <LearnPianoChordsSettings />
+  return (
+    <Routes>
+      <Route path="/settings" element={<LearnPianoChordsSettings />} />
+      <Route path="/play" element={<LearnPianoChords />} />
+      <Route path="*" element={<Navigate to="/learn-piano-chords/settings" replace />} />
+    </Routes>
   );
 };
 

@@ -82,7 +82,7 @@ export default function LearnPianoSettings() {
   };
 
   const startPractice = () => {
-    navigate('/learn-piano', {
+    navigate('/learn-piano/play', {
       state: {
         selectedScale,
         selectedNotes,

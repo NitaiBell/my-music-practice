@@ -57,7 +57,7 @@ const LearnPianoChordsSettings = () => {
   };
 
   const startPractice = () => {
-    navigate('/learn-piano-chords', {
+    navigate('/learn-piano-chords/play', {
       state: {
         selectedScale,
         selectedChords,

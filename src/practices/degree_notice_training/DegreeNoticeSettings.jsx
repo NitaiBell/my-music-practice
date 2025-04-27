@@ -89,7 +89,7 @@ export default function DegreeNoticeSettings() {
   
 
   const startPractice = () => {
-    navigate('/degree-notice', {
+    navigate('/degree-notice/play', {
       state: {
         selectedScales,
         selectedDegrees,

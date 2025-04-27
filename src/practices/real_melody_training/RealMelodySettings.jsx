@@ -44,7 +44,6 @@ export default function RealMelodySettings() {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
   const [rounds, setRounds] = useState(30);
-  const [octaves, setOctaves] = useState([3, 4]);
   const [normalMode, setNormalMode] = useState(true);
   const keyboardRef = useRef();
   const navigate = useNavigate();
@@ -82,20 +81,15 @@ export default function RealMelodySettings() {
     playNote3(note);
   };
 
-  const toggleOctave = (oct) => {
-    if (oct === 3) return;
-    if (octaves.includes(oct)) {
-      setOctaves((prev) => prev.filter((o) => o !== oct));
-    } else {
-      setOctaves((prev) => [...prev, oct]);
-      const normalized = normalizeNote(tonic);
-      keyboardRef.current?.playNote(`${normalized}${oct}`);
-    }
-  };
-
   const startPractice = () => {
-    navigate('/real-melody', {
-      state: { selectedScale, selectedNotes, rounds, octaves, normalMode },
+    navigate('/real-melody/play', {
+      state: {
+        selectedScale,
+        selectedNotes,
+        rounds,
+        octaves: [3, 4, 5], // Always use 3,4,5
+        normalMode,
+      },
     });
   };
 
@@ -161,23 +155,6 @@ export default function RealMelodySettings() {
               />
             </div>
 
-            <div className="real-melody-dropdown">
-              <button className="real-melody-dropbtn">🔢 Octaves</button>
-              <div className="real-melody-dropdown-content">
-                {[2, 3, 4, 5, 6].map((o) => (
-                  <label key={o}>
-                    <input
-                      type="checkbox"
-                      checked={octaves.includes(o)}
-                      disabled={o === 3}
-                      onChange={() => toggleOctave(o)}
-                    />
-                    Octave {o}
-                  </label>
-                ))}
-              </div>
-            </div>
-
             <button className="real-melody-start-btn" onClick={startPractice}>
               Start Practice
             </button>
@@ -185,13 +162,13 @@ export default function RealMelodySettings() {
         </nav>
 
         <div className="real-melody-floating-setup-message">
-          🎯 Set your scale, notes, rounds & octaves, then click “Start Practice”!
+          🎯 Set your scale, notes, rounds, then click “Start Practice”!
         </div>
 
         <div className="real-melody-summary">
           <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
           <p>Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
-          <p>Octaves: <strong>{octaves.join(', ')}</strong></p>
+          <p>Octaves: <strong>3, 4, 5</strong></p>
           <p>Mode: <strong>{normalMode ? 'Normal' : 'Pro'}</strong></p>
         </div>
       </div>
@@ -200,7 +177,7 @@ export default function RealMelodySettings() {
         <RealMelodyKeyboardView
           ref={keyboardRef}
           highlightNotes={selectedNotes}
-          octaves={normalMode ? [3, 4, 5] : octaves}
+          octaves={[3, 4, 5]} // Always 3–4–5
         />
       </div>
     </div>
