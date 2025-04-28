@@ -1,0 +1,16 @@
+.video-wrapper {
+  width: 100%;       /* fill available container width */
+  height: 100%;      /* fill available container height */
+  display: flex;     /* center the video element */
+  justify-content: center;
+  align-items: center;
+}
+
+.video-wrapper video {
+  width: 80%;        /* shrink video to 80% of wrapper */
+  height: auto;      /* maintain aspect ratio */
+  border-radius: 6px;
+  background: #000;
+  display: block;
+  margin: 0 auto;
+}

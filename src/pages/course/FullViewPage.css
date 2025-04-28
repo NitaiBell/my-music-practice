@@ -1,0 +1,71 @@
+/* FullViewPage.css */
+
+/* Whole Page */
+.fullview-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #f3e5f5, #ede7f6); /* Soft purple gradient */
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+  }
+  
+  /* Navbar */
+  .fullview-navbar {
+    background: #745985;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  
+  /* Main Content */
+  .fullview-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    padding: 40px 20px;
+  }
+  
+  /* Description Box */
+  .fullview-description {
+    max-width: 800px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Section Title */
+  .fullview-description h2 {
+    font-size: 1.8rem;
+    color: #5c4370;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Paragraph Text */
+  .fullview-description p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    white-space: pre-line;
+    color: #444444;
+    text-align: justify;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .fullview-description {
+      padding: 20px;
+      margin: 0 10px;
+    }
+  
+    .fullview-navbar {
+      font-size: 1.5rem;
+    }
+  }
+  

@@ -1,0 +1,47 @@
+- User watches lessons, checks checkboxes, moves between pages
+- All changes are stored immediately in memory (ProgressContext)
+- Memory stays alive while user moves inside the app
+- Every few minutes (e.g., 5 minutes), the app sends memory to backend
+- This saves latest progress safely (ranks, checkboxes, last lesson watched, etc.)
+
+
+- Browser triggers "beforeunload" event
+- App quickly calls saveProgress() function
+- saveProgress() sends user progress immediately to backend
+- Then the browser/tab is allowed to close
+
+
+- When app loads, ProgressProvider fetches user progress from backend
+- It fills the memory again with saved checkboxes, scores, etc.
+- The user sees everything exactly like last time
+
+
+[ProgressProvider] → fetches saved progress at app start
+
+[useProgressTracker] → holds all the memory (what user finished, ranks, scores)
+
+[CoursePage, PracticePage] → read and update progress using ProgressContext
+
+[saveProgress()] → sends memory to backend every few minutes, and on tab close
+
+
+
+[ App Opens ]
+    ↓
+Fetch saved progress from backend
+    ↓
+User plays, checks lessons
+    ↓
+Memory updated immediately
+    ↓
+Every 5 min → save to backend
+or
+User closes tab → save immediately
+    ↓
+Backend always stores latest user state
+    ↓
+User returns → progress loaded from backend
+
+
+
+User clicks → memory updates → every 5 minutes auto-save → tab close triggers save → next time app starts → fetch saved progress → continue.
