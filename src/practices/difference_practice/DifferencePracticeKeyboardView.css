@@ -1,0 +1,150 @@
+/* DifferencePracticeKeyboardView.css */
+
+.difference_practice_keyboard_view-container {
+    background-color: transparent !important;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    height: 30vh;
+    padding: 14px;
+    overflow-x: hidden;
+  }
+  
+  .difference_practice_keyboard_view-octave {
+    display: flex;
+    flex: 1 1 0;
+    position: relative;
+  }
+  
+  .difference_practice_keyboard_view-white-keys {
+    display: flex;
+    flex: 1;
+    z-index: 1;
+  }
+  
+  .difference_practice_keyboard_view-white-key {
+    flex: 1 1 0;
+    min-width: 40px;
+    max-width: 90px;
+    height: clamp(200px, 32vh, 360px);
+    background: linear-gradient(to bottom, #F1EFEC, #D4C9BE);
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+    border-bottom: 2px solid #999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: inset 0 -3px 4px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+    color: #18230F;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .difference_practice_keyboard_view-white-key:hover {
+    background: linear-gradient(to bottom, #C3F7D5, #AAF4C5);
+    box-shadow: inset 0 -4px 6px rgba(0, 128, 0, 0.2);
+  }
+  
+  .difference_practice_keyboard_view-white-key:active {
+    background: #D4C9BE;
+  }
+  
+  .difference_practice_keyboard_view-label {
+    padding: 6px;
+    z-index: 10;
+    position: relative;
+    pointer-events: none;
+  }
+  
+  .difference_practice_keyboard_view-black-keys {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: clamp(140px, 24vh, 242px);
+    z-index: 2;
+  }
+  
+  .difference_practice_keyboard_view-black-key {
+    position: absolute;
+    width: clamp(25px, 4vw, 50px);
+    height: clamp(140px, 24vh, 242px);
+    background: linear-gradient(to bottom, #18230F, #0f1610);
+    border-radius: 3px;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    z-index: 3;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+  }
+  
+  .difference_practice_keyboard_view-black-key:hover {
+    background: linear-gradient(to bottom, #1F7D53, #255F38);
+    transform: translateX(-50%) scaleY(1.02) translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65);
+  }
+  
+  .difference_practice_keyboard_view-black-key:active {
+    background: #1F7D53;
+    transform: translateX(-50%) scaleY(0.98) translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Black key positioning */
+  .difference_practice_keyboard_view-Cs { left: 12.85%; }
+  .difference_practice_keyboard_view-Ds { left: 27.1%; }
+  .difference_practice_keyboard_view-Fs { left: 56.6%; }
+  .difference_practice_keyboard_view-Gs { left: 70.85%; }
+  .difference_practice_keyboard_view-As { left: 85.15%; }
+  
+  /* Flash animation */
+  @keyframes flashFade {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0; }
+  }
+  
+  .difference_practice_keyboard_view-flash-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    pointer-events: none;
+    animation: flashFade 0.6s ease-out;
+    opacity: 0;
+  }
+  
+  /* Flash layers for white keys */
+  .difference_practice_keyboard_view-white-key.difference_practice_keyboard_view-flash-0 .difference_practice_keyboard_view-flash-overlay { background-color: #a8ffb3; opacity: 1; }
+  .difference_practice_keyboard_view-white-key.difference_practice_keyboard_view-flash-1 .difference_practice_keyboard_view-flash-overlay { background-color: #5cff88; opacity: 1; }
+  .difference_practice_keyboard_view-white-key.difference_practice_keyboard_view-flash-2 .difference_practice_keyboard_view-flash-overlay { background-color: #00ff5c; opacity: 1; }
+  
+  /* Flash layers for black keys */
+  .difference_practice_keyboard_view-black-key.difference_practice_keyboard_view-flash-0 .difference_practice_keyboard_view-flash-overlay { background-color: #a8ffb3; opacity: 1; }
+  .difference_practice_keyboard_view-black-key.difference_practice_keyboard_view-flash-1 .difference_practice_keyboard_view-flash-overlay { background-color: #5cff88; opacity: 1; }
+  .difference_practice_keyboard_view-black-key.difference_practice_keyboard_view-flash-2 .difference_practice_keyboard_view-flash-overlay { background-color: #00ff5c; opacity: 1; }
+  
+  /* Feedback flashes (we are not using in settings/game but still good to keep) */
+  .difference_practice_keyboard_view-white-key.flash-correct .difference_practice_keyboard_view-flash-overlay,
+  .difference_practice_keyboard_view-black-key.flash-correct .difference_practice_keyboard_view-flash-overlay { background-color: #4cff4c; opacity: 1; }
+  
+  .difference_practice_keyboard_view-white-key.flash-wrong .difference_practice_keyboard_view-flash-overlay,
+  .difference_practice_keyboard_view-black-key.flash-wrong .difference_practice_keyboard_view-flash-overlay { background-color: #ff4c4c; opacity: 1; }
+  
+  /* Moderate shrink for black keys on laptop screens */
+  @media (max-width: 1600px) {
+    .difference_practice_keyboard_view-black-key {
+      width: clamp(20px, 3.5vw, 40px);
+      height: clamp(120px, 20vh, 220px);
+    }
+  }
+  

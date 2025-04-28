@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -5,8 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import NitaiPractices from './pages/NitaiPractices.jsx';
 import CoursePage from './pages/course/CoursePage.jsx';
-import FullViewPage from "./pages/course/FullViewPage.jsx";
-
+import FullViewPage from './pages/course/FullViewPage.jsx';
 
 // Simple Practices
 import PlayNote from './practices/playnote/PlayNote.jsx';
@@ -23,6 +23,8 @@ import ChordTypeContainer from './practices/chord_type_practice/ChordTypeContain
 import LearnPianoContainer from './practices/learn_piano/LearnPianoContainer.jsx';
 import LearnPianoChordsContainer from './practices/learn_piano_chords/LearnPianoChordsContainer.jsx';
 import IntervalPracticeContainer from './practices/interval_training/IntervalPracticeContainer.jsx';
+import WhichHigherNoteContainer from './practices/which_higher_note/WhichHigherNoteContainer.jsx';
+import DifferencePracticeContainer from './practices/difference_practice/DifferencePracticeContainer.jsx'; // ✅ Added here!
 
 export default function App() {
   return (
@@ -33,7 +35,6 @@ export default function App() {
         <Route path="/nitai-practices" element={<NitaiPractices />} />
         <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/fullview/:courseId" element={<FullViewPage />} />
-
 
         {/* Simple Practices */}
         <Route path="/play" element={<PlayNote />} />
@@ -50,6 +51,8 @@ export default function App() {
         <Route path="/learn-piano/*" element={<LearnPianoContainer />} />
         <Route path="/learn-piano-chords/*" element={<LearnPianoChordsContainer />} />
         <Route path="/interval-practice/*" element={<IntervalPracticeContainer />} />
+        <Route path="/which-higher-note/*" element={<WhichHigherNoteContainer />} />
+        <Route path="/difference/*" element={<DifferencePracticeContainer />} /> {/* ✅ New line */}
       </Routes>
     </Router>
   );
