@@ -1,0 +1,165 @@
+/* Container */
+.chords_for_melody_practice_container {
+  padding: 30px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom, #99e06c, #18230F);
+  color: #F1EFEC;
+  min-height: 100vh;
+}
+
+/* Controls */
+.chords_for_melody_practice_controls {
+  display: flex;
+  justify-content: center;
+}
+
+.chords_for_melody_practice_play_pause {
+  font-size: 22px;
+  padding: 14px 36px;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.chords_for_melody_practice_play_pause:hover {
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.05);
+}
+
+/* Progress Bar */
+.chords_for_melody_practice_progress_bar {
+  width: 100%;
+  height: 12px;
+  background-color: #d0d7de;
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+}
+
+.chords_for_melody_practice_progress_fill {
+  height: 100%;
+  background: linear-gradient(to right, #4CAF50, #81C784);
+  border-radius: 6px;
+  position: relative;
+  transition: width 0.1s linear;
+}
+
+.chords_for_melody_practice_progress_dot {
+  width: 18px;
+  height: 18px;
+  background: #4CAF50;
+  border: 2px solid white;
+  border-radius: 50%;
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Slots */
+.chords_for_melody_practice_slots {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.chords_for_melody_practice_slot_group {
+  display: flex;
+  align-items: center;
+}
+
+.chords_for_melody_practice_slot {
+  flex: none;
+  width: 140px;
+  height: 70px;
+  background-color: #cbe8b9;
+  border: 2px dashed #5d7755;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #F1EFEC;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.chords_for_melody_practice_slot.half {
+  width: 70px;
+}
+
+.chords_for_melody_practice_slot.active {
+  background-color: #00acc1;
+  border-color: #00acc1;
+  animation: glow 1.5s infinite alternate;
+}
+
+/* Glow Animation */
+@keyframes glow {
+  from { box-shadow: 0 0 6px #00acc1; }
+  to { box-shadow: 0 0 14px #00acc1; }
+}
+
+/* Cut / Merge Buttons */
+.chords_for_melody_practice_cut_button,
+.chords_for_melody_practice_merge_button {
+  background: #ffc107;
+  border: none;
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #18230F;
+  transition: background 0.3s;
+}
+
+.chords_for_melody_practice_cut_button:hover,
+.chords_for_melody_practice_merge_button:hover {
+  background: #ffb300;
+}
+
+/* Chords Line */
+.chords_for_melody_practice_chord_line {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.chords_for_melody_practice_chord {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 12px 26px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: grab;
+  user-select: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.chords_for_melody_practice_chord:hover {
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.1);
+}
+
+/* Keyboard Placeholder */
+.chords_for_melody_practice_keyboard_placeholder {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #F1EFEC;
+  text-align: center;
+}

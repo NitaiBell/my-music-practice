@@ -1,0 +1,23 @@
+/* src/practices/write_notes_practice/WriteNotesStaffView.css */
+
+.write_notes_staff_view-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #fdfdfd;
+  }
+  
+  .write_notes_staff_view-selected-note {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .write_notes_staff_view-staff {
+    width: 100%;
+    max-width: 1600px;
+    height: 600px;
+  }
+  
