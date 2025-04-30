@@ -1,81 +1,135 @@
 // src/practices/chords_for_melody/melodies.js
 
 export const melodies = {
-  simpleMelody: [
-    { note: "C3", duration: 500 },
-    { note: "D3", duration: 500 },
-    { note: "E3", duration: 500 },
-    { note: "F3", duration: 500 },
+  simpleMelody: {
+    tempo: 50,
+    notes: [
+      { note: "C4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 2 },
+      { note: "C4", duration: 4 },
+    ],
+  },
 
-    { note: "G3", duration: 500 },
-    { note: "A3", duration: 500 },
-    { note: "G3", duration: 500 },
-    { note: "F3", duration: 500 },
+  risingMelody: {
+    tempo: 60,
+    notes: [
+      { note: "C4", duration: 2 },
+      { note: "D4", duration: 2 },
+      { note: "E4", duration: 2 },
+      { note: "F4", duration: 2 },
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "E4", duration: 2 },
+      { note: "C4", duration: 2 },
+    ],
+  },
+
+  waltzMelody: {
+    tempo: 90,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "C4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "C5", duration: 1 },
+
+      { note: "G4", duration: 1.5 },
+      { note: "F4", duration: 1.5 },
+
+      { note: "E4", duration: 3 },
+    ],
+  },
+
+  sadInThree: {
+    tempo: 72,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 1.5 },
+      { note: "G#4", duration: 0.5 },
+      { note: "A4", duration: 1 },
+
+      { note: "B4", duration: 2 },
+      { note: "E4", duration: 1 },
+
+      { note: "C5", duration: 1.5 },
+      { note: "B4", duration: 0.5 },
+      { note: "C5", duration: 1},
+
+      { note: "D5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "B4", duration: 1 },
+
+      { note: "B4", duration: 1.5 },
+      { note: "C5", duration: 0.5 },
+      { note: "D5", duration: 1 },
+
+      { note: "E5", duration: 1.5 },
+      { note: "B4", duration: 1.5 },
+
+      { note: "A4", duration: 3 },
+
+    ],
+  },
 
 
-    { note: "E3", duration: 500 },
-    { note: "F3", duration: 500 },
-    { note: "G3", duration: 1000 }, // Half note
 
-    { note: "C3", duration: 2000 }, // Half note
 
-  ],
+  playfulMelody: {
+    tempo: 140,
+    notes: [
+      { note: "G4", duration: 0.5 },
+      { note: "E4", duration: 0.5 },
+      { note: "F4", duration: 0.5 },
+      { note: "D4", duration: 0.5 },
+      { note: "G4", duration: 0.5 },
+      { note: "F4", duration: 0.5 },
+      { note: "E4", duration: 0.5 },
+      { note: "C4", duration: 0.5 },
 
-  risingMelody: [
-    { note: "C3", duration: 1000 },
-    { note: "D3", duration: 1000 },
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
 
-    { note: "E3", duration: 1000 },
-    { note: "F3", duration: 1000 },
+      { note: "F4", duration: 0.5 },
+      { note: "G4", duration: 0.5 },
+      { note: "A4", duration: 3 },
 
-    { note: "G3", duration: 500 },
-    { note: "A3", duration: 500 },
-    { note: "B3", duration: 500 },
-    { note: "C4", duration: 500 },
+      { note: "C5", duration: 4 },
 
-    { note: "E3", duration: 1000 },
-    { note: "C3", duration: 1000 },
-  ],
+      { note: "G4", duration: 0.5 },
+      { note: "G4", duration: 0.5 },
+      { note: "G4", duration: 0.5 },
+      { note: "G4", duration: 0.5 },
+      { note: "E4", duration: 0.5 },
+      { note: "F4", duration: 0.5 },
+      { note: "G4", duration: 0.5 },
+      { note: "C4", duration: 0.5 },
 
-  playfulMelody: [
-    { note: "G3", duration: 250 }, // Eighth
-    { note: "E3", duration: 250 }, // Eighth
-    { note: "F3", duration: 250 }, // Eighth
-    { note: "D3", duration: 250 }, // Eighth
-    { note: "G3", duration: 250 }, // Eighth
-    { note: "F3", duration: 250 }, // Eighth
-    { note: "E3", duration: 250 }, // Eighth
-    { note: "C3", duration: 250 }, // Eighth
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
 
-    { note: "D3", duration: 500 }, // Quarter
-    { note: "E3", duration: 500 }, // Quarter
-    { note: "F3", duration: 500 }, // Quarter
-    { note: "G3", duration: 500 }, // Quarter
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 2 },
 
-    { note: "F3", duration: 250 }, // Eighth
-    { note: "G3", duration: 250 }, // Eighth
-    { note: "A3", duration: 1500 }, // Eighth
-
-    { note: "C4", duration: 2000 }, // Whole note
-
-    { note: "G3", duration: 250 }, // Eighth
-    { note: "E3", duration: 250 }, // Eighth
-    { note: "F3", duration: 250 }, // Eighth
-    { note: "D3", duration: 250 }, // Eighth
-    { note: "G3", duration: 250 }, // Eighth
-    { note: "F3", duration: 250 }, // Eighth
-    { note: "E3", duration: 250 }, // Eighth
-    { note: "C3", duration: 250 }, // Eighth
-
-    { note: "D3", duration: 500 }, // Quarter
-    { note: "E3", duration: 500 }, // Quarter
-    { note: "F3", duration: 500 }, // Quarter
-    { note: "G3", duration: 500 }, // Quarter
-
-    { note: "F3", duration: 250 }, // Eighth
-    { note: "G3", duration: 250 }, // Eighth
-    { note: "A3", duration: 1500 }, // Eighth
-
-    { note: "C4", duration: 2000 }, // Whole note
-  ],
+      { note: "C5", duration: 4 },
+    ],
+  },
 };

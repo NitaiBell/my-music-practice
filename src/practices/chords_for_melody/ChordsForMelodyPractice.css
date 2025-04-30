@@ -89,7 +89,7 @@
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  color: #F1EFEC;
+  color: #000000;
   transition: background 0.3s, transform 0.2s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
@@ -162,4 +162,28 @@
   font-size: 20px;
   color: #F1EFEC;
   text-align: center;
+}
+
+
+/* Tempo and Time Signature */
+.chords_for_melody_practice_tempo {
+  margin-left: 20px;
+  padding: 12px 20px;
+  background: #27391C;
+  color: #F1EFEC;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chords_for_melody_practice_bottom {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 30vh;
+  background: transparent;
 }

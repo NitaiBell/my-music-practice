@@ -1,36 +1,52 @@
+// src/practices/chords_for_melody/ChordsForMelodyPractice.jsx
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { melodies } from './melodies';
 import './ChordsForMelodyPractice.css';
+import ChordsForMelodyKeyboardView from './ChordsForMelodyKeyboardView';
+import './ChordsForMelodyKeyboardView.css';
 
-const availableChords = ["C", "Dm", "Em", "F", "G", "Am", "Bdim"];
-const BAR_DURATION = 2000; // Each bar is 2000ms
+const availableChords = ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'];
 
-// 🔥 Chord mappings: 1-3-5 notes
 const chordNoteMap = {
   C: ['C3', 'E3', 'G3'],
   Dm: ['D3', 'F3', 'A3'],
   Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'],
-  G: ['G3', 'B3', 'D4'],
-  Am: ['A3', 'C4', 'E4'],
-  Bdim: ['B3', 'D4', 'F4'],
+  F: ['F3', 'A3', 'C3'],
+  G: ['G3', 'B3', 'D3'],
+  Am: ['A3', 'C3', 'E3'],
+  Bdim: ['B3', 'D3', 'F3'],
 };
+
 
 const ChordsForMelodyPractice = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const selectedMelodyName = state?.selectedMelody;
+  const keyboardRef = useRef();
 
-  const melody = melodies[selectedMelodyName] || [];
-  const totalDuration = melody.reduce((sum, note) => sum + note.duration, 0);
+  const melodyData = melodies[selectedMelodyName] || {};
+  const { notes = [], tempo = 90, timeSignature = [4, 4] } = melodyData;
+
+  const beatsPerBar = timeSignature?.[0] || 4;
+  const beatDurationMs = 60000 / tempo;
+  const BAR_DURATION = beatsPerBar * beatDurationMs;
+
+  const totalDuration = notes.reduce(
+    (sum, note) => sum + note.duration * beatDurationMs,
+    0
+  );
   const totalBars = Math.ceil(totalDuration / BAR_DURATION);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [slots, setSlots] = useState(() =>
-    Array.from({ length: totalBars }, () => ({ parts: [{ chord: '', duration: BAR_DURATION }] }))
+    Array.from({ length: totalBars }, () => ({
+      parts: [{ chord: '', duration: BAR_DURATION }],
+    }))
   );
+
   const intervalRef = useRef(null);
   const melodyTimeoutsRef = useRef([]);
   const chordTimeoutsRef = useRef([]);
@@ -49,20 +65,20 @@ const ChordsForMelodyPractice = () => {
   const playNote = (noteName) => {
     const normalized = normalizeNoteName(noteName);
     const audio = new Audio(`/clean_cut_notes/${normalized}.wav`);
-    audio.volume = 1.0; // Melody full volume
+    audio.volume = 1.0;
     audio.play();
   };
 
   const playChord = (chordName) => {
-    if (!chordName) return;
     const notes = chordNoteMap[chordName];
     if (!notes) return;
     notes.forEach((note) => {
       const normalized = normalizeNoteName(note);
       const audio = new Audio(`/clean_cut_notes/${normalized}.wav`);
-      audio.volume = 0.7; // Chord softer
+      audio.volume = 0.7;
       audio.play();
     });
+    keyboardRef.current?.setFlashRight(notes);
   };
 
   const startMelodyPlayback = () => {
@@ -70,12 +86,13 @@ const ChordsForMelodyPractice = () => {
     melodyTimeoutsRef.current = [];
     chordTimeoutsRef.current = [];
 
-    melody.forEach((noteObj) => {
+    notes.forEach((noteObj) => {
+      const msDuration = noteObj.duration * beatDurationMs;
       const timeout = setTimeout(() => {
         playNote(noteObj.note);
       }, elapsed);
       melodyTimeoutsRef.current.push(timeout);
-      elapsed += noteObj.duration;
+      elapsed += msDuration;
     });
 
     let chordTime = 0;
@@ -202,9 +219,11 @@ const ChordsForMelodyPractice = () => {
         >
           {isPlaying ? '⏸️ Pause' : '▶️ Play'}
         </button>
+        <div className="chords_for_melody_practice_tempo">
+          Tempo: {tempo} BPM | Time Signature: {beatsPerBar}/4
+        </div>
       </div>
 
-      {/* Progress bar */}
       <div
         className="chords_for_melody_practice_progress_bar"
         onClick={handleProgressClick}
@@ -217,7 +236,6 @@ const ChordsForMelodyPractice = () => {
         </div>
       </div>
 
-      {/* Slots */}
       <div className="chords_for_melody_practice_slots">
         {slots.map((slot, slotIndex) => (
           <div key={slotIndex} className="chords_for_melody_practice_slot_group">
@@ -227,9 +245,9 @@ const ChordsForMelodyPractice = () => {
               return (
                 <div
                   key={partIndex}
-                  className={`chords_for_melody_practice_slot ${part.duration === 1000 ? 'half' : ''} ${
-                    isActive ? 'active' : ''
-                  }`}
+                  className={`chords_for_melody_practice_slot ${
+                    part.duration === BAR_DURATION / 2 ? 'half' : ''
+                  } ${isActive ? 'active' : ''}`}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleSlotDrop(e, slotIndex, partIndex)}
                 >
@@ -256,13 +274,13 @@ const ChordsForMelodyPractice = () => {
         ))}
       </div>
 
-      {/* Chords */}
       <div className="chords_for_melody_practice_chord_line">
         {availableChords.map((chord, idx) => (
           <div
             key={idx}
             className="chords_for_melody_practice_chord"
             draggable
+            onClick={() => playChord(chord)}
             onDragStart={(e) => handleDragStart(e, chord)}
           >
             {chord}
@@ -270,8 +288,8 @@ const ChordsForMelodyPractice = () => {
         ))}
       </div>
 
-      <div className="chords_for_melody_practice_keyboard_placeholder">
-        <p>Keyboard coming soon...</p>
+      <div className="chords_for_melody_practice_bottom">
+        <ChordsForMelodyKeyboardView ref={keyboardRef} />
       </div>
     </div>
   );

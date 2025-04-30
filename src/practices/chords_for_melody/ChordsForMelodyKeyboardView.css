@@ -1,0 +1,156 @@
+/* Container */
+.chords_keyboard_container {
+    background-color: transparent;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    height: 30vh;
+    padding: 14px;
+    overflow-x: hidden;
+  }
+  
+  .chords_octave {
+    display: flex;
+    flex: 1 1 0;
+    position: relative;
+  }
+  
+  /* White Keys */
+  .chords_white_keys {
+    display: flex;
+    flex: 1;
+    z-index: 1;
+  }
+  
+  .chords_white_key {
+    flex: 1 1 0;
+    min-width: 40px;
+    max-width: 90px;
+    height: clamp(200px, 32vh, 360px);
+    background: linear-gradient(to bottom, #F1EFEC, #D4C9BE);
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+    border-bottom: 2px solid #999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: inset 0 -3px 4px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+    color: #18230F;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .chords_white_key:hover {
+    background: linear-gradient(to bottom, #C3F7D5, #AAF4C5);
+    box-shadow: inset 0 -4px 6px rgba(0, 128, 0, 0.2);
+  }
+  
+  /* Black Keys */
+  .chords_black_keys {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: clamp(140px, 24vh, 242px);
+    z-index: 2;
+  }
+  
+  .chords_black_key {
+    position: absolute;
+    width: clamp(25px, 4vw, 50px);
+    height: clamp(140px, 24vh, 242px);
+    background: linear-gradient(to bottom, #18230F, #0f1610);
+    border-radius: 3px;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    z-index: 3;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+  }
+  
+  .chords_black_key:hover {
+    background: linear-gradient(to bottom, #1F7D53, #255F38);
+    transform: translateX(-50%) scaleY(1.02) translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65);
+  }
+  
+  /* Label */
+  .chords_label {
+    padding: 6px;
+    z-index: 10;
+    position: relative;
+    pointer-events: none;
+  }
+  
+  /* Black Key Positions */
+  .chords_Cs { left: 12.85%; }
+  .chords_Ds { left: 27.1%; }
+  .chords_Fs { left: 56.6%; }
+  .chords_Gs { left: 70.85%; }
+  .chords_As { left: 85.15%; }
+  
+  /* Flash Overlay */
+  .flash-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    pointer-events: none;
+    animation: flashFade 0.6s ease-out;
+    opacity: 0;
+  }
+  
+  @keyframes flashFade {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0; }
+  }
+  
+  /* Flash Colors */
+  .chords_white_key.chords_flash_0 .flash-overlay,
+  .chords_black_key.chords_flash_0 .flash-overlay {
+    background-color: #a8ffb3;
+    opacity: 1;
+  }
+  
+  .chords_white_key.chords_flash_1 .flash-overlay,
+  .chords_black_key.chords_flash_1 .flash-overlay {
+    background-color: #5cff88;
+    opacity: 1;
+  }
+  
+  .chords_white_key.chords_flash_2 .flash-overlay,
+  .chords_black_key.chords_flash_2 .flash-overlay {
+    background-color: #00ff5c;
+    opacity: 1;
+  }
+  
+  .chords_white_key.chords_flash_correct .flash-overlay,
+  .chords_black_key.chords_flash_correct .flash-overlay {
+    background-color: #4cff4c;
+    opacity: 1;
+  }
+  
+  .chords_white_key.chords_flash_wrong .flash-overlay,
+  .chords_black_key.chords_flash_wrong .flash-overlay {
+    background-color: #ff4c4c;
+    opacity: 1;
+  }
+  
+  /* Responsive Tweaks */
+  @media (max-width: 1600px) {
+    .chords_black_key {
+      width: clamp(20px, 3.5vw, 40px);
+      height: clamp(120px, 20vh, 220px);
+    }
+  }
+  

@@ -82,3 +82,49 @@
   background: linear-gradient(to right, #43A047, #4CAF50);
   transform: scale(1.05);
 }
+
+.chords_for_melody_settings_fullscreen {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100vw;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #99e06c, #18230F);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.chords_for_melody_settings_container {
+  padding: 40px;
+  max-width: 800px;
+  flex: 1;
+  color: #F1EFEC;
+}
+
+.chords_ads_side {
+  width: 300px; /* Wider for realistic banner */
+  min-height: 600px; /* Taller banner */
+  background-color: #007BFF;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+  position: sticky;
+  top: 20px;
+  border-radius: 16px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+chords_ads_left {
+  margin-right: 24px;
+}
+
+.chords_ads_right {
+  margin-left: 24px;
+}
