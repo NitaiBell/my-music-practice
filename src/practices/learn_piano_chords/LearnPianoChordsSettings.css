@@ -256,3 +256,43 @@
     box-shadow: 0 0 6px #99e06c;
   }
   
+
+  .learn_piano_chords-freestyle-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    background-color: #000000;
+    border: 1px solid #ccc;
+    padding: 0.6rem 1rem;
+    border-radius: 1rem;
+    margin-left: 1rem;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .learn_piano_chords-freestyle-toggle:hover {
+    background-color: #028404;
+  }
+  
+  .learn_piano_chords-freestyle-toggle input[type="checkbox"] {
+    transform: scale(1.4);
+    cursor: pointer;
+  }
+
+
+  /* LearnPianoChordsSettings.css */
+
+.learn_piano_chords-chord-btn.freestyle-disabled {
+  background-color: #e0e0e0;
+  color: #555;
+  cursor: default;
+  border: 1px dashed #bbb;
+  box-shadow: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.learn_piano_chords-chord-btn.freestyle-disabled:hover {
+  background-color: #e0e0e0; /* No hover effect */
+  color: #555;
+}

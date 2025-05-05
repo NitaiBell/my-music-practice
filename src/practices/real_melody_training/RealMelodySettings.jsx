@@ -1,3 +1,5 @@
+// src/practices/real_melody/RealMelodySettings.jsx
+
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RealMelodyKeyboardView from './RealMelodyKeyboardView';
@@ -38,11 +40,14 @@ const notesByScale = {
   B: ['B', 'Cs', 'Ds', 'E', 'Fs', 'Gs', 'As'],
 };
 
+const fullChromaticNotes = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
+
 const DEFAULT_DEGREES = [0, 1, 2, 3, 4, 5, 6];
 
 export default function RealMelodySettings() {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
+  const [outScaleNotes, setOutScaleNotes] = useState([]);
   const [rounds, setRounds] = useState(30);
   const [normalMode, setNormalMode] = useState(true);
   const keyboardRef = useRef();
@@ -81,17 +86,28 @@ export default function RealMelodySettings() {
     playNote3(note);
   };
 
+  const toggleOutNote = (note) => {
+    if (outScaleNotes.includes(note)) {
+      setOutScaleNotes((prev) => prev.filter((n) => n !== note));
+    } else {
+      setOutScaleNotes((prev) => [...prev, note]);
+    }
+    playNote3(note);
+  };
+
   const startPractice = () => {
     navigate('/real-melody/play', {
       state: {
         selectedScale,
-        selectedNotes,
+        selectedNotes: [...selectedNotes, ...outScaleNotes],
         rounds,
-        octaves: [3, 4, 5], // Always use 3,4,5
+        octaves: [3, 4, 5],
         normalMode,
       },
     });
   };
+
+  const outNotesForScale = fullChromaticNotes.filter(n => !notesByScale[selectedScale].includes(n)).slice(0, 5);
 
   return (
     <div className="real-melody-settings-container">
@@ -132,6 +148,22 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
+            <div className="real-melody-dropdown">
+              <button className="real-melody-dropbtn">🧩 Out-of-Scale</button>
+              <div className="real-melody-dropdown-content">
+                {outNotesForScale.map((note) => (
+                  <label key={note}>
+                    <input
+                      type="checkbox"
+                      checked={outScaleNotes.includes(note)}
+                      onChange={() => toggleOutNote(note)}
+                    />
+                    {displayNote(note, selectedScale)}
+                  </label>
+                ))}
+              </div>
+            </div>
+
             <button
               className={`real-melody-beginner-toggle ${normalMode ? 'on' : 'off'}`}
               title="Normal Mode: Any octave is accepted. Pro Mode: exact octave match required."
@@ -162,12 +194,12 @@ export default function RealMelodySettings() {
         </nav>
 
         <div className="real-melody-floating-setup-message">
-          🎯 Set your scale, notes, rounds, then click “Start Practice”!
+          🎯 Set your scale, notes, and rounds — then click “Start Practice”!
         </div>
 
         <div className="real-melody-summary">
           <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
-          <p>Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
+          <p>Notes: <strong>{[...selectedNotes, ...outScaleNotes].map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
           <p>Octaves: <strong>3, 4, 5</strong></p>
           <p>Mode: <strong>{normalMode ? 'Normal' : 'Pro'}</strong></p>
         </div>
@@ -176,8 +208,8 @@ export default function RealMelodySettings() {
       <div className="real-melody-keyboard-wrapper">
         <RealMelodyKeyboardView
           ref={keyboardRef}
-          highlightNotes={selectedNotes}
-          octaves={[3, 4, 5]} // Always 3–4–5
+          highlightNotes={[...selectedNotes, ...outScaleNotes]}
+          octaves={[3, 4, 5]}
         />
       </div>
     </div>

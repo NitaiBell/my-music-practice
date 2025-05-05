@@ -33,6 +33,15 @@ const wrongSound = new Audio('/wrong_right/wrong.mp3');
 const backgroundMusic = new Audio('/effects/background_music.mp3');
 const pageTurnSound = new Audio('/effects/page_turn.mp3');
 
+const shuffle = (array) => {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};
+
 export default function DegreeNotice() {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -71,32 +80,10 @@ export default function DegreeNotice() {
     };
   }, [musicMuted]);
 
-  useEffect(() => {
-    const combinations = [];
-    selectedScales.forEach(scale => {
-      selectedDegrees.forEach(degree => {
-        combinations.push({ scale, degree });
-      });
-    });
-    const shuffledCombos = combinations.sort(() => 0.5 - Math.random()).slice(0, rounds);
-    setQuestionPool(shuffledCombos);
-
-    const modes = shuffledCombos.map(() => {
-      if (questionStyles.scaleToDegree && questionStyles.scaleToNote) {
-        return Math.random() < 0.5 ? 'scaleToDegree' : 'scaleToNote';
-      } else {
-        return questionStyles.scaleToDegree ? 'scaleToDegree' : 'scaleToNote';
-      }
-    });
-    setModeSequence(modes);
-    startRound(shuffledCombos[0], modes[0]);
-  }, []);
-
   const generateQuestion = (scale, degree, mode) => {
     const degreeNum = degreeLabels.indexOf(degree);
     const noteAnswer = fullChordMap[scale][degreeNum];
-    const degreeAnswer = degreeLabels[degreeNum];
-    const correctAnswer = mode === 'scaleToDegree' ? degreeAnswer : noteAnswer;
+    const correctAnswer = mode === 'scaleToDegree' ? degreeLabels[degreeNum] : noteAnswer;
     const questionPrompt = mode === 'scaleToDegree' ? displayNote(noteAnswer) : degree;
 
     const options = new Set([correctAnswer]);
@@ -132,6 +119,43 @@ export default function DegreeNotice() {
     setQuestion(generateQuestion(scale, degree, mode));
   };
 
+  const initGame = () => {
+    const comboSet = new Set();
+    selectedScales.forEach(scale => {
+      selectedDegrees.forEach(degree => {
+        comboSet.add(`${scale}-${degree}`);
+      });
+    });
+
+    const uniqueCombos = Array.from(comboSet).map(str => {
+      const [scale, degree] = str.split('-');
+      return { scale, degree };
+    });
+
+    let finalCombos = [];
+    while (finalCombos.length < rounds) {
+      const batch = shuffle(uniqueCombos);
+      finalCombos.push(...batch);
+    }
+    finalCombos = finalCombos.slice(0, rounds);
+
+    const modes = finalCombos.map(() => {
+      if (questionStyles.scaleToDegree && questionStyles.scaleToNote) {
+        return Math.random() < 0.5 ? 'scaleToDegree' : 'scaleToNote';
+      } else {
+        return questionStyles.scaleToDegree ? 'scaleToDegree' : 'scaleToNote';
+      }
+    });
+
+    setQuestionPool(finalCombos);
+    setModeSequence(modes);
+    startRound(finalCombos[0], modes[0]);
+  };
+
+  useEffect(() => {
+    initGame();
+  }, []);
+
   const handleAnswer = (answer) => {
     setTriesCount(prev => prev + 1);
 
@@ -149,12 +173,13 @@ export default function DegreeNotice() {
         setFeedbackMessage('Correct... after a few tries!');
       }
 
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+
       setTimeout(() => {
-        if (currentIndex + 1 === rounds) {
+        if (nextIndex === rounds) {
           setShowPopup(true);
         } else {
-          const nextIndex = currentIndex + 1;
-          setCurrentIndex(nextIndex);
           setFeedbackMessage('🎵 Next round!');
           startRound(questionPool[nextIndex], modeSequence[nextIndex]);
         }
@@ -174,45 +199,13 @@ export default function DegreeNotice() {
     <div className="degree-notice-container">
       <nav className="degree-notice-navbar">
         <div className="degree-notice-logo">Degree Notice</div>
-        <button
-          className="degree-notice-restart-btn"
-          onClick={() => {
-            const combinations = [];
-            selectedScales.forEach(scale => {
-              selectedDegrees.forEach(degree => {
-                combinations.push({ scale, degree });
-              });
-            });
-            const shuffledCombos = combinations.sort(() => 0.5 - Math.random()).slice(0, rounds);
-            const modes = shuffledCombos.map(() => {
-              if (questionStyles.scaleToDegree && questionStyles.scaleToNote) {
-                return Math.random() < 0.5 ? 'scaleToDegree' : 'scaleToNote';
-              } else {
-                return questionStyles.scaleToDegree ? 'scaleToDegree' : 'scaleToNote';
-              }
-            });
-            setCurrentIndex(0);
-            setCorrectCount(0);
-            setWrongCount(0);
-            setTriesCount(0);
-            setQuestionPool(shuffledCombos);
-            setModeSequence(modes);
-            setShowPopup(false);
-            setFeedbackMessage('🎵 Practice restarted!');
-            startRound(shuffledCombos[0], modes[0]);
-          }}
-        >
-          🔁 Restart
-        </button>
+        <button className="degree-notice-restart-btn" onClick={initGame}>🔁 Restart</button>
         <button
           className="degree-notice-mute-btn"
           onClick={() => {
             setMusicMuted(prev => !prev);
-            if (!musicMuted) {
-              backgroundMusic.pause();
-            } else {
-              backgroundMusic.play().catch(() => {});
-            }
+            if (!musicMuted) backgroundMusic.pause();
+            else backgroundMusic.play().catch(() => {});
           }}
         >
           {musicMuted ? '🔇' : '🎙️'}
@@ -226,11 +219,7 @@ export default function DegreeNotice() {
         </div>
       </nav>
 
-      {feedbackMessage && (
-        <div className="degree-notice-feedback-message">
-          {feedbackMessage}
-        </div>
-      )}
+      {feedbackMessage && <div className="degree-notice-feedback-message">{feedbackMessage}</div>}
 
       <div className="degree-notice-question-area">
         <div className={`degree-notice-question-center ${roundFlash ? 'round-flash' : ''}`}>

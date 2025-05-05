@@ -38,13 +38,14 @@ const notesByScale = {
   B: ['B', 'Cs', 'Ds', 'E', 'Fs', 'Gs', 'As'],
 };
 
-const DEFAULT_DEGREES = [0, 2, 4]; // Do Mi Sol
+const DEFAULT_DEGREES = [0, 2, 4];
 
 export default function LearnPianoSettings() {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
-  const [rounds, setRounds] = useState(10);
-  const [sequenceLength, setSequenceLength] = useState(3);
+  const [rounds, setRounds] = useState(5);
+  const [sequenceLength, setSequenceLength] = useState(8);
+  const [freestyleMode, setFreestyleMode] = useState(false);
   const keyboardRef = useRef();
   const navigate = useNavigate();
   const tonic = selectedScale;
@@ -88,6 +89,7 @@ export default function LearnPianoSettings() {
         selectedNotes,
         rounds,
         sequenceLength,
+        freestyleMode,
       },
     });
   };
@@ -107,6 +109,7 @@ export default function LearnPianoSettings() {
                       name="scale"
                       checked={selectedScale === scale}
                       onChange={() => handleScaleChange(scale)}
+                      disabled={freestyleMode}
                     />
                     {scale} Major
                   </label>
@@ -122,7 +125,7 @@ export default function LearnPianoSettings() {
                     <input
                       type="checkbox"
                       checked={selectedNotes.includes(note)}
-                      disabled={note === tonic}
+                      disabled={freestyleMode || note === tonic}
                       onChange={() => toggleNote(note)}
                     />
                     {displayNote(note, selectedScale)}
@@ -142,6 +145,17 @@ export default function LearnPianoSettings() {
                 onChange={(e) => setSequenceLength(Number(e.target.value))}
                 className="learn_piano_settings-sequence-input"
               />
+            </div>
+
+            {/* 🛠 Updated Freestyle Mode block */}
+            <div className={`learn_piano_settings-freestyle-wrapper ${freestyleMode ? 'active' : ''}`}>
+              <input
+                type="checkbox"
+                checked={freestyleMode}
+                onChange={() => setFreestyleMode(!freestyleMode)}
+                id="freestyleToggle"
+              />
+              <label htmlFor="freestyleToggle">🎲 Freestyle Mode</label>
             </div>
           </div>
 
@@ -166,12 +180,21 @@ export default function LearnPianoSettings() {
         </nav>
 
         <div className="learn_piano_settings-floating-message">
-          🎯 Choose your scale, notes, sequence length and rounds, then click “Start Practice”!
+          {freestyleMode
+            ? '🎲 Freestyle Mode: You’ll hear completely random notes each round!'
+            : '🎯 Choose your scale, notes, sequence length and rounds, then click “Start Practice”!'}
         </div>
 
-        <div className="learn_piano_settings-summary">
-          <p><strong>{rounds}</strong> rounds | Sequence length: <strong>{sequenceLength}</strong></p>
-          <p>Scale: <strong>{selectedScale}</strong> | Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
+        {/* 🛠 Updated summary block */}
+        <div className={`learn_piano_settings-summary ${freestyleMode ? 'freestyle' : ''}`}>
+          {freestyleMode ? (
+            <p>🎲 Freestyle mode is ON — Random notes will be used!</p>
+          ) : (
+            <>
+              <p><strong>{rounds}</strong> rounds | Sequence length: <strong>{sequenceLength}</strong></p>
+              <p>Scale: <strong>{selectedScale}</strong> | Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
+            </>
+          )}
         </div>
       </div>
 

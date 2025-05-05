@@ -1,0 +1,10 @@
+chord_type_practice
+chords_for_melody
+degree_notice_training
+difference_practice
+harmony_training
+interval_training
+learn_piano
+learn_piano_chords
+real_melody_training
+which_higher_note

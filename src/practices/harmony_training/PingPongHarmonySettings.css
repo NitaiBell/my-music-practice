@@ -125,7 +125,10 @@
   padding: 14px;
   align-items: stretch;
   justify-items: stretch;
-  height: 10vh;
+  grid-auto-rows: 1fr;
+  max-height: 20vh; /* ✅ restrict button section height */
+  overflow-y: auto;  /* ✅ add scroll if too many buttons */
+  margin-bottom:10px; /* ✅ reserve space for keyboard */
 }
 
 .harmony-chord-btn {

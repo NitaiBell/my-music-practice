@@ -1,34 +1,31 @@
+// LearnPianoChords.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LearnPianoChords.css';
 import LearnPianoChordsKeyboardView from './LearnPianoChordsKeyboardView';
 
 const chordNoteMap = {
-  C: ['C3', 'E3', 'G3'],
-  D: ['D3', 'Fs3', 'A3'],
-  Dm: ['D3', 'F3', 'A3'],
-  Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'],
-  G: ['G3', 'B3', 'D4'],
-  Am: ['A3', 'C4', 'E4'],
-  Bdim: ['B3', 'D4', 'F4'],
-  Bm: ['B3', 'D4', 'Fs4'],
-  'F#dim': ['Fs3', 'A3', 'C4'],
-  Gm: ['G3', 'As3', 'D4'],
-  Bb: ['As2', 'D3', 'F3'],
-  Edim: ['E3', 'G3', 'As3'],
-  A: ['A3', 'Cs4', 'E4'],
-  'C#m': ['Cs3', 'E3', 'Gs3'],
-  E: ['E3', 'Gs3', 'B3'],
-  'F#m': ['Fs3', 'A3', 'Cs4'],
-  'G#dim': ['Gs3', 'B3', 'D4'],
-  'G#m': ['Gs3', 'B3', 'Ds4'],
-  B: ['B3', 'Ds4', 'Fs4'],
-  'C#dim': ['Cs3', 'E3', 'G3'],
-  'D#dim': ['Ds3', 'Fs3', 'A3'],
-  'D#m': ['Ds3', 'Fs3', 'As3'],
-  'F#': ['Fs3', 'As3', 'Cs4'],
-  'A#dim': ['As3', 'Cs4', 'E4'],
+  C: ['C3', 'E3', 'G3'], D: ['D3', 'Fs3', 'A3'], Dm: ['D3', 'F3', 'A3'], Em: ['E3', 'G3', 'B3'],
+  F: ['F3', 'A3', 'C4'], G: ['G3', 'B3', 'D4'], Am: ['A3', 'C4', 'E4'], Bdim: ['B3', 'D4', 'F4'],
+  Bm: ['B3', 'D4', 'Fs4'], 'F#dim': ['Fs3', 'A3', 'C4'], Gm: ['G3', 'As3', 'D4'], Bb: ['As2', 'D3', 'F3'],
+  Edim: ['E3', 'G3', 'As3'], A: ['A3', 'Cs4', 'E4'], 'C#m': ['Cs3', 'E3', 'Gs3'], E: ['E3', 'Gs3', 'B3'],
+  'F#m': ['Fs3', 'A3', 'Cs4'], 'G#dim': ['Gs3', 'B3', 'D4'], 'G#m': ['Gs3', 'B3', 'Ds4'],
+  B: ['B3', 'Ds4', 'Fs4'], 'C#dim': ['Cs3', 'E3', 'G3'], 'D#dim': ['Ds3', 'Fs3', 'A3'],
+  'D#m': ['Ds3', 'Fs3', 'As3'], 'F#': ['Fs3', 'As3', 'Cs4'], 'A#dim': ['As3', 'Cs4', 'E4'],
+
+  // Additional chords:
+  Cm: ['C3', 'Ds3', 'G3'], 'C7': ['C3', 'E3', 'G3', 'As3'], 'Cm7': ['C3', 'Ds3', 'G3', 'As3'],
+  D7: ['D3', 'Fs3', 'A3', 'C4'], Dmaj7: ['D3', 'Fs3', 'A3', 'Cs4'], Dm7: ['D3', 'F3', 'A3', 'C4'],
+  E7: ['E3', 'Gs3', 'B3', 'D4'], Edom7: ['E3', 'Gs3', 'B3', 'D4'],
+  F7: ['F3', 'A3', 'C4', 'Ds4'], Fmaj7: ['F3', 'A3', 'C4', 'E4'], Fm7: ['F3', 'Gs3', 'C4', 'Ds4'],
+  G7: ['G3', 'B3', 'D4', 'F4'], Gmaj7: ['G3', 'B3', 'D4', 'Fs4'], Gm7: ['G3', 'As3', 'D4', 'F4'],
+  A7: ['A3', 'Cs4', 'E4', 'G4'], Amaj7: ['A3', 'Cs4', 'E4', 'Gs4'], Am7: ['A3', 'C4', 'E4', 'G4'],
+  B7: ['B3', 'Ds4', 'Fs4', 'A4'], Bm7: ['B3', 'D4', 'Fs4', 'A4'],
+
+  // Enharmonic additions:
+  'Db': ['Cs3', 'F3', 'Gs3'], 'Eb': ['Ds3', 'G3', 'As3'], 'Ab': ['Gs3', 'C4', 'Ds4'],
+  'Dbm': ['Cs3', 'E3', 'Gs3'], 'Ebm': ['Ds3', 'F3', 'As3'], 'Abm': ['Gs3', 'B3', 'Ds4'],
+  'Bbm': ['As3', 'C4', 'F4'], 'Bbm7': ['As3', 'C4', 'F4', 'Gs4']
 };
 
 const arraysEqual = (a, b) => {
@@ -41,8 +38,15 @@ const LearnPianoChords = () => {
   const navigate = useNavigate();
   const keyboardRef = useRef();
 
-  const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
+  const {
+    selectedScale = 'C',
+    selectedChords = [],
+    rounds = 10,
+    freestyleMode = false
+  } = state || {};
+
   const tonic = selectedScale.replace(/m$/, '');
+  const allChords = Object.keys(chordNoteMap);
 
   const [sequence, setSequence] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -51,6 +55,7 @@ const LearnPianoChords = () => {
   const [wrongCount, setWrongCount] = useState(0);
   const [triesCount, setTriesCount] = useState(0);
   const [currentChord, setCurrentChord] = useState('');
+  const [currentOptions, setCurrentOptions] = useState([]);
   const [awaitingRetry, setAwaitingRetry] = useState(false);
   const [buttonFlashes, setButtonFlashes] = useState({});
   const [statFlash, setStatFlash] = useState('');
@@ -79,11 +84,11 @@ const LearnPianoChords = () => {
   };
 
   const startGame = () => {
-    const nonTonicChords = selectedChords.filter(c => chordNoteMap[c]);
-    if (nonTonicChords.length === 0) return;
+    const chordPool = freestyleMode ? allChords : selectedChords.filter(c => chordNoteMap[c]);
+    if (chordPool.length === 0) return;
 
     const generated = Array.from({ length: rounds }, () =>
-      nonTonicChords[Math.floor(Math.random() * nonTonicChords.length)]
+      chordPool[Math.floor(Math.random() * chordPool.length)]
     );
 
     setSequence(generated);
@@ -104,8 +109,14 @@ const LearnPianoChords = () => {
   const showNextChord = (chord) => {
     setCurrentChord(chord);
     setCanAnswer(false);
-    const notes = chordNoteMap[chord];
 
+    if (freestyleMode) {
+      const others = allChords.filter(c => c !== chord);
+      const randomSet = others.sort(() => 0.5 - Math.random()).slice(0, 6);
+      setCurrentOptions([...randomSet, chord].sort(() => 0.5 - Math.random()));
+    }
+
+    const notes = chordNoteMap[chord];
     let count = 0;
     const repeatFlash = () => {
       keyboardRef.current?.setFlashBlue(notes);
@@ -170,12 +181,12 @@ const LearnPianoChords = () => {
     }
   };
 
-  const rows = selectedChords.length > 12 ? 2 : 1;
-  const columns = Math.ceil(selectedChords.length / rows || 1);
+  const displayedChords = freestyleMode ? currentOptions : selectedChords;
+  const rows = displayedChords.length > 12 ? 2 : 1;
+  const columns = Math.ceil(displayedChords.length / rows || 1);
 
   return (
     <div className="learn_piano_chords-container">
-      {/* Navigation bar */}
       <nav className="learn_piano_chords-navbar">
         <div className="learn_piano_chords-navbar-left">
           <div className="learn_piano_chords-logo">Learn Piano Chords</div>
@@ -209,13 +220,11 @@ const LearnPianoChords = () => {
       </nav>
 
       {statusMessage && <div className="floating-message">{statusMessage}</div>}
-
       <div className="learn_piano_chords-fill-space" />
 
-      {/* Bottom Section */}
       <div className="learn_piano_chords-bottom">
         <div className="learn_piano_chords-chords" style={{ gridTemplateRows: `repeat(${rows}, 1fr)`, gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
-          {selectedChords.map((chord) => (
+          {displayedChords.map((chord) => (
             <button
               key={chord}
               className={`learn_piano_chords-chord-btn ${!canAnswer ? 'disabled-answer' : ''} ${buttonFlashes[chord] === 'correct' ? 'btn-flash-correct' : ''} ${buttonFlashes[chord] === 'wrong' ? 'btn-flash-wrong' : ''}`}

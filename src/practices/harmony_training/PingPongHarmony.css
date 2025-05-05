@@ -107,9 +107,13 @@
   padding: 14px 16px;
   align-items: stretch;
   justify-items: stretch;
-  height: 10vh;
   width: 100%;
   box-sizing: border-box;
+
+  /* ADD THESE: */
+  max-height: 22vh;        /* prevents overflow into keyboard */
+  overflow-y: auto;        /* scrolls if needed */
+  margin-bottom: 10px;    /* reserves space for keyboard */
 }
 
 .harmonygame-chord-btn {

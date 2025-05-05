@@ -9,26 +9,56 @@ const chordNoteMap = {
   Dm: ['D3', 'F3', 'A3'],
   Em: ['E3', 'G3', 'B3'],
   F: ['F3', 'A3', 'C4'],
+  FM: ['F3', 'A3', 'C4'],
   G: ['G3', 'B3', 'D4'],
   Am: ['A3', 'C4', 'E4'],
   Bdim: ['B3', 'D4', 'F4'],
   Bm: ['B3', 'D4', 'Fs4'],
+
+  // Diminished
   'F#dim': ['Fs3', 'A3', 'C4'],
-  Gm: ['G3', 'As3', 'D4'],
-  Bb: ['As2', 'D3', 'F3'],
-  Edim: ['E3', 'G3', 'As3'],
-  A: ['A3', 'Cs4', 'E4'],
-  'C#m': ['Cs3', 'E3', 'Gs3'],
-  E: ['E3', 'Gs3', 'B3'],
-  'F#m': ['Fs3', 'A3', 'Cs4'],
   'G#dim': ['Gs3', 'B3', 'D4'],
-  'G#m': ['Gs3', 'B3', 'Ds4'],
-  B: ['B3', 'Ds4', 'Fs4'],
   'C#dim': ['Cs3', 'E3', 'G3'],
   'D#dim': ['Ds3', 'Fs3', 'A3'],
-  'D#m': ['Ds3', 'Fs3', 'As3'],
-  'F#': ['Fs3', 'As3', 'Cs4'],
   'A#dim': ['As3', 'Cs4', 'E4'],
+
+  // Minor chords
+  Gm: ['G3', 'As3', 'D4'],
+  'C#m': ['Cs3', 'E3', 'Gs3'],
+  'F#m': ['Fs3', 'A3', 'Cs4'],
+  'G#m': ['Gs3', 'B3', 'Ds4'],
+  'D#m': ['Ds3', 'Fs3', 'As3'],
+  'Ebm': ['Ds3', 'F3', 'As3'],
+  'Abm': ['Gs3', 'B3', 'Cs4'],
+  'Dbm': ['Cs3', 'E3', 'Gb3'],
+  Cm: ['C3', 'Ds3', 'G3'],
+
+  // Major chords with accidentals
+  Bb: ['As2', 'D3', 'F3'],
+  'B♭': ['As2', 'D3', 'F3'], // alias
+  Eb: ['Ds3', 'G3', 'As3'],
+  'E♭': ['Ds3', 'G3', 'As3'], // alias
+  Ab: ['Gs3', 'C4', 'Ds4'],
+  Db: ['Cs3', 'F3', 'Gs3'],
+
+  // Dominant 7
+  'E7': ['E3', 'Gs3', 'B3', 'D4'],
+  'A7': ['A3', 'Cs4', 'E4', 'G4'],
+  'D7': ['D3', 'Fs3', 'A3', 'C4'],
+  'G7': ['G3', 'B3', 'D4', 'F4'],
+  'B7': ['B3', 'Ds4', 'Fs4', 'A4'],
+  'Bb7': ['As2', 'D3', 'F3', 'Gs3'],
+  'B♭7': ['As2', 'D3', 'F3', 'Gs3'], // alias
+  'F#7': ['Fs3', 'As3', 'Cs4', 'E4'],
+  'C#7': ['Cs3', 'F3', 'Gs3', 'B3'],
+  'G#7': ['Gs3', 'B3', 'Ds4', 'F4'],
+  'D#7': ['Ds3', 'Fs3', 'As3', 'C4'],
+
+  // Others
+  E: ['E3', 'Gs3', 'B3'],
+  A: ['A3', 'Cs4', 'E4'],
+  B: ['B3', 'Ds4', 'Fs4'],
+  Fm: ['F3', 'Gs3', 'C4'],
 };
 
 const PingPongHarmony = () => {

@@ -1,3 +1,4 @@
+// LearnPianoChordsSettings.jsx
 import React, { useState } from 'react';
 import './LearnPianoChordsSettings.css';
 import LearnPianoChordsKeyboardView from './LearnPianoChordsKeyboardView';
@@ -14,39 +15,21 @@ const chordsByScale = {
 };
 
 const chordNoteMap = {
-  C: ['C3', 'E3', 'G3'],
-  D: ['D3', 'Fs3', 'A3'],
-  Dm: ['D3', 'F3', 'A3'],
-  Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'],
-  G: ['G3', 'B3', 'D4'],
-  Am: ['A3', 'C4', 'E4'],
-  Bdim: ['B3', 'D4', 'F4'],
-  Bm: ['B3', 'D4', 'Fs4'],
-  'F#dim': ['Fs3', 'A3', 'C4'],
-  Gm: ['G3', 'As3', 'D4'],
-  Bb: ['As2', 'D3', 'F3'],
-  Edim: ['E3', 'G3', 'As3'],
-  A: ['A3', 'Cs4', 'E4'],
-  'C#m': ['Cs3', 'E3', 'Gs3'],
-  E: ['E3', 'Gs3', 'B3'],
-  'F#m': ['Fs3', 'A3', 'Cs4'],
-  'G#dim': ['Gs3', 'B3', 'D4'],
-  'G#m': ['Gs3', 'B3', 'Ds4'],
-  B: ['B3', 'Ds4', 'Fs4'],
-  'C#dim': ['Cs3', 'E3', 'G3'],
-  'D#dim': ['Ds3', 'Fs3', 'A3'],
-  'D#m': ['Ds3', 'Fs3', 'As3'],
-  'F#': ['Fs3', 'As3', 'Cs4'],
-  'A#dim': ['As3', 'Cs4', 'E4'],
+  C: ['C3', 'E3', 'G3'], D: ['D3', 'Fs3', 'A3'], Dm: ['D3', 'F3', 'A3'], Em: ['E3', 'G3', 'B3'],
+  F: ['F3', 'A3', 'C4'], G: ['G3', 'B3', 'D4'], Am: ['A3', 'C4', 'E4'], Bdim: ['B3', 'D4', 'F4'],
+  Bm: ['B3', 'D4', 'Fs4'], 'F#dim': ['Fs3', 'A3', 'C4'], Gm: ['G3', 'As3', 'D4'], Bb: ['As2', 'D3', 'F3'],
+  Edim: ['E3', 'G3', 'As3'], A: ['A3', 'Cs4', 'E4'], 'C#m': ['Cs3', 'E3', 'Gs3'], E: ['E3', 'Gs3', 'B3'],
+  'F#m': ['Fs3', 'A3', 'Cs4'], 'G#dim': ['Gs3', 'B3', 'D4'], 'G#m': ['Gs3', 'B3', 'Ds4'],
+  B: ['B3', 'Ds4', 'Fs4'], 'C#dim': ['Cs3', 'E3', 'G3'], 'D#dim': ['Ds3', 'Fs3', 'A3'],
+  'D#m': ['Ds3', 'Fs3', 'As3'], 'F#': ['Fs3', 'As3', 'Cs4'], 'A#dim': ['As3', 'Cs4', 'E4'],
 };
-
 
 const LearnPianoChordsSettings = () => {
   const [selectedScale, setSelectedScale] = useState('C');
   const [selectedChords, setSelectedChords] = useState(chordsByScale['C']);
   const [rounds, setRounds] = useState(15);
   const [notesToFlash, setNotesToFlash] = useState([]);
+  const [freestyleMode, setFreestyleMode] = useState(false);
   const navigate = useNavigate();
 
   const toggleChord = (chord) => {
@@ -62,6 +45,7 @@ const LearnPianoChordsSettings = () => {
         selectedScale,
         selectedChords,
         rounds,
+        freestyleMode,
       },
     });
   };
@@ -74,10 +58,7 @@ const LearnPianoChordsSettings = () => {
 
   const playChord = (chord) => {
     const notes = chordNoteMap[chord];
-    if (!notes) {
-      console.warn(`Chord "${chord}" is missing from chordNoteMap`);
-      return;
-    }
+    if (!notes) return;
     setNotesToFlash(notes);
     notes.forEach(playNote);
   };
@@ -149,6 +130,16 @@ const LearnPianoChordsSettings = () => {
                 className="learn_piano_chords-rounds-input"
               />
             </div>
+            <div className="learn_piano_chords-freestyle-toggle">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={freestyleMode}
+                  onChange={() => setFreestyleMode(!freestyleMode)}
+                />
+                🎲 Freestyle Mode (random chords each round)
+              </label>
+            </div>
             <button className="learn_piano_chords-start-btn" onClick={startPractice}>
               Start Practice
             </button>
@@ -156,13 +147,19 @@ const LearnPianoChordsSettings = () => {
         </nav>
 
         <div className="learn_piano_chords-floating-setup-message">
-          🎯 Set your scale and chords, then click "Start Practice" when ready!
+          {freestyleMode ? (
+            <>🎲 Freestyle Mode: Random chords will appear each round — no scale required!</>
+          ) : (
+            <>🎯 Set your scale and chords, then click "Start Practice" when ready!</>
+          )}
         </div>
 
-        <div className="learn_piano_chords-summary">
-          <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
-          <p>Chords: <strong>{selectedChords.join(', ')}</strong></p>
-        </div>
+        {!freestyleMode && (
+          <div className="learn_piano_chords-summary">
+            <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
+            <p>Chords: <strong>{selectedChords.join(', ')}</strong></p>
+          </div>
+        )}
 
         <div
           className="learn_piano_chords-chord-buttons"
@@ -171,21 +168,22 @@ const LearnPianoChordsSettings = () => {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
           }}
         >
-          {selectedChords.map((chord) => (
+          {selectedChords.map((chord, index) => (
             <button
-              key={chord}
-              className="learn_piano_chords-chord-btn"
-              onClick={() => playChord(chord)}
+              key={index}
+              className={`learn_piano_chords-chord-btn ${freestyleMode ? 'freestyle-disabled' : ''}`}
+              onClick={() => {
+                if (!freestyleMode) playChord(chord);
+              }}
             >
-              {chord}
+              {freestyleMode ? '❓' : chord}
             </button>
           ))}
         </div>
       </div>
 
       <div className="learn_piano_chords-keyboard-wrapper">
-      <LearnPianoChordsKeyboardView flashNotes={notesToFlash} showLabels={true} />
-
+        <LearnPianoChordsKeyboardView flashNotes={notesToFlash} showLabels={true} />
       </div>
     </div>
   );

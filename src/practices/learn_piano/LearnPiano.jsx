@@ -1,19 +1,20 @@
+// LearnPiano.jsx
 import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LearnPiano.css';
 import LearnPianoKeyboard from './LearnPianoKeyboard';
 
 const displayNoteName = (note, key) => {
-    const base = note.replace(/\d/, '');
-    const preferFlat = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'].includes(key);
-  
-    const sharps = { Cs: 'C♯', Ds: 'D♯', Fs: 'F♯', Gs: 'G♯', As: 'A♯' };
-    const flats = { Cs: 'D♭', Ds: 'E♭', Fs: 'G♭', Gs: 'A♭', As: 'B♭' };
-    const natural = { C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B' };
-  
-    if (natural[base]) return natural[base];
-    return preferFlat ? flats[base] || base : sharps[base] || base;
-  };
+  const base = note.replace(/\d/, '');
+  const preferFlat = ['F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'].includes(key);
+
+  const sharps = { Cs: 'C♯', Ds: 'D♯', Fs: 'F♯', Gs: 'G♯', As: 'A♯' };
+  const flats = { Cs: 'D♭', Ds: 'E♭', Fs: 'G♭', Gs: 'A♭', As: 'B♭' };
+  const natural = { C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', A: 'A', B: 'B' };
+
+  if (natural[base]) return natural[base];
+  return preferFlat ? flats[base] || base : sharps[base] || base;
+};
 
 const getNoteBase = (note) => note.replace(/\d/, '');
 
@@ -28,6 +29,7 @@ export default function LearnPiano() {
     rounds = 10,
     sequenceLength = 5,
     normalMode = true,
+    freestyleMode = false,
   } = state || {};
 
   const [currentRound, setCurrentRound] = useState(0);
@@ -41,14 +43,16 @@ export default function LearnPiano() {
   const [showPopup, setShowPopup] = useState(false);
   const [hasFailedThisRound, setHasFailedThisRound] = useState(false);
 
-  const allChoices = [];
+  const allNotes = [
+    'C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'
+  ];
   const octaves = [3, 4, 5];
-  selectedNotes.forEach((note) =>
-    octaves.forEach((oct) => allChoices.push(`${note}${oct}`))
-  );
+  const allChoices = freestyleMode
+    ? octaves.flatMap((oct) => allNotes.map((note) => `${note}${oct}`))
+    : selectedNotes.flatMap((note) => octaves.map((oct) => `${note}${oct}`));
 
   const startGame = () => {
-    if (selectedNotes.length === 0) return;
+    if (allChoices.length === 0) return;
     setCorrectCount(0);
     setWrongCount(0);
     setTriesCount(0);
@@ -88,7 +92,7 @@ export default function LearnPiano() {
     if (!isCorrect) {
       keyboardRef.current.setFlashWrong(note);
       setStatusMessage('❌ Wrong! Try again');
-      setTriesCount((t) => t + 1); // 🔁 count as a try
+      setTriesCount((t) => t + 1);
       if (!hasFailedThisRound) setWrongCount((w) => w + 1);
       setHasFailedThisRound(true);
       setUserInput([]);
@@ -100,7 +104,7 @@ export default function LearnPiano() {
     setUserInput(nextInput);
 
     if (nextInput.length === currentSequence.length) {
-      setTriesCount((t) => t + 1); // ✅ also count as a try
+      setTriesCount((t) => t + 1);
       if (!hasFailedThisRound) {
         setCorrectCount((c) => c + 1);
       }
@@ -123,10 +127,14 @@ export default function LearnPiano() {
     <div className="learn_piano-game-container">
       <nav className="learn_piano-game-navbar">
         <div className="learn_piano-game-navbar-left">
-          <div className="learn_piano-game-logo">{selectedScale} Practice</div>
-          <button className="learn_piano-game-btn tonic-btn" onClick={handlePlayTonic}>
-            {selectedScale}
-          </button>
+          <div className="learn_piano-game-logo">
+            {freestyleMode ? '🎲 Freestyle Mode' : `${selectedScale} Practice`}
+          </div>
+          {!freestyleMode && (
+            <button className="learn_piano-game-btn tonic-btn" onClick={handlePlayTonic}>
+              {selectedScale}
+            </button>
+          )}
         </div>
 
         <div className="learn_piano-game-stats">
@@ -152,29 +160,29 @@ export default function LearnPiano() {
       <div className="learn_piano-game-fill-space" />
 
       <div className="learn_piano-game-bottom">
-      <div className="learn_piano-sequence-display">
-  {currentSequence.map((note, idx) => {
-    const base = getNoteBase(note);
-    const isCurrent = idx === userInput.length;
+        <div className="learn_piano-sequence-display">
+          {currentSequence.map((note, idx) => {
+            const base = getNoteBase(note);
+            const isCurrent = idx === userInput.length;
 
-    return (
-      <span
-        key={idx}
-        className={`learn_piano-sequence-note ${isCurrent ? 'highlighted' : ''}`}
-      >
-        {displayNoteName(note, selectedScale)}
-      </span>
-    );
-  })}
-</div>
+            return (
+              <span
+                key={idx}
+                className={`learn_piano-sequence-note ${isCurrent ? 'highlighted' : ''}`}
+              >
+                {displayNoteName(note, selectedScale)}
+              </span>
+            );
+          })}
+        </div>
 
         <div className="learn_piano-keyboard-wrapper">
-        <LearnPianoKeyboard
-  ref={keyboardRef}
-  onKeyClick={handleAnswer}
-  octaves={octaves}
-  showLabels={false}
-/>
+          <LearnPianoKeyboard
+            ref={keyboardRef}
+            onKeyClick={handleAnswer}
+            octaves={octaves}
+            showLabels={false}
+          />
         </div>
       </div>
 
