@@ -1,3 +1,5 @@
+// src/App.jsx
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -25,7 +27,8 @@ import IntervalPracticeContainer from './practices/interval_training/IntervalPra
 import WhichHigherNoteContainer from './practices/which_higher_note/WhichHigherNoteContainer.jsx';
 import DifferencePracticeContainer from './practices/difference_practice/DifferencePracticeContainer.jsx';
 import WriteNotesPracticeContainer from './practices/write_notes_practice/WriteNotesPracticeContainer.jsx';
-import ChordsForMelodyContainer from './practices/chords_for_melody/ChordsForMelodyContainer.jsx'; // ✅ NEW IMPORT
+import ChordsForMelodyContainer from './practices/chords_for_melody/ChordsForMelodyContainer.jsx';
+import SpecialChordPracticeContainer from './practices/special_chord_practice/SpecialChordPracticeContainer.jsx'; // ✅ NEW IMPORT
 
 export default function App() {
   return (
@@ -55,7 +58,8 @@ export default function App() {
         <Route path="/which-higher-note/*" element={<WhichHigherNoteContainer />} />
         <Route path="/difference/*" element={<DifferencePracticeContainer />} />
         <Route path="/write-notes/*" element={<WriteNotesPracticeContainer />} />
-        <Route path="/chords-for-melody/*" element={<ChordsForMelodyContainer />} /> {/* ✅ NEW LINE */}
+        <Route path="/chords-for-melody/*" element={<ChordsForMelodyContainer />} />
+        <Route path="/special_chord/*" element={<SpecialChordPracticeContainer />} /> {/* ✅ NEW LINE */}
       </Routes>
     </Router>
   );

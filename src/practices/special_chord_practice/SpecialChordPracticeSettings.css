@@ -1,0 +1,211 @@
+/* SpecialChordPracticeSettings.css */
+
+.special_chord_settings-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, #99e06c, #18230F);
+  color: #F1EFEC;
+}
+
+.special_chord_settings-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.special_chord_settings-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px;
+  font-size: 1.15rem;
+}
+
+.special_chord_settings-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+}
+
+.special_chord_settings-dropbtn {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.special_chord_settings-dropbtn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.special_chord_settings-dropdown-content {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background-color: #F1EFEC;
+  color: #18230F;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  flex-direction: column;
+}
+
+.special_chord_settings-dropdown:hover .special_chord_settings-dropdown-content {
+  display: flex;
+}
+
+.special_chord_settings-dropdown-content label {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.special_chord_settings-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.special_chord_settings-rounds input {
+  width: 80px;
+  font-size: 1.1rem;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 2px solid #F1EFEC;
+  background-color: #27391C;
+  color: #F1EFEC;
+  text-align: center;
+}
+
+.special_chord_settings-start-btn {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  animation: bouncePulse 2s infinite ease-in-out, pulseGradient 4s infinite ease-in-out;
+  background-size: 200% 200%;
+}
+
+.special_chord_settings-start-btn:hover {
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.07);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes bouncePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+
+@keyframes pulseGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.special_chord_settings-message {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 14px 24px;
+  border-radius: 16px;
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+  z-index: 10;
+  animation: messageFadeIn 0.4s ease;
+}
+
+@keyframes messageFadeIn {
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.special_chord_settings-summary {
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #F1EFEC;
+}
+
+.special_chord_settings-chord-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 8px 24px 0;
+  margin-bottom: 24px; /* ← add this line */
+
+}
+
+.special_chord_settings-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  min-width: 280px;
+}
+
+.special_chord_settings-section h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  color: #F1EFEC;
+}
+
+.special_chord_settings-chord-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.special_chord_settings-chord-btn {
+  min-width: 100px;
+  padding: 14px 22px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  border: 2px solid #F1EFEC;
+  background: linear-gradient(135deg, #1F7D53, #255F38);
+  border-radius: 12px;
+  color: #F1EFEC;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.special_chord_settings-chord-btn:hover {
+  background-color: #27391C;
+  transform: scale(1.05);
+}
+
+.special_chord_settings-keyboard {
+  width: 100%;
+  padding-bottom: 12px;
+}

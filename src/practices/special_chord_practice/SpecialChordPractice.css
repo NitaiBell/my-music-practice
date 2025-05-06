@@ -1,0 +1,273 @@
+/* SpecialChordPractice.css */
+
+.special_chord-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(to bottom, #99e06c, #18230F);
+    color: #F1EFEC;
+    overflow: hidden;
+  }
+  
+  .special_chord-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    min-height: 80px;
+  }
+  
+  .special_chord-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  .special_chord-logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 12px 16px;
+    background-color: #27391C;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .special_chord-btn {
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .special_chord-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #255F38, #1F7D53);
+  }
+  
+  .special_chord-start-btn {
+    padding: 14px 24px !important;
+    font-size: 1.1rem;
+  }
+  
+  .special_chord-stats {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    background: #27391C;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .special_chord-stat {
+    background-color: #D4C9BE;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #18230F;
+    min-width: 30px;
+    text-align: center;
+  }
+  
+  .special_chord-stat.correct { background-color: #5CFF70; }
+  .special_chord-stat.wrong { background-color: #FF4C4C; color: #fff; }
+  .special_chord-stat.current { background-color: #FFE99E; }
+  .special_chord-stat.tries { background-color: #ccc; }
+  
+  .special_chord-fill {
+    flex-grow: 1;
+  }
+  
+  .special_chord-floating {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 16px 28px;
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    z-index: 10;
+    animation: messageFadeIn 0.3s ease;
+  }
+  
+  @keyframes messageFadeIn {
+    from { opacity: 0; transform: translate(-50%, -10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+  
+  .special_chord_settings-chord-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 8px 24px 0;
+    margin-bottom: 24px;
+  }
+  
+  .special_chord_settings-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    min-width: 280px;
+  }
+  
+  .special_chord_settings-section h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    color: #F1EFEC;
+  }
+  
+  .special_chord_settings-chord-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .special_chord_settings-chord-btn {
+    min-width: 100px;
+    padding: 14px 22px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    border: 2px solid #F1EFEC;
+    background: linear-gradient(135deg, #1F7D53, #255F38);
+    border-radius: 12px;
+    color: #F1EFEC;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    text-align: center;
+    white-space: nowrap;
+  }
+  
+  .special_chord_settings-chord-btn:hover {
+    background-color: #27391C;
+    transform: scale(1.05);
+  }
+  
+  .special_chord_settings-keyboard {
+    width: 100%;
+    padding-bottom: 12px;
+  }
+  
+  .special_chord-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+  
+  .special_chord-popup {
+    background: #93fc79;
+    color: #18230F;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .special_chord-popup h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .special_chord-popup p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .special_chord-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .special_chord-popup-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .special_chord-popup-buttons button:hover {
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    transform: scale(1.05);
+  }
+  
+  .btn-flash-correct {
+    animation: flashCorrectBtn 0.4s ease;
+    background: #4cff4c !important;
+    border-color: #3bcf3b !important;
+    color: #18230F !important;
+    box-shadow: 0 0 12px #4cff4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  .btn-flash-wrong {
+    animation: flashWrongBtn 0.4s ease;
+    background: #ff4c4c !important;
+    border-color: #cc3939 !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px #ff4c4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes flashCorrectBtn {
+    0% { background: #4cff4c; color: #18230F; transform: scale(1.05); }
+    100% { background: linear-gradient(135deg, #1F7D53, #255F38); color: #F1EFEC; transform: scale(1); }
+  }
+  
+  @keyframes flashWrongBtn {
+    0% { background: #ff4c4c; color: #fff; transform: scale(1.05); }
+    100% { background: linear-gradient(135deg, #1F7D53, #255F38); color: #F1EFEC; transform: scale(1); }
+  }
+  
+  @keyframes statFlash {
+    0% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+    50% { transform: scale(1.15); box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+  }
+  
+  .stat-flash {
+    animation: statFlash 0.4s ease-out;
+  }
+  
+  @keyframes bounceFlash {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+    50% { transform: scale(1.15); box-shadow: 0 0 12px #fff; }
+  }
+  
+  .special_chord-btn.bounce-flash {
+    animation: bounceFlash 0.6s infinite;
+  }
+  
