@@ -1,12 +1,39 @@
-  C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'], []
-  G: ['G', 'Am', 'Bm', 'C', 'D', 'Em', 'F#dim'],
-  F: ['F', 'Gm', 'Am', 'Bb', 'C', 'Dm', 'Edim'],
-  A: ['A', 'Bm', 'C#m', 'D', 'E', 'F#m', 'G#dim'],
+// src/data/musicTheory/specialChordData.js
+
+// src/practices/special_chord_practice/logicSpecialChord.js
+export const chordLabelToLogicKey = {
+    '♯III': 'sharpIII',
+    '♭III': 'flatIII',
+    'V7/vi': 'V7_vi',
+    'V7/ii': 'V7_ii',
+    'chromatic mediant': 'chromaticMediant',
+    '♭VII': 'flatVII',
+    'V/iii': 'V_iii',
+    'V/V': 'V_V',
+    'V7/V': 'V7_V',
+    'Neapolitan': 'neapolitan',
+    '♭VI': 'flatVI',
+    'V7/iii': 'V7_iii',
+    'V7/iv': 'V7_iv',
+    'ii → V7/vi': 'ii_vi',
+    'v': 'v',
+    'V7': 'V7',
+    'IV7': 'IV7',
+  };
+ 
+export const majorScales = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+
+export const scaleChordsMap = {
+  C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
   D: ['D', 'Em', 'F#m', 'G', 'A', 'Bm', 'C#dim'],
   E: ['E', 'F#m', 'G#m', 'A', 'B', 'C#m', 'D#dim'],
+  F: ['F', 'Gm', 'Am', 'Bb', 'C', 'Dm', 'Edim'],
+  G: ['G', 'Am', 'Bm', 'C', 'D', 'Em', 'F#dim'],
+  A: ['A', 'Bm', 'C#m', 'D', 'E', 'F#m', 'G#dim'],
   B: ['B', 'C#m', 'D#m', 'E', 'F#', 'G#m', 'A#dim'],
+};
 
-  const chordFunctionsByScale = {
+export const chordFunctionsByScale = {
     C: {
       sharpIII: 'E', // III, typically leads to Am
       V7_vi: 'E7', // V7/vi, typically leads to Am
@@ -148,9 +175,102 @@
       IV7: 'E7', // IV7, typically leads to B or E
     },
   };
+export const chordDisplayMap = Object.entries(chordFunctionsByScale).reduce(
+  (map, [scale, functions]) => {
+    for (const [func, chord] of Object.entries(functions)) {
+      const label = `${func.replace(/_/g, '/')} (${chord})`;
+      map[label] = chord;
+    }
+    return map;
+  }, {}
+);
+
+export const specialChordsByScale = Object.fromEntries(
+  Object.entries(chordFunctionsByScale).map(([scale, funcs]) => [
+    scale,
+    Object.entries(funcs).map(
+      ([func, chord]) => `${func.replace(/_/g, '/')} (${chord})`
+    ),
+  ])
+);
+
+export const chordNoteMap = {
+    // Major triads
+    'C': ['C3', 'E3', 'G3'],
+    'C#': ['Cs3', 'E3', 'Gs3'],
+    'D': ['D3', 'Fs3', 'A3'],
+    'D#': ['Ds3', 'G3', 'As3'],
+    'E': ['E3', 'Gs3', 'B3'],
+    'F': ['F3', 'A3', 'C4'],
+    'F#': ['Fs3', 'As3', 'Cs4'],
+    'G': ['G3', 'B3', 'D4'],
+    'G#': ['Gs3', 'B3', 'Ds4'],
+    'A': ['A3', 'Cs4', 'E4'],
+    'A#': ['As3', 'D4', 'F4'],
+    'B': ['B3', 'Ds4', 'Fs4'],
+    'Bb': ['As3', 'D4', 'F4'],
+    'Eb': ['Ds3', 'G3', 'As3'],
+    'Ab': ['Gs3', 'C4', 'Ds4'],
+    'Db': ['Cs3', 'F3', 'Gs3'],
+  
+    // Minor triads
+    'Cm': ['C3', 'Ds3', 'G3'],
+    'C#m': ['Cs3', 'E3', 'Gs3'],
+    'Dm': ['D3', 'F3', 'A3'],
+    'D#m': ['Ds3', 'Fs3', 'As3'],
+    'Em': ['E3', 'G3', 'B3'],
+    'Fm': ['F3', 'Gs3', 'C4'],
+    'F#m': ['Fs3', 'A3', 'Cs4'],
+    'Gm': ['G3', 'As3', 'D4'],
+    'G#m': ['Gs3', 'B3', 'Ds4'],
+    'Am': ['A3', 'C4', 'E4'],
+    'A#m': ['As3', 'Cs4', 'Es4'],
+    'Bm': ['B3', 'D4', 'Fs4'],
+    'Bbm': ['As3', 'Cs4', 'F4'],
+    'Ebm': ['Ds3', 'Fs3', 'As3'],
+    'Abm': ['Gs3', 'B3', 'Ds4'],
+    'Dbm': ['Cs3', 'E3', 'Gs3'],
+  
+    // Dominant 7ths
+    'C7': ['C3', 'E3', 'G3', 'As3'],
+    'C#7': ['Cs3', 'F3', 'Gs3', 'B3'],
+    'D7': ['D3', 'Fs3', 'A3', 'C4'],
+    'D#7': ['Ds3', 'G3', 'As3', 'Cs4'],
+    'E7': ['E3', 'Gs3', 'B3', 'D4'],
+    'F7': ['F3', 'A3', 'C4', 'Ds4'],
+    'F#7': ['Fs3', 'As3', 'Cs4', 'E4'],
+    'G7': ['G3', 'B3', 'D4', 'F4'],
+    'G#7': ['Gs3', 'B3', 'Ds4', 'F4'],
+    'A7': ['A3', 'Cs4', 'E4', 'G4'],
+    'A#7': ['As3', 'Cs4', 'Es4', 'Gs4'],
+    'B7': ['B3', 'Ds4', 'Fs4', 'A4'],
+    'Bb7': ['As3', 'D4', 'F4', 'Gs4'],
+    'Eb7': ['Ds3', 'G3', 'As3', 'Cs4'],
+    'Ab7': ['Gs3', 'C4', 'Ds4', 'Fs4'],
+    'Db7': ['Cs3', 'F3', 'Gs3', 'B3'],
+  
+    // Diminished triads
+    'Bdim': ['B3', 'D4', 'F4'],
+    'C#dim': ['Cs3', 'E3', 'G3'],
+    'D#dim': ['Ds3', 'Fs3', 'A3'],
+    'Edim': ['E3', 'G3', 'As3'],
+    'F#dim': ['Fs3', 'A3', 'C4'],
+    'G#dim': ['Gs3', 'B3', 'D4'],
+    'A#dim': ['As3', 'Cs4', 'E4'],
+    'Bbdim': ['As3', 'Cs4', 'F4'],
+    'Ebdim': ['Ds3', 'Fs3', 'As3'],
+    'Abdim': ['Gs3', 'B3', 'D4'],
+    'Dbdim': ['Cs3', 'E3', 'Gs3'],
+  
+    // Theoretical / enharmonic
+    'E#': ['Es3', 'Gs3', 'B3'],
+    'Fx': ['Fss3', 'As3', 'Cs4'],
+    'E#7': ['Es3', 'Gs3', 'Bs3', 'D4']
+  };
+  
+  
+  
+  
 
 
-
-
-
-  the problem now is that for some reasomn the speaciol chord alway leading to tonic
+  export const extraChordsByScale = specialChordsByScale;

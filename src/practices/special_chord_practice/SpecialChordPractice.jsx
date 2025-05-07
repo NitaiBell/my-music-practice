@@ -4,24 +4,12 @@ import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './SpecialChordPractice.css';
 import SpecialChordPracticeKeyboard from './SpecialChordPracticeKeyboard';
-
-const chordNoteMap = {
-  C: ['C3', 'E3', 'G3'], Dm: ['D3', 'F3', 'A3'], Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'], G: ['G3', 'B3', 'D4'], Am: ['A3', 'C4', 'E4'], Bdim: ['B3', 'D4', 'F4'],
-  E: ['E3', 'Gs3', 'B3'], D: ['D3', 'Fs3', 'A3'], A: ['A3', 'Cs4', 'E4'],
-  Fm: ['F3', 'Gs3', 'C4'], 'E♭': ['Ds3', 'G3', 'As3'], 'B♭': ['As2', 'D3', 'F3'],
-  D7: ['D3', 'Fs3', 'A3', 'C4'], E7: ['E3', 'Gs3', 'B3', 'D4'], A7: ['A3', 'Cs4', 'E4', 'G4']
-};
-
-const scaleChordMap = {
-  C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
-  D: ['D', 'Em', 'F#m', 'G', 'A', 'Bm', 'C#dim'],
-  E: ['E', 'F#m', 'G#m', 'A', 'B', 'C#m', 'D#dim'],
-  F: ['F', 'Gm', 'Am', 'Bb', 'C', 'Dm', 'Edim'],
-  G: ['G', 'Am', 'Bm', 'C', 'D', 'Em', 'F#dim'],
-  A: ['A', 'Bm', 'C#m', 'D', 'E', 'F#m', 'G#dim'],
-  B: ['B', 'C#m', 'D#m', 'E', 'F#', 'G#m', 'A#dim'],
-};
+import {
+  chordNoteMap,
+  scaleChordsMap,
+  specialChordsByScale as extraChordsByScale,
+  chordDisplayMap,
+} from './specialChordData';
 
 const SpecialChordPractice = () => {
   const { state } = useLocation();
@@ -32,8 +20,7 @@ const SpecialChordPractice = () => {
   const selectedChord = state?.selectedChord || '';
   const rounds = state?.rounds || 10;
 
-  const scaleChords = scaleChordMap[selectedScale] || [];
-
+  const scaleChords = scaleChordsMap[selectedScale] || [];
   const [sequence, setSequence] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -51,7 +38,7 @@ const SpecialChordPractice = () => {
 
   const playNote = (note) => {
     const audio = new Audio(`/clean_cut_notes/${encodeURIComponent(note + '.wav')}`);
-    audio.play().catch(err => console.error(`Error playing ${note}:`, err));
+    audio.play().catch(() => {});
   };
 
   const playChord = (chord) => {
@@ -60,69 +47,32 @@ const SpecialChordPractice = () => {
     notes.forEach(playNote);
   };
 
-const startGame = () => {
-  const middleLength = rounds - 2;
-  const minSpecialCount = Math.max(1, Math.floor(rounds * 0.25));
+  const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-  const middle = [];
-  let specialCount = 0;
+  const startGame = () => {
+    const totalRounds = rounds || 30;
+    const chordPool = [...scaleChords.filter(c => c !== selectedChord), selectedChord];
 
-  const IV_VI_by_scale = {
-    C: ['F', 'Am'],
-    D: ['G', 'Bm'],
-    E: ['A', 'C#m'],
-    F: ['Bb', 'Dm'],
-    G: ['C', 'Em'],
-    A: ['D', 'F#m'],
-    B: ['E', 'G#m'],
-  };
-
-  const IV_VI = IV_VI_by_scale[selectedScale] || [];
-
-  // Define special chords to control
-  const controlledChords = ['E', 'E7'];
-
-  for (let i = 0; i < middleLength;) {
-    const remaining = middleLength - i;
-    const remainingSpecialNeeded = minSpecialCount - specialCount;
-    const forceSpecial = remaining === remainingSpecialNeeded;
-
-    if ((Math.random() < 0.3 || forceSpecial) && specialCount < minSpecialCount) {
-      const special = controlledChords[Math.floor(Math.random() * controlledChords.length)];
-      middle.push(special);
-      specialCount++;
-      i++;
-      if (i < middleLength) {
-        const next = IV_VI[Math.floor(Math.random() * IV_VI.length)];
-        middle.push(next);
-        i++;
-      }
-    } else {
-      const other = scaleChords[Math.floor(Math.random() * scaleChords.length)];
-      if (!controlledChords.includes(other)) {
-        middle.push(other);
-        i++;
-      }
+    const newSequence = [];
+    for (let i = 0; i < totalRounds; i++) {
+      newSequence.push(pickRandom(chordPool));
     }
-  }
 
-  const fullSequence = [selectedScale, ...middle.slice(0, middleLength), selectedScale];
+    setSequence(newSequence);
+    setCurrentRound(0);
+    setCorrectCount(0);
+    setWrongCount(0);
+    setTriesCount(0);
+    setIsPlaying(true);
+    setCanAnswer(false);
+    setShowPopup(false);
+    setStatusMessage('');
+    setRoundMistakeMade(false);
+    setRoundOutcomeSet(false);
+    setAwaitingRetry(false);
 
-  setSequence(fullSequence);
-  setCurrentRound(0);
-  setCorrectCount(0);
-  setWrongCount(0);
-  setTriesCount(0);
-  setIsPlaying(true);
-  setCanAnswer(false);
-  setRoundMistakeMade(false);
-  setRoundOutcomeSet(false);
-  setAwaitingRetry(false);
-  setShowPopup(false);
-  setStatusMessage('');
-  setTimeout(() => playNextChord(fullSequence[0]), 400);
-};
-
+    playNextChord(newSequence[0]);
+  };
 
   const playNextChord = (chord) => {
     playChord(chord);
@@ -137,12 +87,14 @@ const startGame = () => {
 
   const handleAnswer = (chord) => {
     if (!canAnswer || !isPlaying) return;
+
     const expected = sequence[currentRound];
     const notes = chordNoteMap[chord];
+
     setTriesCount(t => t + 1);
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 300);
-    setFlashChord(chord); // only visual feedback
+    setFlashChord(chord);
 
     if (chord === expected) {
       if (!roundMistakeMade && !roundOutcomeSet) {
@@ -152,6 +104,7 @@ const startGame = () => {
         setRoundOutcomeSet(true);
         setStatusMessage("✅ Correct!");
       }
+
       setCanAnswer(false);
       keyboardRef.current?.setFlashRight(notes);
 
@@ -160,8 +113,9 @@ const startGame = () => {
         setShowPopup(true);
       } else {
         setTimeout(() => {
+          const nextChord = sequence[currentRound + 1];
           setCurrentRound(r => r + 1);
-          playNextChord(sequence[currentRound + 1]);
+          playNextChord(nextChord);
         }, 700);
       }
     } else {

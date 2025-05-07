@@ -1,63 +1,19 @@
 // src/practices/special_chord_practice/SpecialChordPracticeSettings.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SpecialChordPracticeKeyboard from './SpecialChordPracticeKeyboard';
+import {
+  majorScales,
+  scaleChordsMap,
+  specialChordsByScale,
+  chordDisplayMap,
+  chordNoteMap,
+} from './specialChordData';
 import './SpecialChordPracticeSettings.css';
-
-const majorScales = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-
-const scaleChordsMap = {
-  C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
-  D: ['D', 'Em', 'F#m', 'G', 'A', 'Bm', 'C#dim'],
-  E: ['E', 'F#m', 'G#m', 'A', 'B', 'C#m', 'D#dim'],
-  F: ['F', 'Gm', 'Am', 'Bb', 'C', 'Dm', 'Edim'],
-  G: ['G', 'Am', 'Bm', 'C', 'D', 'Em', 'F#dim'],
-  A: ['A', 'Bm', 'C#m', 'D', 'E', 'F#m', 'G#dim'],
-  B: ['B', 'C#m', 'D#m', 'E', 'F#', 'G#m', 'A#dim'],
-};
-
-const specialChordsByScale = {
-  C: ['♯III (E)', 'V7/vi (E7)', 'V7/ii (A7)', 'iv (Fm)', '♭III (E♭)', ' (A/Amin)', '♭VII (B♭)', 'V/iii (C♯)', 'V/V (D)', 'V7/V (D7)'],
-};
-
-const chordDisplayMap = {
-  '♯III (E)': 'E',
-  'V7/vi (E7)': 'E7',
-  'V7/ii (A7)': 'A7',
-  'iv (Fm)': 'Fm',
-  '♭III (E♭)': 'E♭',
-  ' (A/Amin)': 'A',
-  '♭VII (B♭)': 'B♭',
-  'V/iii (C♯)': 'Cs',
-  'V/V (D)': 'D',
-  'V7/V (D7)': 'D7',
-};
-
-const chordNoteMap = {
-  C: ['C3', 'E3', 'G3'],
-  D: ['D3', 'Fs3', 'A3'],
-  Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'],
-  G: ['G3', 'B3', 'D4'],
-  Am: ['A3', 'C4', 'E4'],
-  Bdim: ['B3', 'D4', 'F4'],
-  Dm: ['D3', 'F3', 'A3'],
-  Fm: ['F3', 'Gs3', 'C4'],
-  'E♭': ['Ds3', 'G3', 'As3'],
-  'B♭': ['As2', 'D3', 'F3'],
-  E7: ['E3', 'Gs3', 'B3', 'D4'],
-  A7: ['A3', 'Cs4', 'E4', 'G4'],
-  D7: ['D3', 'Fs3', 'A3', 'C4'],
-  E: ['E3', 'Gs3', 'B3'],
-  A: ['A3', 'Cs4', 'E4'],
-  B: ['B3', 'Ds4', 'Fs4'],
-  Cs: ['Cs3', 'E3', 'Gs3'],
-};
 
 const SpecialChordPracticeSettings = () => {
   const [selectedScale, setSelectedScale] = useState('C');
-  const [selectedChordLabel, setSelectedChordLabel] = useState('♯III (E)');
+  const [selectedChordLabel, setSelectedChordLabel] = useState('');
   const [rounds, setRounds] = useState(10);
   const [notesToFlash, setNotesToFlash] = useState([]);
   const navigate = useNavigate();
@@ -83,12 +39,13 @@ const SpecialChordPracticeSettings = () => {
   };
 
   const startPractice = () => {
-    const chord = chordDisplayMap[selectedChordLabel];
+    const chord = chordDisplayMap[selectedChordLabel] || selectedChordLabel;
     if (!chord) return alert('Please select a special chord first.');
     navigate('/special_chord/play', {
       state: {
         selectedScale,
         selectedChord: chord,
+        selectedChordLabel, // <-- ADD THIS LINE
         rounds,
       },
     });
