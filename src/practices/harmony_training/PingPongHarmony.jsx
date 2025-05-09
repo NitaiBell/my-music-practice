@@ -1,65 +1,12 @@
+// src/practices/ping_pong_harmony/PingPongHarmony.jsx
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './PingPongHarmony.css';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
+import { chordNoteMap } from './HarmonyTrainingData';
 
-const chordNoteMap = {
-  C: ['C3', 'E3', 'G3'],
-  D: ['D3', 'Fs3', 'A3'],
-  Dm: ['D3', 'F3', 'A3'],
-  Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'],
-  FM: ['F3', 'A3', 'C4'],
-  G: ['G3', 'B3', 'D4'],
-  Am: ['A3', 'C4', 'E4'],
-  Bdim: ['B3', 'D4', 'F4'],
-  Bm: ['B3', 'D4', 'Fs4'],
-
-  // Diminished
-  'F#dim': ['Fs3', 'A3', 'C4'],
-  'G#dim': ['Gs3', 'B3', 'D4'],
-  'C#dim': ['Cs3', 'E3', 'G3'],
-  'D#dim': ['Ds3', 'Fs3', 'A3'],
-  'A#dim': ['As3', 'Cs4', 'E4'],
-
-  // Minor chords
-  Gm: ['G3', 'As3', 'D4'],
-  'C#m': ['Cs3', 'E3', 'Gs3'],
-  'F#m': ['Fs3', 'A3', 'Cs4'],
-  'G#m': ['Gs3', 'B3', 'Ds4'],
-  'D#m': ['Ds3', 'Fs3', 'As3'],
-  'Ebm': ['Ds3', 'F3', 'As3'],
-  'Abm': ['Gs3', 'B3', 'Cs4'],
-  'Dbm': ['Cs3', 'E3', 'Gb3'],
-  Cm: ['C3', 'Ds3', 'G3'],
-
-  // Major chords with accidentals
-  Bb: ['As2', 'D3', 'F3'],
-  'B♭': ['As2', 'D3', 'F3'], // alias
-  Eb: ['Ds3', 'G3', 'As3'],
-  'E♭': ['Ds3', 'G3', 'As3'], // alias
-  Ab: ['Gs3', 'C4', 'Ds4'],
-  Db: ['Cs3', 'F3', 'Gs3'],
-
-  // Dominant 7
-  'E7': ['E3', 'Gs3', 'B3', 'D4'],
-  'A7': ['A3', 'Cs4', 'E4', 'G4'],
-  'D7': ['D3', 'Fs3', 'A3', 'C4'],
-  'G7': ['G3', 'B3', 'D4', 'F4'],
-  'B7': ['B3', 'Ds4', 'Fs4', 'A4'],
-  'Bb7': ['As2', 'D3', 'F3', 'Gs3'],
-  'B♭7': ['As2', 'D3', 'F3', 'Gs3'], // alias
-  'F#7': ['Fs3', 'As3', 'Cs4', 'E4'],
-  'C#7': ['Cs3', 'F3', 'Gs3', 'B3'],
-  'G#7': ['Gs3', 'B3', 'Ds4', 'F4'],
-  'D#7': ['Ds3', 'Fs3', 'As3', 'C4'],
-
-  // Others
-  E: ['E3', 'Gs3', 'B3'],
-  A: ['A3', 'Cs4', 'E4'],
-  B: ['B3', 'Ds4', 'Fs4'],
-  Fm: ['F3', 'Gs3', 'C4'],
-};
+const normalizeChord = (chord) => chord.trim();
 
 const PingPongHarmony = () => {
   const { state } = useLocation();
@@ -67,7 +14,7 @@ const PingPongHarmony = () => {
   const keyboardRef = useRef();
 
   const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
-  const tonic = selectedScale.replace(/m$/, '');
+  const tonic = normalizeChord(selectedScale.replace(/m$/, ''));
 
   const [sequence, setSequence] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -83,7 +30,7 @@ const PingPongHarmony = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [buttonFlashes, setButtonFlashes] = useState({});
   const [statFlash, setStatFlash] = useState('');
-  const [statusMessage, setStatusMessage] = useState(''); // ✅ New status message
+  const [statusMessage, setStatusMessage] = useState('');
 
   const playNote = (note) => {
     const encoded = encodeURIComponent(`${note}.wav`);
@@ -92,30 +39,65 @@ const PingPongHarmony = () => {
   };
 
   const playChord = (chord) => {
-    const notes = chordNoteMap[chord];
+    const clean = normalizeChord(chord);
+    const notes = chordNoteMap[clean];
+    if (!notes) {
+      console.warn(`Chord not found in chordNoteMap: "${clean}"`);
+      return;
+    }
     notes.forEach(playNote);
   };
 
   const setButtonFlash = (chord, type) => {
-    setButtonFlashes((prev) => ({ ...prev, [chord]: type }));
+    const clean = normalizeChord(chord);
+    setButtonFlashes((prev) => ({ ...prev, [clean]: type }));
     setTimeout(() => {
-      setButtonFlashes((prev) => ({ ...prev, [chord]: null }));
+      setButtonFlashes((prev) => ({ ...prev, [clean]: null }));
     }, 500);
   };
 
   const startGame = () => {
-    if (!selectedChords.includes(tonic)) return;
-
-    const middleRounds = rounds - 2;
-    const nonTonicChords = selectedChords.filter((chord) => chord !== tonic);
-    if (middleRounds < 0 || nonTonicChords.length === 0) return;
-
-    const middle = Array.from({ length: middleRounds }, () =>
-      nonTonicChords[Math.floor(Math.random() * nonTonicChords.length)]
-    );
-
+    const normalizedChords = selectedChords.map(normalizeChord);
+    if (!normalizedChords.includes(tonic)) return;
+  
+    const middleLength = rounds - 2;
+    const nonTonicChords = normalizedChords.filter((chord) => chord !== tonic);
+    if (middleLength <= 0 || nonTonicChords.length === 0) return;
+  
+    const middle = [];
+  
+    // Edge case: only 1 or 2 chords
+    if (nonTonicChords.length <= 2) {
+      for (let i = 0; i < middleLength; i++) {
+        middle.push(nonTonicChords[Math.floor(Math.random() * nonTonicChords.length)]);
+      }
+    } else {
+      // 3+ chords → better variety
+      let lastChord = tonic;
+  
+      for (let i = 0; i < middleLength; i++) {
+        // Shuffle and avoid same chord back-to-back
+        const options = nonTonicChords.filter((ch) => ch !== lastChord);
+        const pool = options.length ? options : nonTonicChords;
+        const next = pool[Math.floor(Math.random() * pool.length)];
+        middle.push(next);
+        lastChord = next;
+      }
+  
+      // Optional: try to guarantee each chord appears at least once
+      const mustInclude = new Set(nonTonicChords);
+      middle.forEach((ch) => mustInclude.delete(ch));
+      const missing = Array.from(mustInclude);
+  
+      // Replace some random middle spots with the missing ones
+      for (let i = 0; i < missing.length && i < middle.length; i++) {
+        const swapIndex = Math.floor(Math.random() * middle.length);
+        middle[swapIndex] = missing[i];
+      }
+    }
+  
     const fullSequence = [tonic, ...middle, tonic];
-
+  
     setSequence(fullSequence);
     setCurrentRound(0);
     setCorrectCount(0);
@@ -128,13 +110,15 @@ const PingPongHarmony = () => {
     setAwaitingRetry(false);
     setStatusMessage('');
     setShowPopup(false);
-
+  
     setTimeout(() => playNextChord(fullSequence[0]), 300);
   };
+  
 
   const playNextChord = (chord) => {
-    setCurrentChord(chord);
-    playChord(chord);
+    const clean = normalizeChord(chord);
+    setCurrentChord(clean);
+    playChord(clean);
     setCanAnswer(true);
     setRoundMistakeMade(false);
     setRoundOutcomeSet(false);
@@ -155,14 +139,20 @@ const PingPongHarmony = () => {
   const handleAnswer = (chord) => {
     if (!canAnswer || !isPlaying) return;
 
-    const expectedChord = sequence[currentRound];
-    const notes = chordNoteMap[chord];
+    const guess = normalizeChord(chord);
+    const expected = normalizeChord(sequence[currentRound]);
+    const notes = chordNoteMap[guess];
+
+    if (!notes) {
+      console.warn(`Chord not found for answer: "${guess}"`);
+      return;
+    }
 
     setTriesCount((t) => t + 1);
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 400);
 
-    if (chord === expectedChord) {
+    if (guess === expected) {
       if (!roundOutcomeSet && !roundMistakeMade) {
         setCorrectCount((c) => c + 1);
         setStatFlash('correct');
@@ -173,7 +163,7 @@ const PingPongHarmony = () => {
 
       setCanAnswer(false);
       keyboardRef.current?.setFlashRight(notes);
-      setButtonFlash(chord, 'correct');
+      setButtonFlash(guess, 'correct');
 
       if (currentRound + 1 >= sequence.length) {
         setIsPlaying(false);
@@ -197,12 +187,13 @@ const PingPongHarmony = () => {
       setRoundMistakeMade(true);
       setAwaitingRetry(true);
       keyboardRef.current?.setFlashWrong(notes);
-      setButtonFlash(chord, 'wrong');
+      setButtonFlash(guess, 'wrong');
     }
   };
 
   const rows = selectedChords.length > 12 ? 2 : 1;
   const columns = Math.ceil(selectedChords.length / rows || 1);
+  const uniqueChords = Array.from(new Set(selectedChords.map(normalizeChord)));
 
   return (
     <div className="harmonygame-container">
@@ -229,11 +220,7 @@ const PingPongHarmony = () => {
         </button>
       </nav>
 
-      {statusMessage && (
-        <div className="floating-message">
-          {statusMessage}
-        </div>
-      )}
+      {statusMessage && <div className="floating-message">{statusMessage}</div>}
 
       <div className="harmonygame-fill-space" />
 
@@ -245,7 +232,7 @@ const PingPongHarmony = () => {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
           }}
         >
-          {selectedChords.map((chord) => (
+          {uniqueChords.map((chord) => (
             <button
               key={chord}
               className={`harmonygame-chord-btn ${buttonFlashes[chord] === 'correct' ? 'btn-flash-correct' : ''} ${buttonFlashes[chord] === 'wrong' ? 'btn-flash-wrong' : ''}`}

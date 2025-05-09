@@ -1,87 +1,19 @@
+// src/practices/ping_pong_harmony/PingPongHarmonySettings.jsx
+
 import React, { useState } from 'react';
 import './PingPongHarmonySettings.css';
 import { useNavigate } from 'react-router-dom';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
-
-const chordsByScale = {
-  C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
-  G: ['G', 'Am', 'Bm', 'C', 'D', 'Em', 'F#dim'],
-  F: ['F', 'Gm', 'Am', 'Bb', 'C', 'Dm', 'Edim'],
-  A: ['A', 'Bm', 'C#m', 'D', 'E', 'F#m', 'G#dim'],
-  D: ['D', 'Em', 'F#m', 'G', 'A', 'Bm', 'C#dim'],
-  E: ['E', 'F#m', 'G#m', 'A', 'B', 'C#m', 'D#dim'],
-  B: ['B', 'C#m', 'D#m', 'E', 'F#', 'G#m', 'A#dim'],
-};
-
-// 🎵 Dynamic extra chords per scale (with correct musical symbols)
-//here I can add more extra chords for doiffrenet scales
-const extraChordsByScale = {
-  C: ['E', 'E7', 'A7', 'Fm', 'E♭', 'Bm', 'B♭', 'B', 'D', 'D7'],
-
-};
-
-const chordNoteMap = {
-  C: ['C3', 'E3', 'G3'],
-  D: ['D3', 'Fs3', 'A3'],
-  Dm: ['D3', 'F3', 'A3'],
-  Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'],
-  FM: ['F3', 'A3', 'C4'],
-  G: ['G3', 'B3', 'D4'],
-  Am: ['A3', 'C4', 'E4'],
-  Bdim: ['B3', 'D4', 'F4'],
-  Bm: ['B3', 'D4', 'Fs4'],
-
-  // Diminished
-  'F#dim': ['Fs3', 'A3', 'C4'],
-  'G#dim': ['Gs3', 'B3', 'D4'],
-  'C#dim': ['Cs3', 'E3', 'G3'],
-  'D#dim': ['Ds3', 'Fs3', 'A3'],
-  'A#dim': ['As3', 'Cs4', 'E4'],
-
-  // Minor chords
-  Gm: ['G3', 'As3', 'D4'],
-  'C#m': ['Cs3', 'E3', 'Gs3'],
-  'F#m': ['Fs3', 'A3', 'Cs4'],
-  'G#m': ['Gs3', 'B3', 'Ds4'],
-  'D#m': ['Ds3', 'Fs3', 'As3'],
-  'Ebm': ['Ds3', 'F3', 'As3'],
-  'Abm': ['Gs3', 'B3', 'Cs4'],
-  'Dbm': ['Cs3', 'E3', 'Gb3'],
-  Cm: ['C3', 'Ds3', 'G3'],
-
-  // Major chords with accidentals
-  Bb: ['As2', 'D3', 'F3'],
-  'B♭': ['As2', 'D3', 'F3'], // alias
-  Eb: ['Ds3', 'G3', 'As3'],
-  'E♭': ['Ds3', 'G3', 'As3'], // alias
-  Ab: ['Gs3', 'C4', 'Ds4'],
-  Db: ['Cs3', 'F3', 'Gs3'],
-
-  // Dominant 7
-  'E7': ['E3', 'Gs3', 'B3', 'D4'],
-  'A7': ['A3', 'Cs4', 'E4', 'G4'],
-  'D7': ['D3', 'Fs3', 'A3', 'C4'],
-  'G7': ['G3', 'B3', 'D4', 'F4'],
-  'B7': ['B3', 'Ds4', 'Fs4', 'A4'],
-  'Bb7': ['As2', 'D3', 'F3', 'Gs3'],
-  'B♭7': ['As2', 'D3', 'F3', 'Gs3'], // alias
-  'F#7': ['Fs3', 'As3', 'Cs4', 'E4'],
-  'C#7': ['Cs3', 'F3', 'Gs3', 'B3'],
-  'G#7': ['Gs3', 'B3', 'Ds4', 'F4'],
-  'D#7': ['Ds3', 'Fs3', 'As3', 'C4'],
-
-  // Others
-  E: ['E3', 'Gs3', 'B3'],
-  A: ['A3', 'Cs4', 'E4'],
-  B: ['B3', 'Ds4', 'Fs4'],
-  Fm: ['F3', 'Gs3', 'C4'],
-};
-
+import {
+  majorScales,
+  scaleChordsMap,
+  extraChordsByScale,
+  chordNoteMap,
+} from './HarmonyTrainingData';
 
 const PingPongHarmonySettings = () => {
   const [selectedScale, setSelectedScale] = useState('C');
-  const [selectedChords, setSelectedChords] = useState(chordsByScale['C']);
+  const [selectedChords, setSelectedChords] = useState(scaleChordsMap['C']);
   const [outChords, setOutChords] = useState([]);
   const [rounds, setRounds] = useState(15);
   const [notesToFlash, setNotesToFlash] = useState([]);
@@ -128,7 +60,7 @@ const PingPongHarmonySettings = () => {
   const handleScaleChange = (scale) => {
     setSelectedScale(scale);
     const tonic = scale;
-    const newChords = chordsByScale[scale];
+    const newChords = scaleChordsMap[scale];
     const reordered = newChords.includes(tonic)
       ? [tonic, ...newChords.filter((c) => c !== tonic)]
       : newChords;
@@ -137,7 +69,7 @@ const PingPongHarmonySettings = () => {
   };
 
   const extraChords = extraChordsByScale[selectedScale] || [];
-  const allButtons = [...selectedChords, ...outChords];
+const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
   const rows = allButtons.length > 12 ? 2 : 1;
   const columns = Math.ceil(allButtons.length / rows || 1);
 
@@ -150,7 +82,7 @@ const PingPongHarmonySettings = () => {
             <div className="harmony-dropdown">
               <button className="harmony-dropbtn">🎼 Scale</button>
               <div className="harmony-dropdown-content">
-                {Object.keys(chordsByScale).map((scale) => (
+                {majorScales.map((scale) => (
                   <label key={scale}>
                     <input
                       type="radio"
@@ -168,7 +100,7 @@ const PingPongHarmonySettings = () => {
             <div className="harmony-dropdown">
               <button className="harmony-dropbtn">🎶 Chords</button>
               <div className="harmony-dropdown-content">
-                {chordsByScale[selectedScale].map((chord) => (
+                {scaleChordsMap[selectedScale].map((chord) => (
                   <label key={chord}>
                     <input
                       type="checkbox"
@@ -256,26 +188,3 @@ const PingPongHarmonySettings = () => {
 };
 
 export default PingPongHarmonySettings;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
