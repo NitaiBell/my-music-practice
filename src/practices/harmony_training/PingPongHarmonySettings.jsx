@@ -1,4 +1,4 @@
-// src/practices/ping_pong_harmony/PingPongHarmonySettings.jsx
+// ✅ Updated PingPongHarmonySettings.jsx with specialChordMode support
 
 import React, { useState } from 'react';
 import './PingPongHarmonySettings.css';
@@ -9,6 +9,7 @@ import {
   scaleChordsMap,
   extraChordsByScale,
   chordNoteMap,
+  chordFunctionsByScale,
 } from './HarmonyTrainingData';
 
 const PingPongHarmonySettings = () => {
@@ -16,6 +17,7 @@ const PingPongHarmonySettings = () => {
   const [selectedChords, setSelectedChords] = useState(scaleChordsMap['C']);
   const [outChords, setOutChords] = useState([]);
   const [rounds, setRounds] = useState(15);
+  const [specialChordMode, setSpecialChordMode] = useState(false);
   const [notesToFlash, setNotesToFlash] = useState([]);
   const navigate = useNavigate();
 
@@ -33,11 +35,34 @@ const PingPongHarmonySettings = () => {
   };
 
   const startPractice = () => {
+    const allChords = [...selectedChords, ...outChords];
+
+    const romanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
+    const inScaleFunctions = Object.fromEntries(
+      (scaleChordsMap[selectedScale] || []).map((chord, i) => [chord, romanNumerals[i]])
+    );
+
+    const specialFunctions = Object.entries(chordFunctionsByScale[selectedScale] || {}).reduce(
+      (acc, [func, chord]) => {
+        acc[chord] = func.replace(/_/g, '/');
+        return acc;
+      },
+      {}
+    );
+
+    const chordFunctionMap = {};
+    allChords.forEach((chord) => {
+      chordFunctionMap[chord] =
+        specialFunctions[chord] || inScaleFunctions[chord] || '?';
+    });
+
     navigate('/harmony/play', {
       state: {
         selectedScale,
-        selectedChords: [...selectedChords, ...outChords],
+        selectedChords: allChords,
+        chordFunctionMap,
         rounds,
+        specialChordMode,
       },
     });
   };
@@ -65,11 +90,11 @@ const PingPongHarmonySettings = () => {
       ? [tonic, ...newChords.filter((c) => c !== tonic)]
       : newChords;
     setSelectedChords(reordered);
-    setOutChords([]); // reset extra chords on scale change
+    setOutChords([]);
   };
 
   const extraChords = extraChordsByScale[selectedScale] || [];
-const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
+  const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
   const rows = allButtons.length > 12 ? 2 : 1;
   const columns = Math.ceil(allButtons.length / rows || 1);
 
@@ -78,7 +103,6 @@ const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
       <div className="harmony-content-wrapper">
         <nav className="harmony-navbar">
           <div className="harmony-scale-chord-wrapper">
-            {/* Scale Dropdown */}
             <div className="harmony-dropdown">
               <button className="harmony-dropbtn">🎼 Scale</button>
               <div className="harmony-dropdown-content">
@@ -96,7 +120,6 @@ const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
               </div>
             </div>
 
-            {/* In-scale Chords */}
             <div className="harmony-dropdown">
               <button className="harmony-dropbtn">🎶 Chords</button>
               <div className="harmony-dropdown-content">
@@ -114,7 +137,6 @@ const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
               </div>
             </div>
 
-            {/* Extra Chords (Dynamic) */}
             <div className="harmony-dropdown">
               <button className="harmony-dropbtn">🧩 Extra Chords</button>
               <div className="harmony-dropdown-content">
@@ -132,7 +154,6 @@ const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
             </div>
           </div>
 
-          {/* Controls */}
           <div className="harmony-controls">
             <div className="rounds-group">
               <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
@@ -146,6 +167,14 @@ const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
                 className="harmony-rounds-input"
               />
             </div>
+            <label>
+              <input
+                type="checkbox"
+                checked={specialChordMode}
+                onChange={() => setSpecialChordMode((v) => !v)}
+              />
+              🎯 Focus on Special Chords
+            </label>
             <button className="harmony-start-btn" onClick={startPractice}>
               Start Practice
             </button>
