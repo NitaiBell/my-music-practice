@@ -259,3 +259,31 @@
 .harmony-rounds-input:focus {
   box-shadow: 0 0 6px #99e06c;
 }
+
+
+/* Special chord mode toggle styling */
+.harmony-special-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #27391C;
+  border: 2px solid #F1EFEC;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #F1EFEC;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.harmony-special-toggle input[type="checkbox"] {
+  transform: scale(1.4);
+  accent-color: #99e06c;
+  cursor: pointer;
+}
+
+.harmony-special-toggle:hover {
+  background-color: #1a2714;
+  transform: scale(1.02);
+}

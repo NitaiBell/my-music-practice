@@ -167,14 +167,14 @@ const PingPongHarmonySettings = () => {
                 className="harmony-rounds-input"
               />
             </div>
-            <label>
-              <input
-                type="checkbox"
-                checked={specialChordMode}
-                onChange={() => setSpecialChordMode((v) => !v)}
-              />
-              🎯 Focus on Special Chords
-            </label>
+            <div className="harmony-special-toggle">
+  <input
+    type="checkbox"
+    checked={specialChordMode}
+    onChange={() => setSpecialChordMode((v) => !v)}
+  />
+  🎯 Focus on Special Chords
+</div>
             <button className="harmony-start-btn" onClick={startPractice}>
               Start Practice
             </button>
