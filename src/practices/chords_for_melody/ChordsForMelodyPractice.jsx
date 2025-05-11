@@ -1,5 +1,3 @@
-// src/practices/chords_for_melody/ChordsForMelodyPractice.jsx
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { melodies } from './melodies';
@@ -7,18 +5,17 @@ import './ChordsForMelodyPractice.css';
 import ChordsForMelodyKeyboardView from './ChordsForMelodyKeyboardView';
 import './ChordsForMelodyKeyboardView.css';
 
-const availableChords = ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'];
-
 const chordNoteMap = {
   C: ['C3', 'E3', 'G3'],
   Dm: ['D3', 'F3', 'A3'],
   Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C3'],
-  G: ['G3', 'B3', 'D3'],
-  Am: ['A3', 'C3', 'E3'],
-  Bdim: ['B3', 'D3', 'F3'],
+  F: ['F3', 'A3', 'C4'], // Adjusted C3 to C4 for consistency
+  G: ['G3', 'B3', 'D4'], // Adjusted D3 to D4 for consistency
+  Am: ['A3', 'C4', 'E4'], // Adjusted C3, E3 to C4, E4 for consistency
+  Bdim: ['B3', 'D4', 'F4'], // Adjusted D3, F3 to D4, F4 for consistency
+  D: ['D3', 'F#3', 'A3'], // Added for playfulMelody
+  E: ['E3', 'G#3', 'B3'], // Added for sadInThree
 };
-
 
 const ChordsForMelodyPractice = () => {
   const { state } = useLocation();
@@ -27,7 +24,7 @@ const ChordsForMelodyPractice = () => {
   const keyboardRef = useRef();
 
   const melodyData = melodies[selectedMelodyName] || {};
-  const { notes = [], tempo = 90, timeSignature = [4, 4] } = melodyData;
+  const { notes = [], tempo = 90, timeSignature = [4, 4], chords = ['C', 'F', 'G'] } = melodyData;
 
   const beatsPerBar = timeSignature?.[0] || 4;
   const beatDurationMs = 60000 / tempo;
@@ -66,7 +63,7 @@ const ChordsForMelodyPractice = () => {
     const normalized = normalizeNoteName(noteName);
     const audio = new Audio(`/clean_cut_notes/${normalized}.wav`);
     audio.volume = 1.0;
-    audio.play();
+    audio.play().catch((error) => console.error(`Error playing note ${normalized}:`, error));
   };
 
   const playChord = (chordName) => {
@@ -76,7 +73,7 @@ const ChordsForMelodyPractice = () => {
       const normalized = normalizeNoteName(note);
       const audio = new Audio(`/clean_cut_notes/${normalized}.wav`);
       audio.volume = 0.7;
-      audio.play();
+      audio.play().catch((error) => console.error(`Error playing chord note ${normalized}:`, error));
     });
     keyboardRef.current?.setFlashRight(notes);
   };
@@ -89,7 +86,7 @@ const ChordsForMelodyPractice = () => {
     notes.forEach((noteObj) => {
       const msDuration = noteObj.duration * beatDurationMs;
       const timeout = setTimeout(() => {
-        playNote(noteObj.note);
+        playNote(noteObj.note || noteObj.harmonynote);
       }, elapsed);
       melodyTimeoutsRef.current.push(timeout);
       elapsed += msDuration;
@@ -201,9 +198,11 @@ const ChordsForMelodyPractice = () => {
 
   if (!selectedMelodyName) {
     return (
-      <div className="chords_for_melody_practice_container">
+      <div className="chords_for_melody_practice_containerغه:1px solid #000; padding:10px;">
         <h2>No melody selected. Please go back to settings.</h2>
-        <button onClick={() => navigate('/chords-for-melody/settings')}>Back to Settings</button>
+        <button onClick={() => navigate('/chords-for-melody/settings')}>
+          Back to Settings
+        </button>
       </div>
     );
   }
@@ -241,7 +240,8 @@ const ChordsForMelodyPractice = () => {
           <div key={slotIndex} className="chords_for_melody_practice_slot_group">
             {slot.parts.map((part, partIndex) => {
               const isActive =
-                activeSlot?.slotIndex === slotIndex && activeSlot?.partIndex === partIndex;
+                activeSlot?.slotIndex === slotIndex &&
+                activeSlot?.partIndex === partIndex;
               return (
                 <div
                   key={partIndex}
@@ -275,7 +275,7 @@ const ChordsForMelodyPractice = () => {
       </div>
 
       <div className="chords_for_melody_practice_chord_line">
-        {availableChords.map((chord, idx) => (
+        {chords.map((chord, idx) => (
           <div
             key={idx}
             className="chords_for_melody_practice_chord"

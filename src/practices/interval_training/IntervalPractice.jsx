@@ -12,7 +12,7 @@ export default function IntervalPractice() {
     selectedIntervals = [],
     baseNotes = [],
     rounds = 10,
-    octaves = [3, 4],
+    octaves = [3, 4, 5],
     direction = 'both',
   } = state || {};
 
@@ -62,8 +62,15 @@ export default function IntervalPractice() {
 
   const isNoteInRange = (note) => {
     const midi = noteToMidi(note);
-    const min = noteToMidi(`${baseNotes[0] || 'C'}${Math.min(...octaves)}`);
-    const max = noteToMidi(`${baseNotes[baseNotes.length - 1] || 'B'}${Math.max(...octaves)}`);
+  
+    // Compute all possible min and max MIDI values from baseNotes x octaves
+    const allPossible = baseNotes.flatMap(base =>
+      octaves.map(oct => noteToMidi(`${base}${oct}`))
+    );
+  
+    const min = Math.min(...allPossible);
+    const max = Math.max(...allPossible);
+  
     return midi >= min && midi <= max;
   };
 

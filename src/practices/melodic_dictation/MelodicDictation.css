@@ -1,0 +1,211 @@
+/* Container */
+.melodic_dictation-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(to bottom, #c2f86a, #18230F);
+    color: #F1EFEC;
+    overflow: hidden;
+  }
+  
+  /* Navbar */
+  .melodic_dictation-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    min-height: 80px;
+  }
+  
+  .melodic_dictation-navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  .melodic_dictation-logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 12px 16px;
+    background-color: #27391C;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .melodic_dictation-btn {
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .melodic_dictation-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #255F38, #1F7D53);
+  }
+  
+  .melodic_dictation-start-btn {
+    padding: 14px 24px !important;
+    font-size: 1.1rem;
+  }
+  
+  /* Stats */
+  .melodic_dictation-stats {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.15rem;
+    background: #27391C;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .melodic_dictation-stat {
+    background-color: #D4C9BE;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #18230F;
+    min-width: 32px;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  
+  .melodic_dictation-stat.correct {
+    background-color: #5CFF70;
+  }
+  
+  .melodic_dictation-stat.wrong {
+    background-color: #FF4C4C;
+    color: #fff;
+  }
+  
+  .melodic_dictation-stat.current {
+    background-color: #FFE99E;
+  }
+  
+  .melodic_dictation-stat.tries {
+    background-color: #ccc;
+  }
+  
+  .melodic_dictation-fill-space {
+    flex-grow: 1;
+  }
+  
+  .melodic_dictation-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  .melodic_dictation-keyboard {
+    width: 100vw;
+    padding-bottom: 12px;
+    overflow-x: hidden;
+  }
+  
+  /* Floating message */
+  .melodic_dictation-floating-message {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 16px 28px;
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    z-index: 10;
+    animation: messageFadeIn 0.3s ease;
+  }
+  
+  @keyframes messageFadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+  
+  /* Popup */
+  .melodic_dictation-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+  
+  .melodic_dictation-popup {
+    background: #93fc79;
+    color: #18230F;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .melodic_dictation-popup h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .melodic_dictation-popup p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .melodic_dictation-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .melodic_dictation-popup-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .melodic_dictation-popup-buttons button:hover {
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    transform: scale(1.05);
+  }
+  
+
+  .melodic_dictation-keyboard-wrapper {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  
