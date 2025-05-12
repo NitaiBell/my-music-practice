@@ -1,6 +1,6 @@
 // src/practices/melodic_dictation/MelodicDictation.jsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './MelodicDictation.css';
 import MelodicDictationKeyboard from './MelodicDictationKeyboard';
@@ -16,13 +16,16 @@ export default function MelodicDictation() {
     rounds = 5,
     sequenceLength = 4,
     octaves = [4],
-    difficulty = 'normal',
+    difficulty = 'normal', // reserved for future use
   } = state || {};
 
+  /* ----------------- global stats ----------------- */
   const [roundIndex, setRoundIndex] = useState(0);
-  const [triesCount, setTriesCount] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [wrongCount, setWrongCount] = useState(0);
+  const [triesCount, setTriesCount] = useState(0);      // total attempts across the game
+  const [correctCount, setCorrectCount] = useState(0);  // +1 only if FIRST attempt of a round is correct
+  const [wrongCount, setWrongCount] = useState(0);      // +1 once per round if ANY mistake is made
+
+  /* ----------------- round‑scoped state ----------------- */
   const [currentSequence, setCurrentSequence] = useState([]);
   const [userInput, setUserInput] = useState([]);
   const [canAnswer, setCanAnswer] = useState(false);
@@ -30,8 +33,13 @@ export default function MelodicDictation() {
   const [showPopup, setShowPopup] = useState(false);
   const [mustClickReplay, setMustClickReplay] = useState(false);
 
-  const allChoices = selectedNotes.flatMap(note =>
-    octaves.map(oct => `${note}${oct}`)
+  // helpers to keep per‑round bookkeeping
+  const [attemptsThisRound, setAttemptsThisRound] = useState(0); // how many FULL sequence attempts made so far in this round
+  const [madeMistake, setMadeMistake] = useState(false);         // has the player already made at least one mistake in THIS round?
+
+  /* ----------------- utility generators ----------------- */
+  const allChoices = selectedNotes.flatMap((note) =>
+    octaves.map((oct) => `${note}${oct}`)
   );
 
   const generateSequence = () => {
@@ -43,31 +51,42 @@ export default function MelodicDictation() {
     return sequence;
   };
 
+  /* ----------------- audio helpers ----------------- */
   const playSequence = async (seq) => {
     setCanAnswer(false);
     for (let i = 0; i < seq.length; i++) {
       const note = seq[i];
-      keyboardRef.current.playNote(note, false); // no flash on play
+      keyboardRef.current.playNote(note, false); // play without flash
       await new Promise((res) => setTimeout(res, 650));
     }
-    setCanAnswer(true);
     setUserInput([]);
     setMustClickReplay(false);
     setStatusMessage('🎧 Your turn');
+    setCanAnswer(true);
+  };
+
+  /* ----------------- round / game lifecycle ----------------- */
+  const startRound = (newRoundIdx) => {
+    // reset round‑scoped helpers
+    setAttemptsThisRound(0);
+    setMadeMistake(false);
+
+    const seq = generateSequence();
+    setCurrentSequence(seq);
+    setRoundIndex(newRoundIdx);
+    playSequence(seq);
   };
 
   const startGame = () => {
-    setRoundIndex(0);
+    setShowPopup(false);
     setTriesCount(0);
     setCorrectCount(0);
     setWrongCount(0);
-    setShowPopup(false);
     setStatusMessage('');
-    const sequence = generateSequence();
-    setCurrentSequence(sequence);
-    playSequence(sequence);
+    startRound(0);
   };
 
+  /* ----------------- user interaction ----------------- */
   const handleKeyClick = (note) => {
     if (!canAnswer || mustClickReplay) return;
 
@@ -75,36 +94,54 @@ export default function MelodicDictation() {
     setUserInput(nextInput);
 
     const expectedNote = currentSequence[nextInput.length - 1];
+
+    // correct so far
     if (note === expectedNote) {
       keyboardRef.current.setFlashRight(note);
+
+      // sequence finished successfully
       if (nextInput.length === currentSequence.length) {
-        setCorrectCount((c) => c + 1);
-        setStatusMessage('✅ Correct!');
+        const firstAttempt = attemptsThisRound === 0; // true if this was the first try in the round
+
+        // update stats BEFORE resetting attemptsThisRound
+        setTriesCount((t) => t + 1);
+        if (firstAttempt) {
+          setCorrectCount((c) => c + 1);
+        }
+
+        /* prepare next round or finish game */
         if (roundIndex + 1 === rounds) {
+          setStatusMessage('✅ Correct!');
           setShowPopup(true);
           setCanAnswer(false);
         } else {
+          setStatusMessage('✅ Correct!');
+          setCanAnswer(false);
           setTimeout(() => {
-            const nextSequence = generateSequence();
-            setRoundIndex((i) => i + 1);
-            setCurrentSequence(nextSequence);
-            setUserInput([]);
-            setStatusMessage('');
-            playSequence(nextSequence);
+            startRound(roundIndex + 1);
           }, 800);
         }
       }
-    } else {
-      keyboardRef.current.setFlashWrong(note);
-      currentSequence.slice(0, nextInput.length - 1).forEach(n => {
-        setTimeout(() => keyboardRef.current.setFlashRight(n), 150);
-      });
-      setWrongCount((w) => w + 1);
-      setTriesCount((t) => t + 1);
-      setCanAnswer(false);
-      setMustClickReplay(true);
-      setStatusMessage('❌ Wrong! Click Replay to hear again.');
+      return; // early exit on correct path
     }
+
+    /* ----------------- wrong note branch ----------------- */
+    keyboardRef.current.setFlashWrong(note);
+
+
+    // stats: add a try, and possibly a wrong (only once per round)
+    setTriesCount((t) => t + 1);
+    setAttemptsThisRound((a) => a + 1);
+    if (!madeMistake) {
+      setWrongCount((w) => w + 1);
+      setMadeMistake(true);
+    }
+
+    // force replay before next attempt
+    setMustClickReplay(true);
+    setCanAnswer(false);
+    setUserInput([]);
+    setStatusMessage('❌ Wrong! Click Replay to hear again.');
   };
 
   const handleReplay = () => {
@@ -121,42 +158,48 @@ export default function MelodicDictation() {
   const flashFirstNotes = () => {
     if (currentSequence.length) {
       const firstNote = currentSequence[0];
-      keyboardRef.current.playNote(firstNote, true); // flash = true
+      keyboardRef.current.playNote(firstNote, true);
       setStatusMessage('✨ First note flashed');
     }
   };
 
-
   const handleAnswerWithFlash = async () => {
     if (!canAnswer) return;
-  
-    // Count as mistake
-    setWrongCount((prev) => prev + 1);
-    setTriesCount((prev) => prev + 1);
+
+    // user requested to reveal the answer – counts as a wrong attempt
+    setTriesCount((t) => t + 1);
+    setAttemptsThisRound((a) => a + 1);
+    if (!madeMistake) {
+      setWrongCount((w) => w + 1);
+      setMadeMistake(true);
+    }
+
     setCanAnswer(false);
     setStatusMessage('🎼 Showing Answer...');
-  
+
     for (let i = 0; i < currentSequence.length; i++) {
       const note = currentSequence[i];
-      keyboardRef.current.playNote(note, true); // flash = true
+      keyboardRef.current.playNote(note, true);
       await new Promise((res) => setTimeout(res, 700));
     }
-  
+
     setStatusMessage('🎧 Your turn');
+    setMustClickReplay(false);
     setCanAnswer(true);
+    setUserInput([]);
   };
 
+  /* ----------------- JSX ----------------- */
   return (
     <div className="melodic_dictation-container">
+      {/* -------- NAVBAR -------- */}
       <nav className="melodic_dictation-navbar">
         <div className="melodic_dictation-navbar-left">
           <div className="melodic_dictation-logo">{selectedScale} Melody</div>
           <button className="melodic_dictation-btn" onClick={handleReplay}>🔁 Replay</button>
           <button className="melodic_dictation-btn" onClick={handleTonic}>{selectedScale}</button>
           <button className="melodic_dictation-btn" onClick={flashFirstNotes}>✨ Flash First Notes</button>
-          <button className="melodic_dictation-btn" onClick={handleAnswerWithFlash}>
-  🎼 Answer
-</button>
+          <button className="melodic_dictation-btn" onClick={handleAnswerWithFlash}>🎼 Answer</button>
         </div>
 
         <div className="melodic_dictation-stats">
@@ -175,12 +218,14 @@ export default function MelodicDictation() {
         </button>
       </nav>
 
+      {/* -------- FLOATING STATUS -------- */}
       {statusMessage && (
         <div className="melodic_dictation-floating-message">{statusMessage}</div>
       )}
 
       <div className="melodic_dictation-fill-space" />
 
+      {/* -------- KEYBOARD -------- */}
       <div className="melodic_dictation-bottom">
         <div className="melodic_dictation-keyboard-wrapper">
           <MelodicDictationKeyboard
@@ -191,6 +236,7 @@ export default function MelodicDictation() {
         </div>
       </div>
 
+      {/* -------- END POPUP -------- */}
       {showPopup && (
         <div className="melodic_dictation-popup-overlay">
           <div className="melodic_dictation-popup">

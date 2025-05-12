@@ -170,7 +170,7 @@ export default function MelodicDictationSettings() {
 
             <div className="melodic_dictation_settings-dropdown">
               <button className="melodic_dictation_settings-dropbtn">
-                🎚 Difficulty: {difficulty === 'normal' ? 'Normal' : difficulty === 'hard' ? 'Hard' : 'Master'}
+              🪜 Difficulty: {difficulty === 'normal' ? 'Normal' : difficulty === 'hard' ? 'Hard' : 'Master'}
               </button>
               <div className="melodic_dictation_settings-dropdown-content">
                 <label>
