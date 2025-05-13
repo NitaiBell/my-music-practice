@@ -14,3 +14,6 @@ else if cd backend/frontend
     cd ../backend to get the second
 
 npm install react-router-dom
+
+
+images profiles = https://chatgpt.com/c/682364ce-155c-8013-a30e-0f960a9c0a6c

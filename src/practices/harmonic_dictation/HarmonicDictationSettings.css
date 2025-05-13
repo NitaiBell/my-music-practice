@@ -215,3 +215,39 @@
     box-shadow: 0 0 6px #99e06c;
   }
   
+
+  .rounds-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: #27391C;
+    border: 2px solid #F1EFEC;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    font-size: 1.1rem;
+  }
+  
+  .rounds-label {
+    font-weight: 600;
+    color: #F1EFEC;
+    white-space: nowrap;
+  }
+  
+  .harmony_dictation_settings-rounds-input {
+    width: 60px;
+    padding: 6px 8px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 2px solid #F1EFEC;
+    background-color: #407217;
+    color: #F1EFEC;
+    text-align: center;
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .harmony_dictation_settings-rounds-input:focus {
+    outline: none;
+    box-shadow: 0 0 6px #99e06c;
+  }
+  

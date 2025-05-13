@@ -130,19 +130,22 @@ const HarmonicDictationSettings = () => {
           </div>
 
           <div className="harmony_dictation_settings-controls">
-            <label className="rounds-label">Rounds:</label>
-            <input
-              type="number"
-              min="1"
-              max="20"
-              value={rounds}
-              onChange={(e) => setRounds(Number(e.target.value))}
-              className="harmony_dictation_settings-rounds-input"
-            />
-            <button className="harmony_dictation_settings-start-btn" onClick={startPractice}>
-              Start Practice
-            </button>
-          </div>
+  <div className="rounds-group">
+    <label className="rounds-label">🎯 Rounds</label>
+    <input
+      type="number"
+      min="1"
+      max="20"
+      value={rounds}
+      onChange={(e) => setRounds(Number(e.target.value))}
+      className="harmony_dictation_settings-rounds-input"
+    />
+  </div>
+  <button className="harmony_dictation_settings-start-btn" onClick={startPractice}>
+    Start Practice
+  </button>
+</div>
+
         </nav>
 
         <div className="harmony_dictation_settings-floating-message">

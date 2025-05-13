@@ -306,3 +306,33 @@
     }
   }
   
+
+  .harmony_dictation-floating-message,
+.harmony_dictation-instruction-message {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: bold;
+  padding: 16px 28px;
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  z-index: 10;
+  animation: messageFadeIn 0.3s ease;
+  white-space: nowrap;
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

@@ -8,3 +8,5 @@ learn_piano
 learn_piano_chords
 real_melody_training
 which_higher_note
+harmonic_dictation
+melodic_dictation

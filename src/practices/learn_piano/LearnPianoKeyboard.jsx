@@ -52,12 +52,13 @@ import React, {
       };
   
       const getFlashClass = (note) => {
-        if (flashGreen.includes(note)) return 'learn_piano-flash-green';
-        if (flashRed.includes(note)) return 'learn_piano-flash-red';
-        if (flashBlue.includes(note)) return 'learn_piano-flash-blue';
+        if (flashGreen.includes(note)) return 'flash-correct';
+        if (flashRed.includes(note)) return 'flash-wrong';
+        if (flashBlue.includes(note)) return 'flash-blue';
         if (getNoteBase(note) === tonic) return 'learn_piano-tonic';
         return '';
       };
+      
   
       const getNoteBase = (note) => note.replace(/\d/, '');
   

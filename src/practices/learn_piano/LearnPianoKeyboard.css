@@ -156,3 +156,10 @@
     height: clamp(120px, 20vh, 220px);
   }
 }
+
+
+.learn_piano-white-key.flash-correct .flash-overlay,
+.learn_piano-black-key.flash-correct .flash-overlay {
+  background-color: #4cff4c;
+  opacity: 1;
+}
