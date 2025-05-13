@@ -1,0 +1,308 @@
+/* HarmonicDictation.css */
+
+.harmony_dictation-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(to bottom, #99e06c, #18230F);
+    color: #F1EFEC;
+    overflow: hidden;
+  }
+  
+  .harmony_dictation-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    min-height: 80px;
+  }
+  
+  .harmony_dictation-navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  .harmony_dictation-logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 12px 16px;
+    background-color: #27391C;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .harmony_dictation-btn {
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .harmony_dictation-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #255F38, #1F7D53);
+  }
+  
+  .harmony_dictation-start-btn {
+    padding: 14px 24px !important;
+    font-size: 1.1rem;
+  }
+  
+  .harmony_dictation-stats {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    background: #27391C;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 2px solid #F1EFEC;
+  }
+  
+  .harmony_dictation-stat {
+    background-color: #D4C9BE;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #18230F;
+    min-width: 30px;
+    text-align: center;
+  }
+  
+  .harmony_dictation-stat.correct {
+    background-color: #5CFF70;
+  }
+  
+  .harmony_dictation-stat.wrong {
+    background-color: #FF4C4C;
+    color: #fff;
+  }
+  
+  .harmony_dictation-stat.current {
+    background-color: #FFE99E;
+  }
+  
+  .harmony_dictation-stat.tries {
+    background-color: #ccc;
+  }
+  
+  .harmony_dictation-fill-space {
+    flex-grow: 1;
+  }
+  
+  .harmony_dictation-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  .harmony_dictation-chords {
+    display: grid;
+    gap: 12px;
+    padding: 14px 16px;
+    align-items: stretch;
+    justify-items: stretch;
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 22vh;
+    overflow-y: auto;
+    margin-bottom: 10px;
+  }
+  
+  .harmony_dictation-chord-btn {
+    width: 100%;
+    height: 100%;
+    font-size: 2.2rem;
+    font-weight: bold;
+    border: 2px solid #F1EFEC;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1F7D53, #255F38);
+    color: #F1EFEC;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .harmony_dictation-chord-btn:hover {
+    background-color: #27391C;
+    transform: scale(1.03);
+  }
+  
+  .harmony_dictation-keyboard {
+    width: 100vw;
+    padding-bottom: 12px;
+    overflow-x: hidden;
+  }
+  
+  .harmony_dictation-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+  
+  .harmony_dictation-popup {
+    background: #93fc79;
+    color: #18230F;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .harmony_dictation-popup h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .harmony_dictation-popup p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .harmony_dictation-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .harmony_dictation-popup-buttons button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #F1EFEC;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .harmony_dictation-popup-buttons button:hover {
+    background: linear-gradient(to right, #255F38, #1F7D53);
+    transform: scale(1.05);
+  }
+  
+  .harmony_dictation-btn.bounce-flash {
+    animation: bounceFlash 0.6s infinite;
+  }
+  
+  .harmony_dictation-floating-message {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 16px 28px;
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    z-index: 10;
+    animation: messageFadeIn 0.3s ease;
+  }
+  
+  @keyframes bounceFlash {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 0px transparent;
+    }
+    50% {
+      transform: scale(1.15);
+      box-shadow: 0 0 12px #fff;
+    }
+  }
+  
+  @keyframes messageFadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+  
+  .btn-flash-correct {
+    animation: flashCorrectBtn 0.4s ease;
+    background: #4cff4c !important;
+    border-color: #3bcf3b !important;
+    color: #18230F !important;
+    box-shadow: 0 0 12px #4cff4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  .btn-flash-wrong {
+    animation: flashWrongBtn 0.4s ease;
+    background: #ff4c4c !important;
+    border-color: #cc3939 !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px #ff4c4c;
+    transform: scale(1.03);
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes flashCorrectBtn {
+    0% {
+      background: #4cff4c;
+      color: #18230F;
+      transform: scale(1.05);
+    }
+    100% {
+      background: linear-gradient(135deg, #1F7D53, #255F38);
+      color: #F1EFEC;
+      transform: scale(1.0);
+    }
+  }
+  
+  @keyframes flashWrongBtn {
+    0% {
+      background: #ff4c4c;
+      color: #fff;
+      transform: scale(1.05);
+    }
+    100% {
+      background: linear-gradient(135deg, #1F7D53, #255F38);
+      color: #F1EFEC;
+      transform: scale(1.0);
+    }
+  }
+  
+  .stat-flash {
+    animation: statFlash 0.4s ease-out;
+  }
+  
+  @keyframes statFlash {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0px transparent;
+    }
+    50% {
+      transform: scale(1.15);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0px transparent;
+    }
+  }
+  

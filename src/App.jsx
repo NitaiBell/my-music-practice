@@ -29,7 +29,8 @@ import DifferencePracticeContainer from './practices/difference_practice/Differe
 import WriteNotesPracticeContainer from './practices/write_notes_practice/WriteNotesPracticeContainer.jsx';
 import ChordsForMelodyContainer from './practices/chords_for_melody/ChordsForMelodyContainer.jsx';
 import SpecialChordPracticeContainer from './practices/special_chord_practice/SpecialChordPracticeContainer.jsx';
-import MelodicDictationContainer from './practices/melodic_dictation/MelodicDictationContainer.jsx'; // ✅ NEW IMPORT
+import MelodicDictationContainer from './practices/melodic_dictation/MelodicDictationContainer.jsx';
+import HarmonicDictationContainer from './practices/harmonic_dictation/HarmonicDictationContainer.jsx'; // ✅ NEW IMPORT
 
 export default function App() {
   return (
@@ -61,7 +62,8 @@ export default function App() {
         <Route path="/write-notes/*" element={<WriteNotesPracticeContainer />} />
         <Route path="/chords-for-melody/*" element={<ChordsForMelodyContainer />} />
         <Route path="/special_chord/*" element={<SpecialChordPracticeContainer />} />
-        <Route path="/melodic-dictation/*" element={<MelodicDictationContainer />} /> {/* ✅ NEW LINE */}
+        <Route path="/melodic-dictation/*" element={<MelodicDictationContainer />} />
+        <Route path="/harmonic/*" element={<HarmonicDictationContainer />} /> {/* ✅ ADDED LINE */}
       </Routes>
     </Router>
   );
