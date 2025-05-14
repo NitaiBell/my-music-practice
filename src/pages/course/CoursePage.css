@@ -11,7 +11,7 @@
 /* Navbar */
 .course-navbar {
   height: 60px;
-  background: #745985;
+  background: #23b000;
   color: #fff;
   display: flex;
   align-items: center;
@@ -121,12 +121,34 @@
 
 /* Checkbox */
 .episode-checkbox {
-  margin-left: 8px;
-  margin-right: 8px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   width: 18px;
   height: 18px;
+  border: 2px solid #23b000;   /* green border */
+  border-radius: 4px;
+  background-color: #fff;
   cursor: pointer;
+  position: relative;
+  transition: background 0.2s, border-color 0.2s;
 }
+
+.episode-checkbox:checked {
+  background-color: #23b000;   /* green background when checked */
+  border-color: #23b000;
+}
+
+.episode-checkbox:checked::before {
+  content: '✓';
+  position: absolute;
+  top: -1px;
+  left: 3px;
+  font-size: 14px;
+  color: white;               /* white checkmark */
+  font-weight: bold;
+}
+
 
 /* Episode Button */
 .course-episode-item {
@@ -146,7 +168,7 @@
 }
 
 .course-episode-item.active {
-  background: #ddc8e2;
+  background: #c8e2cf;
   color: #080000;
   font-weight: bold;
 }
@@ -177,7 +199,7 @@
 
 .open-fullview-button {
   padding: 10px 16px;
-  background: #745985;
+  background: #6b8559;
   color: white;
   border: none;
   border-radius: 6px;
@@ -187,16 +209,16 @@
 }
 
 .open-fullview-button:hover {
-  background: #5c4370;
+  background: #00ff15;
 }
 
 .description-link {
-  color: #745985;
+  color: #b6e692;
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.3s;
 }
 
 .description-link:hover {
-  color: #5c4370;
+  color: #437049;
 }

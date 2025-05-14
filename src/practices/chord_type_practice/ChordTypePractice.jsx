@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ChordTypePractice.css';
 import ChordTypeKeyboard from './ChordTypeKeyboard';
+import { calculateChordTypeRank } from './calculateChordTypeRank'; // ✅ Imported helper
 
 const chordIntervals = {
   Major: [0, 4, 7],
@@ -15,9 +16,8 @@ const chordIntervals = {
   Aug: [0, 4, 8],
   Dim7: [0, 3, 6, 9],
   Maj6: [0, 4, 7, 9],
-  Min7b5: [0, 3, 6, 10] // ✅ Half-diminished seventh (Minor 7♭5)
+  Min7b5: [0, 3, 6, 10]
 };
-
 
 const noteOrder = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
 const baseNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -45,6 +45,7 @@ const ChordTypePractice = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
+  const startTimeRef = useRef(null); // ✅ Added startTimeRef
 
   const {
     selectedChordTypes = ['Major', 'Minor'],
@@ -97,6 +98,8 @@ const ChordTypePractice = () => {
       newSequence.push({ chordType, base });
       attempts++;
     }
+
+    startTimeRef.current = performance.now(); // ✅ Start timer
 
     setSequence(newSequence);
     setCurrentRound(0);
@@ -242,6 +245,26 @@ const ChordTypePractice = () => {
             <p><strong>Correct:</strong> {correctCount}</p>
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Tries:</strong> {triesCount}</p>
+
+            {rounds >= 20 ? (() => {
+              const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
+              const { score, max, avgTimePerAnswer } = calculateChordTypeRank({
+                selectedChordTypes,
+                correctCount,
+                triesCount,
+                rounds,
+                totalTimeSec,
+              });
+              return (
+                <>
+                  <p><strong>Rank:</strong> {score} / {max}</p>
+                  <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
+                </>
+              );
+            })() : (
+              <p><strong>Rank:</strong> Not calculated (minimum 25 rounds required)</p>
+            )}
+
             <div className="chord_type_game-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/chord-type')}>⚙️ Back to Settings</button>
@@ -254,3 +277,4 @@ const ChordTypePractice = () => {
 };
 
 export default ChordTypePractice;
+

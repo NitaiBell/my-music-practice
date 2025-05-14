@@ -87,63 +87,68 @@ export default function MelodicDictation() {
   };
 
   /* ----------------- user interaction ----------------- */
+  const correctSound = new Audio('/wrong_right/correct.mp3');
+  const wrongSound = new Audio('/wrong_right/wrong.mp3');
+  
   const handleKeyClick = (note) => {
     if (!canAnswer || mustClickReplay) return;
-
+  
+    keyboardRef.current.playNote(note, false); // play the note
+  
     const nextInput = [...userInput, note];
     setUserInput(nextInput);
-
+  
     const expectedNote = currentSequence[nextInput.length - 1];
-
-    // correct so far
+  
+    // ✅ correct so far
     if (note === expectedNote) {
       keyboardRef.current.setFlashRight(note);
-
-      // sequence finished successfully
+  
+      // ✅ full sequence correct
       if (nextInput.length === currentSequence.length) {
-        const firstAttempt = attemptsThisRound === 0; // true if this was the first try in the round
-
-        // update stats BEFORE resetting attemptsThisRound
+        const firstAttempt = attemptsThisRound === 0;
+  
         setTriesCount((t) => t + 1);
-        if (firstAttempt) {
-          setCorrectCount((c) => c + 1);
-        }
-
-        /* prepare next round or finish game */
+        if (firstAttempt) setCorrectCount((c) => c + 1);
+  
+        setCanAnswer(false);
+        setStatusMessage('✅ Correct!');
+  
+        correctSound.play();
+  
         if (roundIndex + 1 === rounds) {
-          setStatusMessage('✅ Correct!');
-          setShowPopup(true);
-          setCanAnswer(false);
+          // ✅ end of game
+          correctSound.onended = () => {
+            setShowPopup(true);
+          };
         } else {
-          setStatusMessage('✅ Correct!');
-          setCanAnswer(false);
-          setTimeout(() => {
+          // ✅ next round
+          correctSound.onended = () => {
             startRound(roundIndex + 1);
-          }, 800);
+          };
         }
       }
-      return; // early exit on correct path
+  
+      return; // stop here, no wrong logic needed
     }
-
-    /* ----------------- wrong note branch ----------------- */
+  
+    // ❌ wrong answer branch
     keyboardRef.current.setFlashWrong(note);
-
-
-    // stats: add a try, and possibly a wrong (only once per round)
+    wrongSound.play();
+  
     setTriesCount((t) => t + 1);
     setAttemptsThisRound((a) => a + 1);
     if (!madeMistake) {
       setWrongCount((w) => w + 1);
       setMadeMistake(true);
     }
-
-    // force replay before next attempt
+  
     setMustClickReplay(true);
     setCanAnswer(false);
     setUserInput([]);
     setStatusMessage('❌ Wrong! Click Replay to hear again.');
   };
-
+  
   const handleReplay = () => {
     if (currentSequence.length) {
       setStatusMessage('🔁 Replaying...');

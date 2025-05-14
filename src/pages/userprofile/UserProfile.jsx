@@ -4,6 +4,18 @@ import './UserProfile.css';
 const profileOptions = [
   { name: 'Mozart', file: 'mozart profile.png' },
   { name: 'Bunny Mozart', file: 'bunny mozart.png' },
+  { name: 'Bear Mozart', file: 'bear mozart.png' },
+  { name: 'Cat Mozart', file: 'cat mozart.png' },
+  { name: 'Cool Mozart', file: 'cool mozart.png' },
+  { name: 'Cowboy Mozart', file: 'cowboy mozart.png' },
+  { name: 'Elephant Mozart', file: 'elephant mozart.png' },
+  { name: 'Freedom Mozart', file: 'freedom mozart.png' },
+  { name: 'Koala Mozart', file: 'kuala mozart.png' },
+  { name: 'Monkey Mozart', file: 'monkey mozart.png' },
+  { name: 'Penguin Mozart', file: 'penguin mozart.png' },
+  { name: 'Pig Mozart', file: 'pig mozart.png' },
+  { name: 'Pirate Mozart', file: 'pirate mozart.png' },
+  { name: 'Turtle Mozart', file: 'turtle mozart.png' },
 ];
 
 const practiceLinks = [
@@ -24,10 +36,24 @@ const practiceLinks = [
 export default function UserProfile({ username = 'Mozart' }) {
   const [selectedImage, setSelectedImage] = useState('/profiles/mozart profile.png');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const handleSelectImage = (file) => {
     setSelectedImage(`/profiles/${file}`);
     setShowDropdown(false);
+  };
+
+  const handleUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result); // base64
+        setSelectedImage(reader.result); // update avatar
+        setShowDropdown(false);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const scrollToSection = (id, offset = -280) => {
@@ -72,6 +98,25 @@ export default function UserProfile({ username = 'Mozart' }) {
           +
           {showDropdown && (
             <div className="user-profile-dropdown">
+              {/* Upload option at the top */}
+              <div className="user-profile-option upload-option">
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                  <img
+                    src={uploadedImage || '/icons/upload-icon.png'}
+                    alt="Upload"
+                    style={{ width: '36px', height: '36px', borderRadius: '50%' }}
+                  />
+                  <span>Upload Image</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleUpload}
+                  />
+                </label>
+              </div>
+
+              {/* Default avatars */}
               {profileOptions.map(({ name, file }) => (
                 <div
                   key={file}

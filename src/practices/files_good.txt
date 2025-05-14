@@ -9,4 +9,14 @@ learn_piano_chords
 real_melody_training
 which_higher_note
 harmonic_dictation
-melodic_dictation
+
+
+🧠 RANK FACTORS & THEIR IMPACT
+Factor	What It Measures	How It Affects Score
+🎯 Correct Count	Number of rounds answered correctly on first try	Increases score. More first-try corrects = better accuracyFactor.
+❌ Wrong Count	Rounds failed on first try	Lowers accuracyFactor. More mistakes = lower score.
+🔁 Total Tries	Total number of attempts (including retries)	Used in efficiencyFactor. More retries = lower score.
+🎼 Note Variety	Number of different notes selected	Increases difficulty. More notes = higher noteVarietyFactor.
+⏱ Total Time	Total seconds the session took	Used to calculate speed bonus. Slower = less bonus.
+⚡ Avg Time per Round	Time per note (sec)	Faster average = higher speedFactor. Under 8s = rewarded.
+📈 Mode (normalMode)	If only note name must match (not octave)	Optional: can be used to scale difficulty if desired.

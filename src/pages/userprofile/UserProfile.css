@@ -138,10 +138,23 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 8px;
-    width: 180px;
+    width: 200px;
+    max-height: 300px;               /* ✅ Limit dropdown height */
+    overflow-y: auto;                /* ✅ Enable vertical scrolling */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     z-index: 1003;
   }
+  
+
+  .user-profile-dropdown::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .user-profile-dropdown::-webkit-scrollbar-thumb {
+    background: #10b981;
+    border-radius: 4px;
+  }
+  
   
   .user-profile-option {
     display: flex;

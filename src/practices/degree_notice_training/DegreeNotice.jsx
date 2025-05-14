@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './DegreeNotice.css';
+import { calculateDegreeNoticeRank } from './calculateDegreeNoticeRank';
+
 
 const fullChordMap = {
   C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
@@ -67,13 +69,12 @@ export default function DegreeNotice() {
   const [roundFlash, setRoundFlash] = useState(false);
   const [musicMuted, setMusicMuted] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
+  const startTimeRef = useRef(null);
 
   useEffect(() => {
     backgroundMusic.volume = 0.15;
     backgroundMusic.loop = true;
-    if (!musicMuted) {
-      backgroundMusic.play().catch(() => {});
-    }
+    if (!musicMuted) backgroundMusic.play().catch(() => {});
     return () => {
       backgroundMusic.pause();
       backgroundMusic.currentTime = 0;
@@ -85,14 +86,16 @@ export default function DegreeNotice() {
     const noteAnswer = fullChordMap[scale][degreeNum];
     const correctAnswer = mode === 'scaleToDegree' ? degreeLabels[degreeNum] : noteAnswer;
     const questionPrompt = mode === 'scaleToDegree' ? displayNote(noteAnswer) : degree;
-
+  
     const options = new Set([correctAnswer]);
     while (options.size < 4) {
       const randIdx = Math.floor(Math.random() * 7);
-      const distractor = mode === 'scaleToDegree' ? degreeLabels[randIdx] : fullChordMap[scale][randIdx];
+      const distractor = mode === 'scaleToDegree'
+        ? degreeLabels[randIdx]
+        : fullChordMap[scale][randIdx];
       options.add(distractor);
     }
-
+  
     return {
       scale,
       degree,
@@ -120,6 +123,7 @@ export default function DegreeNotice() {
   };
 
   const initGame = () => {
+    startTimeRef.current = performance.now();
     const comboSet = new Set();
     selectedScales.forEach(scale => {
       selectedDegrees.forEach(degree => {
@@ -158,29 +162,18 @@ export default function DegreeNotice() {
 
   const handleAnswer = (answer) => {
     setTriesCount(prev => prev + 1);
-
     if (answer === question.correctAnswer) {
       correctSound.currentTime = 0;
       correctSound.play();
       setFlashCorrect(true);
-
-      if (!wasWrongThisRound) {
-        setCorrectCount(prev => prev + 1);
-        const encouragement = ['Nice!', 'Well done!', 'Great job!', '🎯 You nailed it!'];
-        setFeedbackMessage(encouragement[Math.floor(Math.random() * encouragement.length)]);
-      } else {
-        setWrongCount(prev => prev + 1);
-        setFeedbackMessage('Correct... after a few tries!');
-      }
-
+      if (!wasWrongThisRound) setCorrectCount(c => c + 1);
+      else setWrongCount(w => w + 1);
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
-
       setTimeout(() => {
         if (nextIndex === rounds) {
           setShowPopup(true);
         } else {
-          setFeedbackMessage('🎵 Next round!');
           startRound(questionPool[nextIndex], modeSequence[nextIndex]);
         }
       }, 600);
@@ -190,7 +183,6 @@ export default function DegreeNotice() {
       setWasWrongThisRound(true);
       setFlashWrong(true);
       setDisabledButtons(prev => [...prev, answer]);
-      setFeedbackMessage('❌ Try again!');
       setTimeout(() => setFlashWrong(false), 400);
     }
   };
@@ -254,6 +246,27 @@ export default function DegreeNotice() {
             <p><strong>Correct:</strong> {correctCount}</p>
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Attempts:</strong> {triesCount}</p>
+
+            {rounds >= 20 ? (() => {
+              const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
+              const { score, max, avgTimePerAnswer } = calculateDegreeNoticeRank({
+                selectedScales,
+                selectedDegrees,
+                correctCount,
+                triesCount,
+                rounds,
+                totalTimeSec,
+              });
+              return (
+                <>
+                  <p><strong>Rank:</strong> {score} / {max}</p>
+                  <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
+                </>
+              );
+            })() : (
+              <p><strong>Rank:</strong> Not calculated (minimum 20 rounds required)</p>
+            )}
+
             <div className="degree-notice-popup-buttons">
               <button onClick={() => window.location.reload()}>🔁 Restart</button>
               <button onClick={() => navigate('/degree-notice')}>⚙️ Settings</button>
