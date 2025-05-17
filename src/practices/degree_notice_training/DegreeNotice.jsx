@@ -247,19 +247,34 @@ export default function DegreeNotice() {
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Attempts:</strong> {triesCount}</p>
 
-            {rounds >= 20 ? (() => {
+            {rounds >= 10 ? (() => {
               const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
-              const { score, max, avgTimePerAnswer } = calculateDegreeNoticeRank({
+              const {
+                score,
+                max,
+                level,
+                avgTimePerAnswer,
+                rightScore,
+                tryScore,
+                speedScore
+              } = calculateDegreeNoticeRank({
                 selectedScales,
                 selectedDegrees,
                 correctCount,
                 triesCount,
                 rounds,
-                totalTimeSec,
+                totalTimeSec
               });
               return (
                 <>
-                  <p><strong>Rank:</strong> {score} / {max}</p>
+                  <p><strong>Level:</strong> {level}</p>
+                  <p><strong>Overall Rank:</strong> {score} / {max}</p>
+                  <p><strong>Breakdown:</strong></p>
+                  <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                    <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
+                    <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
+                    <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+                  </ul>
                   <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
                 </>
               );

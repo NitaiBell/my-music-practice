@@ -99,27 +99,34 @@ const DifferencePracticeSettings = () => {
             <div className="rounds-group">
               <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
               <input
-                id="rounds-input"
-                type="number"
-                min="1"
-                max="20"
-                value={rounds}
-                onChange={(e) => setRounds(Number(e.target.value))}
-                className="difference_practice_settings-rounds-input"
-              />
+  id="rounds-input"
+  type="number"
+  min="1"
+  max="20"
+  value={rounds}
+  onChange={(e) => {
+    const val = Number(e.target.value);
+    setRounds(Math.min(20, Math.max(1, val))); // clamp between 1 and 20
+  }}
+  className="difference_practice_settings-rounds-input"
+/>
             </div>
 
             <div className="rounds-group">
               <label htmlFor="sequence-length-input" className="rounds-label">Notes in Sequence:</label>
               <input
-                id="sequence-length-input"
-                type="number"
-                min="2"
-                max="8"
-                value={sequenceLength}
-                onChange={(e) => setSequenceLength(Number(e.target.value))}
-                className="difference_practice_settings-rounds-input"
-              />
+  id="sequence-length-input"
+  type="number"
+  min="2"
+  max="8"
+  value={sequenceLength}
+  onChange={(e) => {
+    const val = Number(e.target.value);
+    setSequenceLength(Math.min(8, Math.max(2, val))); // clamp between 2 and 8
+  }}
+  className="difference_practice_settings-rounds-input"
+/>
+
             </div>
 
             <button className="difference_practice_settings-start-btn" onClick={startPractice}>
@@ -133,10 +140,14 @@ const DifferencePracticeSettings = () => {
         </div>
 
         <div className="difference_practice_settings-summary">
-          <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
-          <p>Notes: <strong>{selectedNotes.join(', ')}</strong></p>
-          <p>Sequence Length: <strong>{sequenceLength}</strong> notes</p>
-        </div>
+  <p>
+    <strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong>
+  </p>
+  <p>Notes: <strong>{selectedNotes.join(', ')}</strong></p>
+  <p>Sequence Length: <strong>{sequenceLength}</strong> notes</p>
+  <p>Level: <strong>{sequenceLength}</strong> (based on sequence length)</p>
+</div>
+
 
         <div
           className="difference_practice_settings-sequence-buttons"

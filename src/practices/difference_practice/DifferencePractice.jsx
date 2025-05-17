@@ -4,11 +4,14 @@ import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './DifferencePractice.css';
 import DifferencePracticeKeyboardView from './DifferencePracticeKeyboardView';
+import { calculateDifferenceRank } from './calculateDifferenceRank';
 
 const DifferencePractice = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
+  const startAnswerTimeRef = useRef(null);
+  const totalAnswerTimeRef = useRef(0);
 
   const {
     selectedScale = 'C',
@@ -32,6 +35,7 @@ const DifferencePractice = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [buttonFlashes, setButtonFlashes] = useState({});
   const [statFlash, setStatFlash] = useState('');
+  const [roundMistake, setRoundMistake] = useState(false);
 
   const playNote = (note) => {
     const normalized = note.replace('#', 's').replace('b', 'f');
@@ -68,6 +72,7 @@ const DifferencePractice = () => {
     setSequence1(seq1);
     setSequence2(seq2);
     setWrongNoteIndex(changeIndex);
+    setRoundMistake(false);
 
     setStatusMessage('🎶 Preparing next round...');
     triggerFloating();
@@ -83,6 +88,7 @@ const DifferencePractice = () => {
 
       setIsPlayingSequence(false);
       setCanAnswer(true);
+      startAnswerTimeRef.current = performance.now();
       setStatusMessage('🧠 Find the difference!');
       triggerFloating();
     }, 500);
@@ -98,6 +104,7 @@ const DifferencePractice = () => {
     setStatusMessage('');
     setShowPopup(false);
     setButtonFlashes({});
+    totalAnswerTimeRef.current = 0;
     prepareNextRound();
   };
 
@@ -118,6 +125,7 @@ const DifferencePractice = () => {
     }
     setIsPlayingSequence(false);
     setCanAnswer(true);
+    startAnswerTimeRef.current = performance.now();
     setStatusMessage('🧠 Find the difference!');
     triggerFloating();
   };
@@ -137,12 +145,13 @@ const DifferencePractice = () => {
   const handleAnswer = async (index) => {
     if (!canAnswer || !isPlaying || isPlayingSequence) return;
 
+    totalAnswerTimeRef.current += (performance.now() - startAnswerTimeRef.current);
     setTriesCount((t) => t + 1);
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 400);
 
     if (index === wrongNoteIndex) {
-      setCorrectCount((c) => c + 1);
+      if (!roundMistake) setCorrectCount((c) => c + 1);
       setStatFlash('correct');
       setTimeout(() => setStatFlash(''), 400);
       setButtonFlash(index, 'correct');
@@ -159,7 +168,10 @@ const DifferencePractice = () => {
         prepareNextRound();
       }
     } else {
-      setWrongCount((w) => w + 1);
+      if (!roundMistake) {
+        setWrongCount((w) => w + 1);
+        setRoundMistake(true);
+      }
       setStatFlash('wrong');
       setTimeout(() => setStatFlash(''), 400);
       setButtonFlash(index, 'wrong');
@@ -226,20 +238,56 @@ const DifferencePractice = () => {
       </div>
 
       {showPopup && (
-        <div className="differencegame-popup-overlay">
-          <div className="differencegame-popup">
-            <h2>🎉 Great Job!</h2>
-            <p>You finished the difference practice!</p>
-            <p><strong>Correct:</strong> {correctCount}</p>
-            <p><strong>Wrong:</strong> {wrongCount}</p>
-            <p><strong>Total Tries:</strong> {triesCount}</p>
-            <div className="differencegame-popup-buttons">
-              <button onClick={startGame}>🔁 Restart</button>
-              <button onClick={() => navigate('/difference/settings')}>⚙️ Back to Settings</button>
-            </div>
-          </div>
-        </div>
+  <div className="differencegame-popup-overlay">
+    <div className="differencegame-popup">
+      <h2>🎉 Great Job!</h2>
+      <p>You finished the difference practice!</p>
+      <p><strong>Correct:</strong> {correctCount}</p>
+      <p><strong>Wrong:</strong> {wrongCount}</p>
+      <p><strong>Total Tries:</strong> {triesCount}</p>
+
+      {rounds >= 5 ? (() => {
+        const {
+          score,
+          max,
+          avgTimePerAnswer,
+          level,
+          rightScore,
+          tryScore,
+          speedScore
+        } = calculateDifferenceRank({
+          selectedNotes,
+          sequenceLength,
+          correctCount,
+          triesCount,
+          rounds,
+          totalAnswerTimeSec: totalAnswerTimeRef.current / 1000,
+        });
+
+        return (
+          <>
+            <p><strong>Level:</strong> {level}</p>
+            <p><strong>Overall Rank:</strong> {score} / {max}</p>
+            <p><strong>Breakdown:</strong></p>
+            <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+              <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
+              <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
+              <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+            </ul>
+            <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
+          </>
+        );
+      })() : (
+        <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
       )}
+
+      <div className="differencegame-popup-buttons">
+        <button onClick={startGame}>🔁 Restart</button>
+        <button onClick={() => navigate('/difference/settings')}>⚙️ Back to Settings</button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

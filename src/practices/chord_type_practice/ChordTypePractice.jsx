@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ChordTypePractice.css';
 import ChordTypeKeyboard from './ChordTypeKeyboard';
-import { calculateChordTypeRank } from './calculateChordTypeRank'; // ✅ Imported helper
+import { calculateChordTypeRank } from './calculateChordTypeRank';
 
 const chordIntervals = {
   Major: [0, 4, 7],
@@ -41,11 +41,18 @@ const buildChord = (root, type) => {
   return intervals.map((interval) => getNoteFromMidi(baseMidi + interval));
 };
 
+const getLevel = (chords) => {
+  const n = chords.length;
+  return n <= 2 ? 2 : Math.min(n, 12);
+};
+
+const getMaxRounds = () => 40;
+
 const ChordTypePractice = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
-  const startTimeRef = useRef(null); // ✅ Added startTimeRef
+  const startTimeRef = useRef(null);
 
   const {
     selectedChordTypes = ['Major', 'Minor'],
@@ -90,7 +97,11 @@ const ChordTypePractice = () => {
     const newSequence = [];
     let attempts = 0;
 
-    while (newSequence.length < rounds && attempts < 1000) {
+    const level = getLevel(selectedChordTypes);
+    const maxRounds = getMaxRounds();
+    const actualRounds = Math.min(rounds, maxRounds);
+
+    while (newSequence.length < actualRounds && attempts < 1000) {
       const chordType = selectedChordTypes[Math.floor(Math.random() * selectedChordTypes.length)];
       const base = getRandomBase();
       const root = base + '3';
@@ -99,7 +110,7 @@ const ChordTypePractice = () => {
       attempts++;
     }
 
-    startTimeRef.current = performance.now(); // ✅ Start timer
+    startTimeRef.current = performance.now();
 
     setSequence(newSequence);
     setCurrentRound(0);
@@ -176,6 +187,7 @@ const ChordTypePractice = () => {
 
   const rows = selectedChordTypes.length > 12 ? 2 : 1;
   const columns = Math.ceil(selectedChordTypes.length / rows || 1);
+  const level = getLevel(selectedChordTypes);
 
   return (
     <div className="chord_type_game-container">
@@ -183,28 +195,31 @@ const ChordTypePractice = () => {
         <div className="chord_type_game-navbar-left">
           <div className="chord_type_game-logo">Sabers Chords</div>
           <button
-  className="chord_type_game-btn"
-  onClick={() => {
-    const current = sequence[currentRound];
-    if (!current) return;
-    const root = current.base + '3';
-    const notes = buildChord(root, current.chordType);
-    notes.forEach((note, index) => {
-      setTimeout(() => playNote(note), index * 400); // 400ms spacing between notes
-    });
-  }}
->
-  Arpeggio
-</button>
+            className="chord_type_game-btn"
+            onClick={() => {
+              const current = sequence[currentRound];
+              if (!current) return;
+              const root = current.base + '3';
+              const notes = buildChord(root, current.chordType);
+              notes.forEach((note, index) => {
+                setTimeout(() => playNote(note), index * 400);
+              });
+            }}
+          >
+            Arpeggio
+          </button>
           <button className="chord_type_game-btn" onClick={handleCurrent}>Current</button>
         </div>
+
         <div className="chord_type_game-stats">
           <span className="chord_type_game-stat total">{rounds}</span>/
           <span className={`chord_type_game-stat current ${statFlash === 'current' ? 'stat-flash' : ''}`}>{currentRound}</span>/
           <span className={`chord_type_game-stat correct ${statFlash === 'correct' ? 'stat-flash' : ''}`}>{correctCount}</span>/
           <span className={`chord_type_game-stat wrong ${statFlash === 'wrong' ? 'stat-flash' : ''}`}>{wrongCount}</span>/
           <span className={`chord_type_game-stat tries ${statFlash === 'tries' ? 'stat-flash' : ''}`}>{triesCount}</span>
+          <p className="chord_type_game-level">Level: {level} </p>
         </div>
+
         <button className="chord_type_game-btn" onClick={startGame}>
           {isPlaying ? 'Restart' : 'Start'}
         </button>
@@ -246,23 +261,39 @@ const ChordTypePractice = () => {
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Tries:</strong> {triesCount}</p>
 
-            {rounds >= 20 ? (() => {
+            {rounds >= 10 ? (() => {
               const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
-              const { score, max, avgTimePerAnswer } = calculateChordTypeRank({
+              const {
+                level,
+                score,
+                max,
+                avgTimePerAnswer,
+                rightScore,
+                tryScore,
+                speedScore,
+              } = calculateChordTypeRank({
                 selectedChordTypes,
                 correctCount,
                 triesCount,
                 rounds,
                 totalTimeSec,
               });
+
               return (
                 <>
-                  <p><strong>Rank:</strong> {score} / {max}</p>
+                  <p><strong>Level:</strong> {level}</p>
+                  <p><strong>Overall Rank:</strong> {score} / {max}</p>
+                  <p><strong>Breakdown:</strong></p>
+                  <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                    <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
+                    <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
+                    <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+                  </ul>
                   <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
                 </>
               );
             })() : (
-              <p><strong>Rank:</strong> Not calculated (minimum 25 rounds required)</p>
+              <p><strong>Rank:</strong> Not calculated (minimum 10 rounds required)</p>
             )}
 
             <div className="chord_type_game-popup-buttons">
@@ -277,4 +308,3 @@ const ChordTypePractice = () => {
 };
 
 export default ChordTypePractice;
-

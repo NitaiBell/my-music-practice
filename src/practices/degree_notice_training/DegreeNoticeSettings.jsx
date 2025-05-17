@@ -82,11 +82,11 @@ export default function DegreeNoticeSettings() {
       if (scaleToNote && !scaleToDegree) return;
       setScaleToNote(!scaleToNote);
     }
-  
     whooshSound.currentTime = 0;
     whooshSound.play();
   };
-  
+
+  const level = Math.min(12, Math.max(1, selectedScales.length));
 
   const startPractice = () => {
     navigate('/degree-notice/play', {
@@ -164,9 +164,9 @@ export default function DegreeNoticeSettings() {
           <input
             type="number"
             min="1"
-            max="30"
+            max="40"
             value={rounds}
-            onChange={(e) => setRounds(Number(e.target.value))}
+            onChange={(e) => setRounds(Math.min(40, Number(e.target.value)))}
             className="degree_notice_settings-rounds-input"
           />
         </div>
@@ -207,6 +207,9 @@ export default function DegreeNoticeSettings() {
               {scaleToDegree && scaleToNote ? ' & ' : ''}
               {scaleToNote ? 'Scale → Roman Numeral' : ''}
             </strong>
+          </p>
+          <p>
+            Level: <strong>{level}</strong> (based on selected scales)
           </p>
         </div>
 

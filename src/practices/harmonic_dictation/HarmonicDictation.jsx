@@ -9,6 +9,7 @@
    import HarmonicDictationKeyboardView from './HarmonicDictationKeyboardView';
    import { chordNoteMap, scaleChordsMap } from '../harmony_training/HarmonyTrainingData';
    import { progressionBank } from './ProgressionBank';
+   import { calculateHarmonicDictationRank } from './calculateHarmonicDictationRank';
    
    const NOTE_TO_SEMI = { C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11 };
    const SEMI_TO_NOTE = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
@@ -61,6 +62,8 @@
      const { state } = useLocation();
      const navigate = useNavigate();
      const keyboardRef = useRef();
+     const startAnswerTimeRef = useRef(null);
+     const totalAnswerTimeRef = useRef(0);
    
      const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
      const tonic = normalizeChord(selectedScale.replace(/m$/, ''));
@@ -112,9 +115,13 @@
        setMsg('');
        setInstruction('👂 Listen and identify the chords');
        setPopup(false);
+       totalAnswerTimeRef.current = 0;
    
        playChordSequence(picked[0], playChord);
-       setTimeout(() => setCanAnswer(true), picked[0].length * 1000);
+       setTimeout(() => {
+         setCanAnswer(true);
+         startAnswerTimeRef.current = performance.now();
+       }, picked[0].length * 1000);
      };
    
      const handleCurrent = () => {
@@ -126,90 +133,101 @@
        setMsg('🔁 Listen again...');
        setInstruction('👂 Listen again and answer');
        playChordSequence(prog, playChord);
-       setTimeout(() => setCanAnswer(true), prog.length * 1000);
+       setTimeout(() => {
+         setCanAnswer(true);
+         startAnswerTimeRef.current = performance.now();
+       }, prog.length * 1000);
      };
    
      const handleAnswer = (c) => {
-       if (!canAnswer || !isPlaying) return;
-   
-       const guess = normalizeChord(c);
-       const prog = progressions[currentRound];
-       if (!prog) return;
-   
-       playChord(guess);
-   
-       if (currentStep === 0) {
-         setTries((t) => t + 1);
-         setStatFlash('tries');
-         setTimeout(() => setStatFlash(''), 400);
-       }
-   
-       const expected = normalizeChord(prog[currentStep]);
-       const notes = chordNoteMap[guess];
-       if (!notes) return;
-   
-       if (guess === expected) {
-         keyboardRef.current?.setFlashRight(notes);
-         flashBtn(guess, 'correct');
-         const nextStep = currentStep + 1;
-   
-         if (nextStep >= prog.length) {
-           if (!roundMistake) {
-             setCorrect((n) => n + 1);
-             setStatFlash('correct');
-             setTimeout(() => setStatFlash(''), 400);
-             setMsg('✅ You’re right!');
-             setInstruction('🎵 Get ready for the next one...');
-           } else {
-             setMsg('🙂 Got it on the second try!');
-             setInstruction('🎵 Get ready for the next one...');
-           }
-   
-           const nextRound = currentRound + 1;
-           if (nextRound >= progressions.length) {
-             setIsPlaying(false);
-             setPopup(true);
-             setInstruction('🎉 You’ve completed the game!');
-           } else {
-             setCurrentRound(nextRound);
-             setCurrentStep(0);
-             setRoundMistake(false);
-             setWrongAlreadyCounted(false);
-             setCanAnswer(false);
-             setMsg('');
-             setTimeout(() => {
-               playChordSequence(progressions[nextRound], playChord);
-               setInstruction('👂 Listen and identify the chords');
-               setTimeout(() => setCanAnswer(true), progressions[nextRound].length * 1000);
-             }, 2000);
-           }
-         } else {
-           setCurrentStep(nextStep);
-           setInstruction('🎵 Continue identifying the next chord');
-         }
-       } else {
-         keyboardRef.current?.setFlashWrong(notes);
-         flashBtn(guess, 'wrong');
-   
-         if (!wrongAlreadyCounted) {
-           setWrong((n) => n + 1);
-           setStatFlash('wrong');
-           setTimeout(() => setStatFlash(''), 400);
-           setWrongAlreadyCounted(true);
-         }
-   
-         setRoundMistake(true);
-         setAwaitRetry(true);
-         setCurrentStep(0);
-         setCanAnswer(false);
-         setMsg('❌ Wrong! Click “Current” to listen again.');
-         setInstruction('❌ Click “Current” to listen again');
-       }
-     };
-   
+      // Prevent input if not allowed
+      if (!canAnswer || !isPlaying) return;
+    
+      const guess = normalizeChord(c);
+      const prog = progressions[currentRound];
+      if (!prog) return;
+    
+      const expected = normalizeChord(prog[currentStep]);
+      const notes = chordNoteMap[guess];
+      if (!notes) return;
+    
+      playChord(guess);
+    
+      // ✅ Now we log time and count only if it's truly the user's first active attempt
+      if (currentStep === 0 && canAnswer && isPlaying) {
+        totalAnswerTimeRef.current += performance.now() - startAnswerTimeRef.current;
+        setTries((t) => t + 1);
+        setStatFlash('tries');
+        setTimeout(() => setStatFlash(''), 400);
+      }
+    
+      if (guess === expected) {
+        keyboardRef.current?.setFlashRight(notes);
+        flashBtn(guess, 'correct');
+    
+        const nextStep = currentStep + 1;
+    
+        if (nextStep >= prog.length) {
+          if (!roundMistake) {
+            setCorrect((n) => n + 1);
+            setStatFlash('correct');
+            setTimeout(() => setStatFlash(''), 400);
+            setMsg('✅ You’re right!');
+            setInstruction('🎵 Get ready for the next one...');
+          } else {
+            setMsg('🙂 Got it on the second try!');
+            setInstruction('🎵 Get ready for the next one...');
+          }
+    
+          const nextRound = currentRound + 1;
+          if (nextRound >= progressions.length) {
+            setIsPlaying(false);
+            setPopup(true);
+            setInstruction('🎉 You’ve completed the game!');
+          } else {
+            setCurrentRound(nextRound);
+            setCurrentStep(0);
+            setRoundMistake(false);
+            setWrongAlreadyCounted(false);
+            setCanAnswer(false);
+            setMsg('');
+            setTimeout(() => {
+              playChordSequence(progressions[nextRound], playChord);
+              setInstruction('👂 Listen and identify the chords');
+              setTimeout(() => {
+                setCanAnswer(true);
+                startAnswerTimeRef.current = performance.now();
+              }, progressions[nextRound].length * 1000);
+            }, 2000);
+          }
+        } else {
+          setCurrentStep(nextStep);
+          setInstruction('🎵 Continue identifying the next chord');
+        }
+      } else {
+        keyboardRef.current?.setFlashWrong(notes);
+        flashBtn(guess, 'wrong');
+    
+        if (!wrongAlreadyCounted) {
+          setWrong((n) => n + 1);
+          setStatFlash('wrong');
+          setTimeout(() => setStatFlash(''), 400);
+          setWrongAlreadyCounted(true);
+        }
+    
+        setRoundMistake(true);
+        setAwaitRetry(true);
+        setCurrentStep(0);
+        setCanAnswer(false);
+        setMsg('❌ Wrong! Click “Current” to listen again.');
+        setInstruction('❌ Click “Current” to listen again');
+      }
+    };
+    
      const rows = selectedChords.length > 12 ? 2 : 1;
      const cols = Math.ceil((selectedChords.length || 1) / rows);
      const unique = [...new Set(selectedChords.map(normalizeChord))];
+     const hasSpecial = selectedChords.some((ch) => !scaleChordsMap[selectedScale].includes(ch));
    
      return (
        <div className="harmony_dictation-container">
@@ -265,21 +283,49 @@
          </div>
    
          {popup && (
-           <div className="harmony_dictation-popup-overlay">
-             <div className="harmony_dictation-popup">
-               <h2>🎉 Game Over!</h2>
-               <p>You completed the harmonic dictation!</p>
-               <p><strong>Correct:</strong> {correct}</p>
-               <p><strong>Wrong:</strong> {wrong}</p>
-               <p><strong>Total Tries:</strong> {tries}</p>
-               <div className="harmony_dictation-popup-buttons">
-                 <button onClick={startGame}>🔁 Restart</button>
-                 <button onClick={() => navigate('/harmonic')}>⚙️ Back to Settings</button>
-               </div>
-             </div>
-           </div>
-         )}
-       </div>
-     );
-   }
-   
+  <div className="harmony_dictation-popup-overlay">
+    <div className="harmony_dictation-popup">
+      <h2>🎉 Game Over!</h2>
+      <p>You completed the harmonic dictation!</p>
+      <p><strong>Correct:</strong> {correct}</p>
+      <p><strong>Wrong:</strong> {wrong}</p>
+      <p><strong>Total Tries:</strong> {tries}</p>
+
+      {rounds >= 5 && (
+        (() => {
+          const { score, max, avgTimePerAnswer, level, rightScore, tryScore, speedScore } = calculateHarmonicDictationRank({
+            selectedChords,
+            correctCount: correct,
+            triesCount: tries,
+            rounds,
+            totalAnswerTimeSec: totalAnswerTimeRef.current / 1000,
+            hasSpecialChords: hasSpecial,
+          });
+          return (
+            <>
+              <p><strong>Level:</strong> {level}</p>
+              <p><strong>Rank:</strong> {score} / {max}</p>
+              <p><strong>Breakdown:</strong></p>
+              <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
+                <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
+                <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+              </ul>
+              <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
+            </>
+          );
+        })()
+      )}
+
+      {rounds < 5 && <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>}
+
+      <div className="harmony_dictation-popup-buttons">
+        <button onClick={startGame}>🔁 Restart</button>
+        <button onClick={() => navigate('/harmonic')}>⚙️ Back to Settings</button>
+      </div>
+    </div>
+  </div>
+)}
+    </div>
+  );
+}

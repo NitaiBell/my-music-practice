@@ -1,51 +1,42 @@
 export function calculateDegreeNoticeRank({
-    selectedScales,
-    selectedDegrees,
-    correctCount,
-    triesCount,
-    rounds,
-    totalTimeSec
-  }) {
-    // Cap logic by how many degrees were tested
-    const maxRankByDegreeCount = {
-      1: 200,
-      2: 250,
-      3: 300,
-      4: 340,
-      5: 370,
-      6: 400,
-      7: 430, // full major scale degrees
-    };
-  
-    const degreeCount = selectedDegrees.length;
-    const maxRank = maxRankByDegreeCount[degreeCount] || 200;
-  
-    // Difficulty based on # of scales and degrees
-    const scaleFactor = Math.min(1, selectedScales.length / 6);   // Max boost at 6+ scales
-    const degreeFactor = Math.min(1, degreeCount / 7);            // Max boost at 7 degrees
-    const difficultyFactor = (scaleFactor + degreeFactor) / 2;
-  
-    const accuracy = correctCount / rounds;
-    const efficiency = rounds / triesCount;
-  
-    const avgTime = totalTimeSec / triesCount;
-    const speedFactor = Math.max(0, (6 - avgTime) / 6);           // Lower time = higher score
-  
-    const timePenalty = Math.min(1, totalTimeSec / (rounds * 10)); // Cap at 1 (10s per round avg)
-  
-    // Rank formula
-    const rawScore =
-      100 +
-      200 * difficultyFactor * accuracy +
-      100 * efficiency +
-      100 * speedFactor * (1 - timePenalty);
-  
-    const finalScore = Math.min(maxRank, Math.round(rawScore));
-  
-    return {
-      score: finalScore,
-      max: maxRank,
-      avgTimePerAnswer: Number(avgTime.toFixed(2)),
-    };
-  }
-  
+  selectedScales,
+  selectedDegrees,
+  correctCount,
+  triesCount,
+  rounds,
+  totalTimeSec
+}) {
+  const scaleCount = selectedScales.length;
+  const degreeCount = selectedDegrees.length;
+  const level = Math.min(12, Math.max(1, scaleCount));
+
+  // Accuracy (0–75)
+  const accuracy = correctCount / rounds;
+  const rightScore = Math.round(accuracy * 75);
+
+  // Efficiency (0–15)
+  const efficiency = rounds / Math.max(triesCount, rounds);
+  const tryScore = Math.round(efficiency * 15);
+
+  // Speed (0–10)
+  const avgTime = totalTimeSec / Math.max(triesCount, 1);
+  let speedScore = 0;
+  if (avgTime <= 3) speedScore = 10;
+  else if (avgTime <= 5) speedScore = 8;
+  else if (avgTime <= 6.5) speedScore = 6;
+  else if (avgTime <= 8) speedScore = 4;
+  else if (avgTime <= 10) speedScore = 2;
+  else speedScore = 0;
+
+  const score = rightScore + tryScore + speedScore;
+
+  return {
+    score,
+    max: 100,
+    level,
+    rightScore,
+    tryScore,
+    speedScore,
+    avgTimePerAnswer: Number(avgTime.toFixed(2))
+  };
+}

@@ -19,7 +19,7 @@ const chordIntervals = {
   Aug: [0, 4, 8],
   Dim7: [0, 3, 6, 9],
   Maj6: [0, 4, 7, 9],
-  Min7b5: [0, 3, 6, 10] // ✅ Half-diminished seventh (Minor 7♭5)
+  Min7b5: [0, 3, 6, 10]
 };
 
 const noteOrder = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
@@ -41,6 +41,11 @@ const buildChord = (root, type) => {
   const rootMidi = getMidiNumber(root);
   const intervals = chordIntervals[type] || [];
   return intervals.map(i => getNoteFromMidi(rootMidi + i));
+};
+
+const getLevel = (chords) => {
+  const n = chords.length;
+  return n <= 2 ? 2 : Math.min(n, 12);
 };
 
 const ChordTypeSettings = () => {
@@ -71,7 +76,7 @@ const ChordTypeSettings = () => {
   };
 
   const playChordPreview = (type) => {
-    const notes = buildChord('C3', type); // default root for preview
+    const notes = buildChord('C3', type);
     notes.forEach(playNote);
     setNotesToFlash(notes);
   };
@@ -105,9 +110,9 @@ const ChordTypeSettings = () => {
                 id="rounds-input"
                 type="number"
                 min="1"
-                max="20"
+                max="40"
                 value={rounds}
-                onChange={(e) => setRounds(Number(e.target.value))}
+                onChange={(e) => setRounds(Math.min(40, Number(e.target.value)))}
                 className="chord_type_settings-rounds-input"
               />
             </div>
@@ -124,6 +129,7 @@ const ChordTypeSettings = () => {
         <div className="chord_type_settings-summary">
           <p><strong>{rounds}</strong> rounds</p>
           <p>Chord Types: <strong>{selectedChordTypes.join(', ')}</strong></p>
+          <p>Level: <strong>{getLevel(selectedChordTypes)}</strong> (based on chord variety)</p>
         </div>
 
         <div className="chord_type_settings-chord-buttons">
