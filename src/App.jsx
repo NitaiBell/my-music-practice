@@ -1,3 +1,5 @@
+// src/App.jsx
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -30,6 +32,8 @@ import ChordsForMelodyContainer from './practices/chords_for_melody/ChordsForMel
 import SpecialChordPracticeContainer from './practices/special_chord_practice/SpecialChordPracticeContainer.jsx';
 import MelodicDictationContainer from './practices/melodic_dictation/MelodicDictationContainer.jsx';
 import HarmonicDictationContainer from './practices/harmonic_dictation/HarmonicDictationContainer.jsx'; // ✅
+
+import ListOfValidProgressions from './practices/harmonic_dictation/ListOfValidProgressions.jsx'; // ✅ NEW
 
 export default function App() {
   return (
@@ -64,6 +68,7 @@ export default function App() {
         <Route path="/special_chord/*" element={<SpecialChordPracticeContainer />} />
         <Route path="/melodic-dictation/*" element={<MelodicDictationContainer />} />
         <Route path="/harmonic/*" element={<HarmonicDictationContainer />} /> {/* ✅ */}
+        <Route path="/harmonic/progressions" element={<ListOfValidProgressions />} /> {/* ✅ NEW */}
       </Routes>
     </Router>
   );

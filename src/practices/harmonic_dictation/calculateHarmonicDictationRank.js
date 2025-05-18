@@ -3,6 +3,7 @@ export function calculateHarmonicDictationRank({
     correctCount,
     triesCount,
     totalAnswerTimeSec,
+    rounds,
     hasSpecialChords = false,
   }) {
     const rawChordCount = selectedChords.length;
@@ -12,21 +13,23 @@ export function calculateHarmonicDictationRank({
     const level = hasSpecialChords ? 8 : Math.max(2, Math.min(7, chordCount));
     const maxBaseRank = 100;
   
-    // Difficulty scaling: 2 chords = 0, 8 chords = 1
-    const difficultyFactor = Math.min(1, (chordCount - 2) / 6);
-  
-    // Core metrics
-    const accuracyFactor = correctCount / Math.max(1, triesCount);
+    // Accuracy is now based on rounds, not tries
+    const accuracyFactor = correctCount / Math.max(1, rounds);
     const avgTimePerAnswer = totalAnswerTimeSec / Math.max(1, triesCount);
     const expectedTime = 2 + 1.6 * chordCount;
   
-    // Speed and penalty
+    // Speed and penalty logic
     const speedFactor = Math.max(0, (expectedTime - avgTimePerAnswer) / expectedTime);
     const timePenalty = Math.min(1, totalAnswerTimeSec / (triesCount * expectedTime * 1.5));
   
-    // Final weights (accuracy: 75%, efficiency: 15%, speed: 10%)
+    // 1. Right/Wrong → up to 75 points
     const rightScore = Math.round(75 * accuracyFactor);
-    const tryScore = Math.round(15 * (chordCount / Math.max(triesCount, 1)));
+  
+    // 2. Tries → up to 15 points, subtract 1 per extra try
+    const extraTries = Math.max(0, triesCount - correctCount);
+    const tryScore = Math.max(0, 15 - extraTries);
+  
+    // 3. Speed → up to 10 points
     const speedScore = Math.round(10 * speedFactor * (1 - timePenalty));
   
     const score = Math.min(maxBaseRank, rightScore + tryScore + speedScore);

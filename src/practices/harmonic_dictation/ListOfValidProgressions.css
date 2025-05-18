@@ -1,0 +1,77 @@
+.harmonic_dictation_valid-progressions-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  background: linear-gradient(to bottom, #99e06c, #fbff00);
+  color: #18230F;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.harmonic_dictation_valid-progressions-title {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #1F7D53;
+}
+
+.harmonic_dictation_valid-progressions-subtitle {
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #444;
+}
+
+.harmonic_dictation_valid-progressions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.harmonic_dictation_valid-progression-group {
+  background: #ffffffee;
+  border-left: 6px solid #1F7D53;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  transition: transform 0.2s;
+}
+
+.harmonic_dictation_valid-progression-group:hover {
+  transform: scale(1.01);
+}
+
+.harmonic_dictation_valid-progression-heading {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #255F38;
+  margin-bottom: 0.8rem;
+}
+
+.harmonic_dictation_valid-progression-sequences {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+.harmonic_dictation_valid-progression-sequence {
+  margin-bottom: 0.4rem;
+  line-height: 1.6;
+}
+
+.harmonic_dictation_valid-progressions-footer {
+  text-align: center;
+  margin-top: 2.5rem;
+  font-size: 1rem;
+}
+
+.harmonic_dictation_valid-progressions-footer a {
+  color: #1F7D53;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.harmonic_dictation_valid-progressions-footer a:hover {
+  text-decoration: underline;
+}
