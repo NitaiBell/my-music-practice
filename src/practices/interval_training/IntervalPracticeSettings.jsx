@@ -21,6 +21,8 @@ const displayNoteName = (note) => {
   return map[note] || note;
 };
 
+
+
 export default function IntervalPracticeSettings() {
   const [selectedIntervals, setSelectedIntervals] = useState(INTERVALS);
   const [baseNotes, setBaseNotes] = useState(BASE_NOTES);
@@ -28,6 +30,8 @@ export default function IntervalPracticeSettings() {
   const [direction, setDirection] = useState('both');
   const keyboardRef = useRef();
   const navigate = useNavigate();
+  const level = Math.max(3, Math.min(25, baseNotes.length + selectedIntervals.length));
+
 
   const toggleInterval = (interval) => {
     setSelectedIntervals((prev) =>
@@ -148,12 +152,13 @@ export default function IntervalPracticeSettings() {
         </div>
 
         <div className="interval_training_settings-summary">
-          <p><strong>{rounds}</strong> rounds</p>
-          <p>Intervals: <strong>{selectedIntervals.join(', ')}</strong></p>
-          <p>First Notes: <strong>{baseNotes.map(displayNoteName).join(', ')}</strong></p>
-          <p>Direction: <strong>{direction}</strong></p>
-          <p>Octaves: <strong>3, 4</strong> (fixed)</p>
-        </div>
+  <p><strong>{rounds}</strong> rounds</p>
+  <p>Intervals: <strong>{selectedIntervals.join(', ')}</strong></p>
+  <p>First Notes: <strong>{baseNotes.map(displayNoteName).join(', ')}</strong></p>
+  <p>Direction: <strong>{direction}</strong></p>
+  <p>Octaves: <strong>3, 4</strong> (fixed)</p>
+  <p>Level: <strong>{level}</strong></p>
+</div>
       </div>
 
       <div className="interval_training_settings-keyboard-wrapper">

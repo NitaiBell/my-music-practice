@@ -2,11 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './IntervalPractice.css';
 import IntervalPracticeKeyboardView from "./IntervalPracticeKeyboardView";
+import { calculateIntervalPracticeRank } from './calculateIntervalPracticeRank'; // ✅ import rank function
 
 export default function IntervalPractice() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
+  const answerTimeStartRef = useRef(null);
+  const totalAnswerTimeRef = useRef(0);
+  const [rankData, setRankData] = useState(null); // ✅ track rank result
 
   const {
     selectedIntervals = [],
@@ -62,15 +66,11 @@ export default function IntervalPractice() {
 
   const isNoteInRange = (note) => {
     const midi = noteToMidi(note);
-  
-    // Compute all possible min and max MIDI values from baseNotes x octaves
     const allPossible = baseNotes.flatMap(base =>
       octaves.map(oct => noteToMidi(`${base}${oct}`))
     );
-  
     const min = Math.min(...allPossible);
     const max = Math.max(...allPossible);
-  
     return midi >= min && midi <= max;
   };
 
@@ -117,9 +117,12 @@ export default function IntervalPractice() {
     setAnsweredNotes([]);
     setHasFailedThisRound(false);
     setShowPopup(false);
+    setRankData(null);
+    totalAnswerTimeRef.current = 0;
     const newPair = generateIntervalPair();
     setIntervalPair(newPair);
     setHighlightNote(newPair[0]);
+    answerTimeStartRef.current = Date.now();
     playInterval(newPair);
   };
 
@@ -135,21 +138,41 @@ export default function IntervalPractice() {
 
   const handleAnswer = (note) => {
     if (!isPlaying || intervalPair.length !== 2) return;
-
+  
     keyboardRef.current.playNote(note);
     const updatedAnswers = [...answeredNotes, note];
     setAnsweredNotes(updatedAnswers);
-
+  
     if (updatedAnswers.length === 2) {
-      setTriesCount((t) => t + 1);
+      const elapsed = Date.now() - (answerTimeStartRef.current || Date.now());
+      totalAnswerTimeRef.current += elapsed / 1000;
+  
+      const newTries = triesCount + 1;
+      setTriesCount(newTries);
+  
       const correct = intervalPair.every((n) => updatedAnswers.includes(n));
-
+  
       if (correct) {
         keyboardRef.current.setFlashRight(intervalPair);
-        if (!hasFailedThisRound) setCorrectCount((c) => c + 1);
+  
+        let newCorrect = correctCount;
+        if (!hasFailedThisRound) {
+          newCorrect += 1;
+          setCorrectCount(newCorrect);
+        }
+  
         setStatusMessage('✅ Correct!');
-
+  
         if (currentRound + 1 >= rounds) {
+          const rank = calculateIntervalPracticeRank({
+            selectedNotes: baseNotes,
+            selectedIntervals,
+            correctCount: newCorrect,
+            triesCount: newTries, // ✅ fixed: use updated tries
+            rounds,
+            totalAnswerTimeSec: totalAnswerTimeRef.current,
+          });
+          setRankData(rank);
           setShowPopup(true);
           setIsPlaying(false);
           setHighlightNote('');
@@ -162,19 +185,23 @@ export default function IntervalPractice() {
             setCurrentRound((r) => r + 1);
             setHasFailedThisRound(false);
             setStatusMessage('');
+            answerTimeStartRef.current = Date.now();
             playInterval(newPair);
           }, 900);
         }
       } else {
         keyboardRef.current.setFlashWrong(updatedAnswers);
-        setWrongCount((w) => w + 1);
+        if (!hasFailedThisRound) {
+          setWrongCount((w) => w + 1);
+          setHasFailedThisRound(true);
+        }
         setStatusMessage('❌ Wrong! Try again');
-        setHasFailedThisRound(true);
         setAnsweredNotes([]);
       }
     }
   };
-
+  
+  
   return (
     <div className="interval_practice-container">
       <nav className="interval_practice-navbar">
@@ -215,14 +242,27 @@ export default function IntervalPractice() {
         </div>
       </div>
 
-      {showPopup && (
+      {showPopup && rankData && (
         <div className="interval_practice-popup-overlay">
           <div className="interval_practice-popup">
             <h2>🎉 Practice Complete!</h2>
-            <p><strong>Rounds:</strong> {rounds}</p>
             <p><strong>Correct:</strong> {correctCount}</p>
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Attempts:</strong> {triesCount}</p>
+            {rounds >= 5 ? (
+              <>
+                <p><strong>Level:</strong> {rankData.level}</p>
+                <p><strong>Rank:</strong> {rankData.score} / {rankData.max}</p>
+                <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                  <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+                  <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+                  <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
+                </ul>
+                <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
+              </>
+            ) : (
+              <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
+            )}
             <div className="interval_practice-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/interval-practice')}>⚙️ Settings</button>

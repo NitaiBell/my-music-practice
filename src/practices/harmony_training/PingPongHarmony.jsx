@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './PingPongHarmony.css';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
 import { chordNoteMap } from './HarmonyTrainingData';
+import { calculatePingPongHarmonyRank } from './calculatePingPongHarmonyRank';
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -73,22 +75,19 @@ function weightedPick(weights, chordMap, excludeChord) {
   for (const [deg, w] of entries) {
     acc += w;
     if (r <= acc) {
-      const cand = Object.entries(chordMap)
-        .find(([c, f]) => f === deg && c !== excludeChord);
+      const cand = Object.entries(chordMap).find(([c, f]) => f === deg && c !== excludeChord);
       if (cand) return cand[0];
     }
   }
   return null;
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// Component
-// ──────────────────────────────────────────────────────────────────────────────
-
 const PingPongHarmony = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
+  const answerTimeStartRef = useRef(null);
+  const totalAnswerTimeRef = useRef(0);
 
   const {
     selectedScale = 'C',
@@ -99,87 +98,61 @@ const PingPongHarmony = () => {
   } = state || {};
 
   const tonic = normalizeChord(selectedScale.replace(/m$/, ''));
+  const [sequence, setSequence] = useState([]);
+  const [currentRound, setCurrent] = useState(0);
+  const [isPlaying, setPlaying] = useState(false);
+  const [correct, setCorrect] = useState(0);
+  const [wrong, setWrong] = useState(0);
+  const [tries, setTries] = useState(0);
+  const [canAnswer, setCanAnswer] = useState(false);
+  const [roundMistake, setMistake] = useState(false);
+  const [outcomeSet, setOutcome] = useState(false);
+  const [awaitRetry, setRetry] = useState(false);
+  const [popup, setPopup] = useState(false);
+  const [flashMap, setFlashMap] = useState({});
+  const [statFlash, setStatFlash] = useState('');
+  const [msg, setMsg] = useState('');
 
-  // ───────────── state ─────────────
-  const [sequence, setSequence]       = useState([]);
-  const [currentRound, setCurrent]    = useState(0);
-  const [isPlaying, setPlaying]       = useState(false);
-  const [correct, setCorrect]         = useState(0);
-  const [wrong, setWrong]             = useState(0);
-  const [tries, setTries]             = useState(0);
-  const [canAnswer, setCanAnswer]     = useState(false);
-  const [roundMistake, setMistake]    = useState(false);
-  const [outcomeSet, setOutcome]      = useState(false);
-  const [awaitRetry, setRetry]        = useState(false);
-  const [popup, setPopup]             = useState(false);
-  const [flashMap, setFlashMap]       = useState({});
-  const [statFlash, setStatFlash]     = useState('');
-  const [msg, setMsg]                 = useState('');
-
-  // ───────────── audio ─────────────
-  const playNote = (n) =>
-    new Audio(`/clean_cut_notes/${encodeURIComponent(`${n}.wav`)}`).play();
-  const playChord = (c) =>
-    (chordNoteMap[normalizeChord(c)] || []).forEach(playNote);
-
+  const playNote = (n) => new Audio(`/clean_cut_notes/${encodeURIComponent(`${n}.wav`)}`).play();
+  const playChord = (c) => (chordNoteMap[normalizeChord(c)] || []).forEach(playNote);
   const flashBtn = (c, type) => {
     const key = normalizeChord(c);
     setFlashMap((p) => ({ ...p, [key]: type }));
     setTimeout(() => setFlashMap((p) => ({ ...p, [key]: null })), 500);
   };
 
-  // ───────────── chord picker ─────────────
   const pickNextChord = (prevChord, wasLastSpecial = false) => {
-    const prevFunc   = chordFunctionMap[prevChord];
-    const glyphFunc  = toGlyphDegree(prevFunc);
-
-    const specials   = Object.entries(chordFunctionMap)
-      .filter(([, f]) => isReallySpecial(f));
-    const diatonics  = Object.entries(chordFunctionMap)
-      .filter(([, f]) => !isReallySpecial(f));
-
-    const specialChance = specials.length > 0
-      ? specialChordMode ? (specials.length === 1 ? 0.35 : 0.4) : 0.1
-      : 0;
-
-    const baseRule = progressionRules[glyphFunc] ||
-                     progressionRules[prevFunc] || {};
-    const scaledRule = Object.fromEntries(
-      Object.entries(baseRule).map(([d, p]) => [d, p * (1 - specialChance)])
-    );
-
+    const prevFunc = chordFunctionMap[prevChord];
+    const glyphFunc = toGlyphDegree(prevFunc);
+    const specials = Object.entries(chordFunctionMap).filter(([, f]) => isReallySpecial(f));
+    const diatonics = Object.entries(chordFunctionMap).filter(([, f]) => !isReallySpecial(f));
+    const specialChance = specials.length > 0 ? (specialChordMode ? (specials.length === 1 ? 0.35 : 0.4) : 0.1) : 0;
+    const baseRule = progressionRules[glyphFunc] || progressionRules[prevFunc] || {};
+    const scaledRule = Object.fromEntries(Object.entries(baseRule).map(([d, p]) => [d, p * (1 - specialChance)]));
     if (!wasLastSpecial && Math.random() < specialChance && specials.length) {
       return specials[Math.floor(Math.random() * specials.length)][0];
     }
-
-    return (
-      weightedPick(scaledRule, chordFunctionMap, prevChord) ||
-      diatonics[Math.floor(Math.random() * diatonics.length)][0]
-    );
+    return weightedPick(scaledRule, chordFunctionMap, prevChord) || diatonics[Math.floor(Math.random() * diatonics.length)][0];
   };
 
-  // ───────────── game flow ─────────────
   const startGame = () => {
     if (!selectedChords.map(normalizeChord).includes(tonic)) return;
-
-    const middleLen = rounds - 2;
     const middle = [];
     let prev = tonic;
     let wasSpecial = isReallySpecial(chordFunctionMap[tonic]);
-
-    for (let i = 0; i < middleLen; i++) {
+    for (let i = 0; i < rounds - 2; i++) {
       const next = pickNextChord(prev, wasSpecial);
       wasSpecial = isReallySpecial(chordFunctionMap[next]);
       middle.push(next);
       prev = next;
     }
-
     const seq = [tonic, ...middle, tonic];
     setSequence(seq);
     setCurrent(0);
     setCorrect(0);
     setWrong(0);
     setTries(0);
+    totalAnswerTimeRef.current = 0;
     setPlaying(true);
     setCanAnswer(false);
     setMistake(false);
@@ -187,13 +160,13 @@ const PingPongHarmony = () => {
     setRetry(false);
     setMsg('');
     setPopup(false);
-
     setTimeout(() => playNextChord(seq[0]), 300);
   };
 
   const playNextChord = (c) => {
     playChord(c);
     setCanAnswer(true);
+    answerTimeStartRef.current = performance.now();
     setMistake(false);
     setOutcome(false);
     setRetry(false);
@@ -212,12 +185,13 @@ const PingPongHarmony = () => {
 
   const handleAnswer = (c) => {
     if (!canAnswer || !isPlaying) return;
-
-    const guess    = normalizeChord(c);
+    if (answerTimeStartRef.current) {
+      totalAnswerTimeRef.current += performance.now() - answerTimeStartRef.current;
+    }
+    const guess = normalizeChord(c);
     const expected = normalizeChord(sequence[currentRound]);
-    const notes    = chordNoteMap[guess];
+    const notes = chordNoteMap[guess];
     if (!notes) return;
-
     setTries((t) => t + 1);
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 400);
@@ -233,7 +207,6 @@ const PingPongHarmony = () => {
       setCanAnswer(false);
       keyboardRef.current?.setFlashRight(notes);
       flashBtn(guess, 'correct');
-
       if (currentRound + 1 >= sequence.length) {
         setPlaying(false);
         setPopup(true);
@@ -258,11 +231,19 @@ const PingPongHarmony = () => {
     }
   };
 
-  // ───────────── render ─────────────
   const rows = selectedChords.length > 12 ? 2 : 1;
   const cols = Math.ceil(selectedChords.length / rows || 1);
   const unique = [...new Set(selectedChords.map(normalizeChord))];
-
+  const totalAnswerTimeSec = totalAnswerTimeRef.current / 1000;
+  const { score, max, level, rightScore, tryScore, speedScore, avgTimePerAnswer } =
+    calculatePingPongHarmonyRank({
+      selectedChords,
+      correctCount: correct,
+      triesCount: tries,
+      rounds,
+      hasSpecialChords: specialChordMode,
+      totalAnswerTimeSec,
+    });
   return (
     <div className="harmonygame-container">
       {/* ── Navbar ── */}
@@ -337,20 +318,28 @@ const PingPongHarmony = () => {
       {popup && (
         <div className="harmonygame-popup-overlay">
           <div className="harmonygame-popup">
-            <h2>🎉 Game Over!</h2>
+            <h2>🎉 Game Over!</h2>
             <p>You completed the harmony practice!</p>
-            <p>
-              <strong>Correct:</strong> {correct}
-            </p>
-            <p>
-              <strong>Wrong:</strong> {wrong}
-            </p>
-            <p>
-              <strong>Total Tries:</strong> {tries}
-            </p>
+            <p><strong>Correct:</strong> {correct}</p>
+            <p><strong>Wrong:</strong> {wrong}</p>
+            <p><strong>Total Tries:</strong> {tries}</p>
+            {rounds >= 5 ? (
+              <>
+                <p><strong>Level:</strong> {level}</p>
+                <p><strong>Rank:</strong> {score} / {max}</p>
+                <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                  <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
+                  <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
+                  <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+                </ul>
+                <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
+              </>
+            ) : (
+              <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
+            )}
             <div className="harmonygame-popup-buttons">
-              <button onClick={startGame}>🔁 Restart</button>
-              <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
+              <button onClick={startGame}>🔁 Restart</button>
+              <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
             </div>
           </div>
         </div>

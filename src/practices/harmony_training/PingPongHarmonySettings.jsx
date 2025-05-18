@@ -1,6 +1,8 @@
 // ✅ Updated PingPongHarmonySettings.jsx with specialChordMode support
 
 import React, { useState } from 'react';
+import { useEffect } from 'react';
+
 import './PingPongHarmonySettings.css';
 import { useNavigate } from 'react-router-dom';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
@@ -97,6 +99,24 @@ const PingPongHarmonySettings = () => {
   const allButtons = Array.from(new Set([...selectedChords, ...outChords]));
   const rows = allButtons.length > 12 ? 2 : 1;
   const columns = Math.ceil(allButtons.length / rows || 1);
+  const chordCount = selectedChords.length + outChords.length;
+  const level = specialChordMode ? 8 : Math.max(2, Math.min(7, chordCount));
+
+  const specialFunctions = Object.entries(chordFunctionsByScale[selectedScale] || {}).reduce(
+    (acc, [func, chord]) => {
+      acc[chord] = func.replace(/_/g, '/');
+      return acc;
+    },
+    {}
+  );
+  
+  const hasAnySpecial = outChords.some((ch) => specialFunctions[ch]);
+  useEffect(() => {
+    if (!hasAnySpecial && specialChordMode) {
+      setSpecialChordMode(false);
+    }
+  }, [hasAnySpecial, specialChordMode]);
+  
 
   return (
     <div className="harmony-container-settings">
@@ -172,8 +192,9 @@ const PingPongHarmonySettings = () => {
     type="checkbox"
     checked={specialChordMode}
     onChange={() => setSpecialChordMode((v) => !v)}
+    disabled={!hasAnySpecial}
   />
-  🎯 Focus on Special Chords
+  🎯 Focus on Special Chords { !hasAnySpecial && <span style={{ opacity: 0.6 }}>— (select one to enable)</span> }
 </div>
             <button className="harmony-start-btn" onClick={startPractice}>
               Start Practice
@@ -186,9 +207,11 @@ const PingPongHarmonySettings = () => {
         </div>
 
         <div className="harmony-summary">
-          <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
-          <p>Chords: <strong>{allButtons.join(', ')}</strong></p>
-        </div>
+  <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
+  <p>Chords: <strong>{allButtons.join(', ')}</strong></p>
+  <p>Level: <strong>{level}</strong> {specialChordMode && '(Special Mode)'}</p>
+</div>
+
 
         <div
           className="harmony-chord-buttons"
