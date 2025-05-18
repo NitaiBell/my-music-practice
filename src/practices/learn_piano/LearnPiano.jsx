@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LearnPiano.css';
 import LearnPianoKeyboard from './LearnPianoKeyboard';
+import { calculateLearnPianoRank } from './calculateLearnPianoRank';
 
 const displayNoteName = (note, key) => {
   const base = note.replace(/\d/, '');
@@ -22,6 +23,8 @@ export default function LearnPiano() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
+  const answerTimeStartRef = useRef(null);
+  const totalAnswerTimeRef = useRef(0);
 
   const {
     selectedScale = 'C',
@@ -42,10 +45,9 @@ export default function LearnPiano() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [hasFailedThisRound, setHasFailedThisRound] = useState(false);
+  const [rankData, setRankData] = useState(null);
 
-  const allNotes = [
-    'C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'
-  ];
+  const allNotes = [ 'C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B' ];
   const octaves = [3, 4, 5];
   const allChoices = freestyleMode
     ? octaves.flatMap((oct) => allNotes.map((note) => `${note}${oct}`))
@@ -61,7 +63,10 @@ export default function LearnPiano() {
     setShowPopup(false);
     setStatusMessage('');
     setHasFailedThisRound(false);
+    setRankData(null);
+    totalAnswerTimeRef.current = 0;
     generateNewSequence(0);
+    answerTimeStartRef.current = Date.now();
   };
 
   const generateNewSequence = (roundNum) => {
@@ -71,6 +76,7 @@ export default function LearnPiano() {
     setCurrentSequence(newSequence);
     setUserInput([]);
     setCurrentRound(roundNum);
+    answerTimeStartRef.current = Date.now();
   };
 
   const handlePlayTonic = () => {
@@ -81,14 +87,14 @@ export default function LearnPiano() {
 
   const handleAnswer = (note) => {
     if (!isPlaying) return;
-
+  
     keyboardRef.current.playNote(note);
-
+  
     const expected = currentSequence[userInput.length];
     const isCorrect = normalMode
       ? getNoteBase(note) === getNoteBase(expected)
       : note === expected;
-
+  
     if (!isCorrect) {
       keyboardRef.current.setFlashWrong(note);
       setStatusMessage('❌ Wrong! Try again');
@@ -98,17 +104,34 @@ export default function LearnPiano() {
       setUserInput([]);
       return;
     }
-
+  
     keyboardRef.current.setFlashRight(note);
     const nextInput = [...userInput, note];
     setUserInput(nextInput);
-
+  
     if (nextInput.length === currentSequence.length) {
-      setTriesCount((t) => t + 1);
+      const elapsed = Date.now() - (answerTimeStartRef.current || Date.now());
+      totalAnswerTimeRef.current += elapsed / 1000;
+  
+      const updatedTries = triesCount + 1;
+      let updatedCorrect = correctCount;
       if (!hasFailedThisRound) {
-        setCorrectCount((c) => c + 1);
+        updatedCorrect += 1;
+        setCorrectCount(updatedCorrect);
       }
+      setTriesCount(updatedTries);
+  
       if (currentRound + 1 >= rounds) {
+        const rank = calculateLearnPianoRank({
+          selectedNotes,
+          sequenceLength,
+          freestyleMode,
+          correctCount: updatedCorrect,
+          triesCount: updatedTries,
+          rounds,
+          totalAnswerTimeSec: totalAnswerTimeRef.current,
+        });
+        setRankData(rank);
         setIsPlaying(false);
         setShowPopup(true);
       } else {
@@ -122,7 +145,7 @@ export default function LearnPiano() {
       setStatusMessage('✅ Correct... keep going');
     }
   };
-
+  
   return (
     <div className="learn_piano-game-container">
       <nav className="learn_piano-game-navbar">
@@ -162,9 +185,7 @@ export default function LearnPiano() {
       <div className="learn_piano-game-bottom">
         <div className="learn_piano-sequence-display">
           {currentSequence.map((note, idx) => {
-            const base = getNoteBase(note);
             const isCurrent = idx === userInput.length;
-
             return (
               <span
                 key={idx}
@@ -187,20 +208,36 @@ export default function LearnPiano() {
       </div>
 
       {showPopup && (
-        <div className="learn_piano-popup-overlay">
-          <div className="learn_piano-popup">
-            <h2>🎉 Practice Complete!</h2>
-            <p><strong>Rounds:</strong> {rounds}</p>
-            <p><strong>Correct:</strong> {correctCount}</p>
-            <p><strong>Wrong:</strong> {wrongCount}</p>
-            <p><strong>Total Attempts:</strong> {triesCount}</p>
-            <div className="learn_piano-popup-buttons">
-              <button onClick={startGame}>🔁 Restart</button>
-              <button onClick={() => navigate('/learn-piano')}>⚙️ Settings</button>
-            </div>
-          </div>
-        </div>
+  <div className="learn_piano-popup-overlay">
+    <div className="learn_piano-popup">
+      <h2>🎉 Practice Complete!</h2>
+      <p><strong>Rounds:</strong> {rounds}</p>
+      <p><strong>Correct:</strong> {correctCount}</p>
+      <p><strong>Wrong:</strong> {wrongCount}</p>
+      <p><strong>Total Attempts:</strong> {triesCount}</p>
+
+      {rounds >= 5 && rankData ? (
+        <>
+          <p><strong>Level:</strong> {rankData.level}</p>
+          <p><strong>Rank:</strong> {rankData.score} / 100</p>
+          <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+            <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+            <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+            <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
+          </ul>
+          <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
+        </>
+      ) : (
+        <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
       )}
+
+      <div className="learn_piano-popup-buttons">
+        <button onClick={startGame}>🔁 Restart</button>
+        <button onClick={() => navigate('/learn-piano')}>⚙️ Settings</button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

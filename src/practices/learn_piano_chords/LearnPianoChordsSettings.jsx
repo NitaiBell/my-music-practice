@@ -76,6 +76,9 @@ const LearnPianoChordsSettings = () => {
   const numButtons = selectedChords.length;
   const rows = numButtons > 12 ? 2 : 1;
   const columns = Math.ceil(numButtons / rows || 1);
+  const diatonicChords = chordsByScale[selectedScale] || [];
+const uniqueValidChords = selectedChords.filter((c) => diatonicChords.includes(c));
+const level = freestyleMode ? 8 : Math.max(2, Math.min(7, uniqueValidChords.length));
 
   return (
     <div className="learn_piano_chords-container-settings">
@@ -156,9 +159,11 @@ const LearnPianoChordsSettings = () => {
 
         {!freestyleMode && (
           <div className="learn_piano_chords-summary">
-            <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
-            <p>Chords: <strong>{selectedChords.join(', ')}</strong></p>
-          </div>
+          <p>
+            <strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong> | Level: <strong>{level}</strong>
+          </p>
+          <p>Chords: <strong>{selectedChords.join(', ')}</strong></p>
+        </div>
         )}
 
         <div

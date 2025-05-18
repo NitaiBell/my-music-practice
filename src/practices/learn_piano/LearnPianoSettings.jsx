@@ -28,6 +28,8 @@ const displayNote = (note, key) => {
   return naturalNames[note] || (preferFlat ? displayMapFlats[note] : displayMapSharps[note]) || note;
 };
 
+
+
 const notesByScale = {
   C: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
   D: ['D', 'E', 'Fs', 'G', 'A', 'B', 'Cs'],
@@ -49,7 +51,9 @@ export default function LearnPianoSettings() {
   const keyboardRef = useRef();
   const navigate = useNavigate();
   const tonic = selectedScale;
-
+  const level = freestyleMode
+  ? (sequenceLength >= 10 ? 18 : 17)
+  : Math.max(2, Math.min(17, selectedNotes.length + sequenceLength));
   function getScaleDegrees(scale, degreeIndices) {
     return degreeIndices.map((i) => notesByScale[scale][i]);
   }
@@ -191,8 +195,9 @@ export default function LearnPianoSettings() {
             <p>🎲 Freestyle mode is ON — Random notes will be used!</p>
           ) : (
             <>
-              <p><strong>{rounds}</strong> rounds | Sequence length: <strong>{sequenceLength}</strong></p>
-              <p>Scale: <strong>{selectedScale}</strong> | Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
+<p>
+  <strong>{rounds}</strong> rounds | Sequence length: <strong>{sequenceLength}</strong> | Level: <strong>{level}</strong>
+</p>              <p>Scale: <strong>{selectedScale}</strong> | Notes: <strong>{selectedNotes.map(n => displayNote(n, selectedScale)).join(', ')}</strong></p>
             </>
           )}
         </div>

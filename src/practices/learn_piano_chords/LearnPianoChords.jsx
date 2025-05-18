@@ -1,8 +1,9 @@
 // LearnPianoChords.jsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LearnPianoChords.css';
 import LearnPianoChordsKeyboardView from './LearnPianoChordsKeyboardView';
+import { calculateLearnPianoChordsRank } from './calculateLearnPianoChordsRank';
 
 const chordNoteMap = {
   C: ['C3', 'E3', 'G3'], D: ['D3', 'Fs3', 'A3'], Dm: ['D3', 'F3', 'A3'], Em: ['E3', 'G3', 'B3'],
@@ -12,31 +13,26 @@ const chordNoteMap = {
   'F#m': ['Fs3', 'A3', 'Cs4'], 'G#dim': ['Gs3', 'B3', 'D4'], 'G#m': ['Gs3', 'B3', 'Ds4'],
   B: ['B3', 'Ds4', 'Fs4'], 'C#dim': ['Cs3', 'E3', 'G3'], 'D#dim': ['Ds3', 'Fs3', 'A3'],
   'D#m': ['Ds3', 'Fs3', 'As3'], 'F#': ['Fs3', 'As3', 'Cs4'], 'A#dim': ['As3', 'Cs4', 'E4'],
-
-  // Additional chords:
   Cm: ['C3', 'Ds3', 'G3'], 'C7': ['C3', 'E3', 'G3', 'As3'], 'Cm7': ['C3', 'Ds3', 'G3', 'As3'],
   D7: ['D3', 'Fs3', 'A3', 'C4'], Dmaj7: ['D3', 'Fs3', 'A3', 'Cs4'], Dm7: ['D3', 'F3', 'A3', 'C4'],
-  E7: ['E3', 'Gs3', 'B3', 'D4'], Edom7: ['E3', 'Gs3', 'B3', 'D4'],
+  E7: ['E3', 'Gs3', 'B3', 'D4'],
   F7: ['F3', 'A3', 'C4', 'Ds4'], Fmaj7: ['F3', 'A3', 'C4', 'E4'], Fm7: ['F3', 'Gs3', 'C4', 'Ds4'],
   G7: ['G3', 'B3', 'D4', 'F4'], Gmaj7: ['G3', 'B3', 'D4', 'Fs4'], Gm7: ['G3', 'As3', 'D4', 'F4'],
   A7: ['A3', 'Cs4', 'E4', 'G4'], Amaj7: ['A3', 'Cs4', 'E4', 'Gs4'], Am7: ['A3', 'C4', 'E4', 'G4'],
   B7: ['B3', 'Ds4', 'Fs4', 'A4'], Bm7: ['B3', 'D4', 'Fs4', 'A4'],
-
-  // Enharmonic additions:
   'Db': ['Cs3', 'F3', 'Gs3'], 'Eb': ['Ds3', 'G3', 'As3'], 'Ab': ['Gs3', 'C4', 'Ds4'],
-  'Dbm': ['Cs3', 'E3', 'Gs3'], 'Ebm': ['Ds3', 'F3', 'As3'], 'Abm': ['Gs3', 'B3', 'Ds4'],
-  'Bbm': ['As3', 'C4', 'F4'], 'Bbm7': ['As3', 'C4', 'F4', 'Gs4']
+  'Dbm': ['Cs3', 'E3', 'Gs3'], 'Ebm': ['Ds3', 'Fs3', 'As3'], 'Abm': ['Gs3', 'B3', 'Ds4'],
+  'Bbm': ['As2', 'Cs3', 'F3'], 'Bbm7': ['As2', 'Cs3', 'F3', 'Gs3']
 };
 
-const arraysEqual = (a, b) => {
-  if (a.length !== b.length) return false;
-  return a.every((val, index) => val === b[index]);
-};
+const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
 
 const LearnPianoChords = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
+  const totalAnswerTimeRef = useRef(0);
+  const answerTimeStartRef = useRef(null);
 
   const {
     selectedScale = 'C',
@@ -64,33 +60,22 @@ const LearnPianoChords = () => {
   const [roundMistakeMade, setRoundMistakeMade] = useState(false);
   const [roundOutcomeSet, setRoundOutcomeSet] = useState(false);
   const [canAnswer, setCanAnswer] = useState(false);
+  const [rankData, setRankData] = useState(null);
 
   const playNote = (note) => {
-    const encoded = encodeURIComponent(`${note}.wav`);
-    const audio = new Audio(`/clean_cut_notes/${encoded}`);
-    audio.play().catch(err => console.error(`Error playing ${note}:`, err));
+    const audio = new Audio(`/clean_cut_notes/${encodeURIComponent(note)}.wav`);
+    audio.play();
   };
-
-  const playChord = (chord) => {
-    const notes = chordNoteMap[chord];
-    notes.forEach(playNote);
-  };
-
+  const playChord = (chord) => chordNoteMap[chord]?.forEach(playNote);
   const flashButton = (chord, type) => {
     setButtonFlashes(prev => ({ ...prev, [chord]: type }));
-    setTimeout(() => {
-      setButtonFlashes(prev => ({ ...prev, [chord]: null }));
-    }, 500);
+    setTimeout(() => setButtonFlashes(prev => ({ ...prev, [chord]: null })), 500);
   };
 
   const startGame = () => {
     const chordPool = freestyleMode ? allChords : selectedChords.filter(c => chordNoteMap[c]);
     if (chordPool.length === 0) return;
-
-    const generated = Array.from({ length: rounds }, () =>
-      chordPool[Math.floor(Math.random() * chordPool.length)]
-    );
-
+    const generated = Array.from({ length: rounds }, () => chordPool[Math.floor(Math.random() * chordPool.length)]);
     setSequence(generated);
     setCurrentRound(0);
     setCorrectCount(0);
@@ -102,45 +87,43 @@ const LearnPianoChords = () => {
     setRoundMistakeMade(false);
     setRoundOutcomeSet(false);
     setCanAnswer(false);
-
+    setRankData(null);
+    totalAnswerTimeRef.current = 0;
+    answerTimeStartRef.current = Date.now();
     setTimeout(() => showNextChord(generated[0]), 300);
   };
 
   const showNextChord = (chord) => {
     setCurrentChord(chord);
     setCanAnswer(false);
-
     if (freestyleMode) {
-      const others = allChords.filter(c => c !== chord);
-      const randomSet = others.sort(() => 0.5 - Math.random()).slice(0, 6);
-      setCurrentOptions([...randomSet, chord].sort(() => 0.5 - Math.random()));
+      const options = allChords.filter(c => c !== chord).sort(() => 0.5 - Math.random()).slice(0, 6);
+      setCurrentOptions([...options, chord].sort(() => 0.5 - Math.random()));
     }
-
-    const notes = chordNoteMap[chord];
+    answerTimeStartRef.current = Date.now();
     let count = 0;
-    const repeatFlash = () => {
-      keyboardRef.current?.setFlashBlue(notes);
-      count++;
-      if (count < 3) {
-        setTimeout(repeatFlash, 600);
-      } else {
-        setCanAnswer(true);
-      }
+    const flash = () => {
+      keyboardRef.current?.setFlashBlue(chordNoteMap[chord]);
+      if (++count < 3) setTimeout(flash, 600);
+      else setCanAnswer(true);
     };
-    repeatFlash();
+    flash();
   };
 
   const handleAnswer = (chord) => {
     if (!isPlaying || !currentChord || !canAnswer) return;
+    const expected = chordNoteMap[currentChord]?.slice().sort();
+    const answer = chordNoteMap[chord]?.slice().sort();
 
-    const expectedNotes = chordNoteMap[currentChord].slice().sort();
-    const answerNotes = chordNoteMap[chord]?.slice().sort();
+    const elapsed = Date.now() - (answerTimeStartRef.current || Date.now());
+    totalAnswerTimeRef.current += elapsed / 1000;
+    answerTimeStartRef.current = Date.now();
 
     setTriesCount(t => t + 1);
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 400);
 
-    if (arraysEqual(answerNotes, expectedNotes)) {
+    if (arraysEqual(answer, expected)) {
       if (!roundMistakeMade && !roundOutcomeSet) {
         setCorrectCount(c => c + 1);
         setStatFlash('correct');
@@ -148,20 +131,28 @@ const LearnPianoChords = () => {
         setRoundOutcomeSet(true);
         setStatusMessage("✅ You're right!");
       }
-
-      keyboardRef.current?.setFlashRight(answerNotes);
+      keyboardRef.current?.setFlashRight(answer);
       flashButton(chord, 'correct');
 
       if (currentRound + 1 >= sequence.length) {
+        const rank = calculateLearnPianoChordsRank({
+          selectedScale,
+          selectedChords,
+          freestyleMode,
+          rounds,
+          correctCount: correctCount + 1,
+          triesCount: triesCount + 1,
+          totalAnswerTimeSec: totalAnswerTimeRef.current,
+        });
+        setRankData(rank);
         setIsPlaying(false);
         setShowPopup(true);
       } else {
         setTimeout(() => {
-          const next = sequence[currentRound + 1];
           setCurrentRound(r => r + 1);
           setRoundMistakeMade(false);
           setRoundOutcomeSet(false);
-          showNextChord(next);
+          showNextChord(sequence[currentRound + 1]);
           setStatusMessage('');
         }, 600);
       }
@@ -173,13 +164,13 @@ const LearnPianoChords = () => {
         setRoundOutcomeSet(true);
         setStatusMessage("❌ Wrong! Try again.");
       }
-
       setRoundMistakeMade(true);
       setAwaitingRetry(true);
-      keyboardRef.current?.setFlashWrong(answerNotes);
+      keyboardRef.current?.setFlashWrong(answer);
       flashButton(chord, 'wrong');
     }
   };
+
 
   const displayedChords = freestyleMode ? currentOptions : selectedChords;
   const rows = displayedChords.length > 12 ? 2 : 1;
@@ -238,14 +229,20 @@ const LearnPianoChords = () => {
         </div>
       </div>
 
-      {showPopup && (
+      {showPopup && rankData && (
         <div className="learn_piano_chords-popup-overlay">
           <div className="learn_piano_chords-popup">
             <h2>🎉 Game Over!</h2>
-            <p>Nice job finishing the round!</p>
             <p><strong>Correct:</strong> {correctCount}</p>
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Tries:</strong> {triesCount}</p>
+            <p><strong>Level:</strong> {rankData.level}</p>
+            <p><strong>Rank:</strong> {rankData.score} / 100</p>
+            <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+              <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+              <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+              <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
+            </ul>
             <div className="learn_piano_chords-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/learn-piano-chords')}>⚙️ Back to Settings</button>
