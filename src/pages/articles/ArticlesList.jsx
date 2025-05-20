@@ -3,14 +3,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { articles } from './articlesData';
 import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer'; // ✅ Add Footer
+import Footer from '../../components/Footer';
 import './ArticlesList.css';
 
 export default function ArticlesList() {
   return (
     <div className="articles-wrapper">
-      <Navbar />
+      {/* 🔒 Fixed Navbar */}
+      <div className="articles-fixed-navbar">
+        <Navbar />
+      </div>
+
+      {/* 🔄 Scrollable content */}
       <div className="articles-scroll-container">
+        {/* Spacer for navbar height */}
+        <div style={{ height: '60px' }} />
+
         <div className="articles-list-container">
           <h2 className="articles-heading">Read Articles</h2>
           <div className="articles-card-grid">
@@ -23,7 +31,8 @@ export default function ArticlesList() {
             ))}
           </div>
         </div>
-        <Footer /> {/* ✅ Footer appears below the article list */}
+
+        <Footer />
       </div>
     </div>
   );

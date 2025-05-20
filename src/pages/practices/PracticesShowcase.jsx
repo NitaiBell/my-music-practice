@@ -32,7 +32,7 @@ export default function PracticesShowcase() {
       description: 'Listen to chords instead of single notes and match the correct chord using the keyboard or buttons.',
       logo: '/practices_logos/ping pong melody.png',
       link: '/real-melody',
-      background: 'linear-gradient(to bottom right, #bbf7d0,rgb(114, 241, 194))', // mint to emerald
+      background: 'linear-gradient(to bottom right, #bbf7d0, #34d399)', // mint to emerald
     },
     {
       number: 4,
@@ -40,48 +40,55 @@ export default function PracticesShowcase() {
       description: 'Mix of notes and chords, alternating views and input types. A complete test of melody and harmony.',
       logo: '/practices_logos/ping pong melody.png',
       link: '/real-melody',
-      background: 'linear-gradient(to bottom right, #bbf7d0,rgb(0, 255, 81))', // mint to emerald
+      background: 'linear-gradient(to bottom right, #bbf7d0,rgb(13, 199, 131))', // mint to emerald
     },
   ];
   
 
   return (
     <div className="practice-showcase-wrapper">
-      <Navbar />
-      <div className="practice-scroll-container">
-  {sections.map((section) => (
-    <div
-      className="practice-section"
-      key={section.number}
-      style={{
-        background: section.background,
-        borderBottom: '1px solid black',
-      }}
-    >
-      <div className="practice-count">
-        {section.number} / {sections.length}
+      {/* 🔒 Fixed Navbar */}
+      <div className="practice-fixed-navbar">
+        <Navbar />
       </div>
-      <div className="practice-content">
-        <div
-          className="practice-logo"
-          onClick={() => navigate(section.link)}
-          title="Go to Practice"
-        >
-          <img src={section.logo} alt="Practice Logo" />
-        </div>
-        <div className="practice-description">
-          <h2>{section.title}</h2>
-          <p>{section.description}</p>
-          <button onClick={() => navigate(section.link)}>Start Practice</button>
-        </div>
-      </div>
-    </div>
-  ))}
 
-  <div className="practice-footer-wrapper"> {/* ✅ Add wrapper for spacing if needed */}
-    <Footer />
-  </div>
-</div>
+      {/* 🔄 Scrollable content (with top padding to avoid hiding) */}
+      <div className="practice-scroll-container">
+        <div style={{ height: '60px' }} /> {/* Spacer for navbar height */}
+        
+        {sections.map((section) => (
+          <div
+            className="practice-section"
+            key={section.number}
+            style={{
+              background: section.background,
+              borderBottom: '1px solid black',
+            }}
+          >
+            <div className="practice-count">
+              {section.number} / {sections.length}
+            </div>
+            <div className="practice-content">
+              <div
+                className="practice-logo"
+                onClick={() => navigate(section.link)}
+                title="Go to Practice"
+              >
+                <img src={section.logo} alt="Practice Logo" />
+              </div>
+              <div className="practice-description">
+                <h2>{section.title}</h2>
+                <p>{section.description}</p>
+                <button onClick={() => navigate(section.link)}>Start Practice</button>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        <div className="practice-footer-wrapper">
+          <Footer />
+        </div>
+      </div>
     </div>
   );
 }

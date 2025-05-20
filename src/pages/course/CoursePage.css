@@ -8,6 +8,15 @@
   overflow: hidden; /* prevent overall page scroll */
 }
 
+.course-fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+
 /* Navbar */
 .course-navbar {
   height: 60px;

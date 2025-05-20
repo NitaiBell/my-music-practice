@@ -11,6 +11,20 @@ which_higher_note
 harmonic_dictation
 
 
+Chord Types	
+Degree Training	
+Spot the Difference	
+Ping Pong Harmony		
+Interval Trainer	
+Piano Notes	
+Piano Chords	
+Ping Pong Melody	
+Which Note Is Higher?	
+Harmonic Dictation	
+Melodic Dictation
+Harmonize the Melody	
+
+
 🧠 RANK FACTORS & THEIR IMPACT
 Factor	What It Measures	How It Affects Score
 🎯 Correct Count	Number of rounds answered correctly on first try	Increases score. More first-try corrects = better accuracyFactor.

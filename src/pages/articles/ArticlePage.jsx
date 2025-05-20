@@ -1,7 +1,6 @@
-// src/pages/articles/ArticlePage.jsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../../components/Navbar'; // ✅ Import Navbar
+import Navbar from '../../components/Navbar';
 import './ArticlePage.css';
 
 export default function ArticlePage() {
@@ -48,10 +47,16 @@ export default function ArticlePage() {
 
   return (
     <div className="light-page">
-      <Navbar /> {/* ✅ Navbar at the top */}
-      <div className="article-page">
-        <h1>{article.title}</h1>
-        <div className="article-content">{article.content}</div>
+      <Navbar />
+      <div className="article-layout">
+        <div className="ad-left">Ad</div>
+
+        <div className="article-page">
+          <h1>{article.title}</h1>
+          <div className="article-content">{article.content}</div>
+        </div>
+
+        <div className="ad-right">Ad</div>
       </div>
     </div>
   );

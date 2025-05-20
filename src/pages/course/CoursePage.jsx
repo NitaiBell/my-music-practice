@@ -110,25 +110,36 @@ Let's dive deep into the beauty and science of snow! 🌨️
 
   return (
     <div className="course-page">
-      <Navbar /> {/* ✅ Shared Navbar */}
-
-
+      {/* 🔒 Fixed Navbar */}
+      <div className="course-fixed-navbar">
+        <Navbar />
+      </div>
+  
+      {/* 🔄 Spacer for fixed navbar height */}
+      <div style={{ height: '60px' }} />
+  
+      {/* Main course layout */}
       <div className="course-main">
         <div className="course-content">
           <div className="video-player">
             {currentVideo && <VideoPlayer src={currentVideo} />}
           </div>
-
+  
           <div className="course-details">
-          <h2
-  className="description-link"
-  onClick={() => window.open(`/fullview/${encodeURIComponent(courseId || defaultFile.replace('.mp4', ''))}`, '_blank')}
->
-  Description – {currentTitle}
-</h2>
+            <h2
+              className="description-link"
+              onClick={() =>
+                window.open(
+                  `/fullview/${encodeURIComponent(courseId || defaultFile.replace('.mp4', ''))}`,
+                  '_blank'
+                )
+              }
+            >
+              Description – {currentTitle}
+            </h2>
             <p style={{ whiteSpace: 'pre-line' }}>{description}</p>
           </div>
-
+  
           <aside className="course-sidebar">
             {sections.map((section) => (
               <div key={section.id}>
@@ -142,8 +153,10 @@ Let's dive deep into the beauty and science of snow! 🌨️
                   <ul className="course-episode-list">
                     {section.episodes.map((file) => {
                       const nameWithoutExt = file.replace('.mp4', '');
-                      const active = decodeURIComponent(courseId || defaultFile.replace('.mp4', '')) === nameWithoutExt;
-
+                      const active =
+                        decodeURIComponent(courseId || defaultFile.replace('.mp4', '')) ===
+                        nameWithoutExt;
+  
                       return (
                         <li key={file} className="course-episode-item-wrapper">
                           <input
@@ -173,9 +186,9 @@ Let's dive deep into the beauty and science of snow! 🌨️
           </aside>
         </div>
       </div>
-
+  
       <Footer />
-
     </div>
   );
+  
 }
