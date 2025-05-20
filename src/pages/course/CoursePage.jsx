@@ -1,5 +1,9 @@
+// src/pages/course/CoursePage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar'; // ✅ Reusable Navbar
+import Footer from '../../components/Footer'; // ✅ shared component
+
 import VideoPlayer from './VideoPlayer';
 import './CoursePage.css';
 
@@ -101,11 +105,13 @@ Let's dive deep into the beauty and science of snow! 🌨️
     }));
   };
 
+  const currentFile = `${decodeURIComponent(courseId || defaultFile.replace('.mp4', ''))}.mp4`;
+  const currentTitle = episodeMeta[currentFile]?.display || 'Course';
+
   return (
     <div className="course-page">
-      <header className="course-navbar">
-        <h1>{episodeMeta[`${decodeURIComponent(courseId || defaultFile.replace('.mp4', ''))}.mp4`]?.display || 'Course'}</h1>
-      </header>
+      <Navbar /> {/* ✅ Shared Navbar */}
+
 
       <div className="course-main">
         <div className="course-content">
@@ -114,14 +120,12 @@ Let's dive deep into the beauty and science of snow! 🌨️
           </div>
 
           <div className="course-details">
-            {/* ✨ Make "Description" clickable */}
-            <h2
-              className="description-link"
-              onClick={() => window.open(`/fullview/${encodeURIComponent(courseId || defaultFile.replace('.mp4', ''))}`, '_blank')}
-            >
-              Description
-            </h2>
-
+          <h2
+  className="description-link"
+  onClick={() => window.open(`/fullview/${encodeURIComponent(courseId || defaultFile.replace('.mp4', ''))}`, '_blank')}
+>
+  Description – {currentTitle}
+</h2>
             <p style={{ whiteSpace: 'pre-line' }}>{description}</p>
           </div>
 
@@ -154,7 +158,9 @@ Let's dive deep into the beauty and science of snow! 🌨️
                           >
                             {episodeMeta[file]?.display || nameWithoutExt}
                             {videoDurations[file] && (
-                              <span className="episode-duration"> ({formatDuration(videoDurations[file])})</span>
+                              <span className="episode-duration">
+                                ({formatDuration(videoDurations[file])})
+                              </span>
                             )}
                           </button>
                         </li>
@@ -168,9 +174,8 @@ Let's dive deep into the beauty and science of snow! 🌨️
         </div>
       </div>
 
-      <footer className="course-footer">
-        © 2025 My Music Practice | All Rights Reserved
-      </footer>
+      <Footer />
+
     </div>
   );
 }

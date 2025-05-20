@@ -1,176 +1,174 @@
-/* src/practices/which_higher_note/WhichHigherNoteSettings.css */
-
+/* Container */
 .which_higher_settings-container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: linear-gradient(to bottom, #c2f86a, #18230F);
-    color: #F1EFEC;
-    font-family: 'Segoe UI', sans-serif;
-    overflow: hidden;
-  }
-  
-  /* Navbar */
-  .which_higher-navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 18px 28px;
-    min-height: 90px;
-    background: linear-gradient(to right, #1F7D53, #255F38);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    border-bottom: 3px solid #5CFF70;
-    font-size: 1.8rem;
-    font-weight: bold;
-    border-radius: 0 0 16px 16px;
-  }
-  
-  /* Content */
-  .which_higher_content-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    padding-bottom: 60px;
-  }
-  
-  /* Controls */
-  .which_higher-controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
-    background: rgba(39, 57, 28, 0.85);
-    padding: 30px 40px;
-    border-radius: 20px;
-    border: 2px solid #F1EFEC;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  }
-  
-  /* Rounds */
-  .which_higher-rounds-group {
-    display: flex;
-    align-items: center;
-    background: #27391C;
-    border: 2px solid #F1EFEC;
-    padding: 12px 18px;
-    border-radius: 14px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    gap: 14px;
-  }
-  
-  .which_higher-rounds-label {
-    font-size: 1.4rem;
-    font-weight: bold;
-  }
-  
-  .which_higher-rounds-input {
-    width: 100px;
-    font-size: 1.4rem;
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: none;
-    background-color: #1a2714;
-    color: #F1EFEC;
-    text-align: center;
-    outline: none;
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .which_higher-rounds-input:focus {
-    box-shadow: 0 0 8px #99e06c;
-  }
-  
-  /* Octaves */
-  .which_higher-octaves-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .which_higher-octaves-label {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .which_higher-octaves-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  
-  .which_higher-octave-btn {
-    padding: 12px 18px;
-    font-size: 1.4rem;
-    background: #27391C;
-    color: #F1EFEC;
-    border: 2px solid #F1EFEC;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  .which_higher-octave-btn.selected {
-    background: #5CFF70;
-    color: #18230F;
-    box-shadow: 0 0 12px rgba(92, 255, 112, 0.8);
-  }
-  
-  .which_higher-octave-btn:hover {
-    background: #1f3c2b;
-    transform: scale(1.07);
-  }
-  
-  /* Start Button */
-  .which_higher-start-btn {
-    background: linear-gradient(to right, #1F7D53, #255F38);
-    color: #F1EFEC;
-    padding: 16px 32px;
-    border: none;
-    border-radius: 18px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
-    margin-top: 20px;
-  }
-  
-  .which_higher-start-btn:hover {
-    background: linear-gradient(to right, #255F38, #1F7D53);
-    transform: scale(1.08);
-  }
-  
-  /* Floating Setup Message */
-  .which_higher-floating-setup-message {
-    position: absolute;
-    top: 0px; /* <-- instead of 100px */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-size: 1.6rem;
-    font-weight: bold;
-    padding: 16px 26px;
-    border-radius: 18px;
-    backdrop-filter: blur(6px);
-    pointer-events: none;
-    z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, #c2f86a, #18230F);
+  color: #F1EFEC;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
 }
-  
-  /* Summary */
-  .which_higher-summary {
-    padding: 14px 26px;
-    font-size: 1.3rem;
-    text-align: center;
-    color: #F1EFEC;
-    background: rgba(39, 57, 28, 0.85);
-    border-radius: 14px;
-    margin-bottom: 24px;
-  }
-  
+
+/* Navbar */
+.which_higher_settings-navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px 28px;
+  min-height: 90px;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  border-bottom: 3px solid #5CFF70;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border-radius: 0 0 16px 16px;
+}
+
+/* Content wrapper */
+.which_higher_settings-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding-bottom: 60px;
+}
+
+/* Controls panel */
+.which_higher_settings-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  background: rgba(39, 57, 28, 0.85);
+  padding: 30px 40px;
+  border-radius: 20px;
+  border: 2px solid #F1EFEC;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Rounds group */
+.which_higher_settings-rounds-group {
+  display: flex;
+  align-items: center;
+  background: #27391C;
+  border: 2px solid #F1EFEC;
+  padding: 12px 18px;
+  border-radius: 14px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  gap: 14px;
+}
+
+.which_higher_settings-rounds-label {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.which_higher_settings-rounds-input {
+  width: 100px;
+  font-size: 1.4rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  background-color: #1a2714;
+  color: #F1EFEC;
+  text-align: center;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+.which_higher_settings-rounds-input:focus {
+  box-shadow: 0 0 8px #99e06c;
+}
+
+/* Octaves group */
+.which_higher_settings-octaves-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.which_higher_settings-octaves-label {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.which_higher_settings-octaves-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.which_higher_settings-octave-btn {
+  padding: 12px 18px;
+  font-size: 1.4rem;
+  background: #27391C;
+  color: #F1EFEC;
+  border: 2px solid #F1EFEC;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.which_higher_settings-octave-btn.selected {
+  background: #5CFF70;
+  color: #18230F;
+  box-shadow: 0 0 12px rgba(92, 255, 112, 0.8);
+}
+
+.which_higher_settings-octave-btn:hover {
+  background: #1f3c2b;
+  transform: scale(1.07);
+}
+
+/* Start button */
+.which_higher_settings-start-btn {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 18px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+  margin-top: 20px;
+}
+
+.which_higher_settings-start-btn:hover {
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.08);
+}
+
+/* Floating setup message */
+.which_higher_settings-floating-setup-message {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: bold;
+  padding: 16px 26px;
+  border-radius: 18px;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Summary text */
+.which_higher_settings-summary {
+  padding: 14px 26px;
+  font-size: 1.3rem;
+  text-align: center;
+  color: #F1EFEC;
+  background: rgba(39, 57, 28, 0.85);
+  border-radius: 14px;
+  margin-bottom: 24px;
+}

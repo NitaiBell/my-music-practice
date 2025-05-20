@@ -222,3 +222,13 @@
 .description-link:hover {
   color: #437049;
 }
+
+
+.course-title-heading {
+  color: #ffffff;
+  background-color: #050505;
+  text-align: center;             /* Centers text horizontally */
+  margin: 0 auto;
+
+}
+

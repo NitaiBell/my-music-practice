@@ -1,5 +1,9 @@
+// pages/userprofile/UserProfile.jsx
 import React, { useState } from 'react';
 import './UserProfile.css';
+import Navbar from '../../components/Navbar'; // from anywhere
+import Footer from '../../components/Footer'; // ✅ shared footer
+
 
 const profileOptions = [
   { name: 'Mozart', file: 'mozart profile.png' },
@@ -48,8 +52,8 @@ export default function UserProfile({ username = 'Mozart' }) {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUploadedImage(reader.result); // base64
-        setSelectedImage(reader.result); // update avatar
+        setUploadedImage(reader.result);
+        setSelectedImage(reader.result);
         setShowDropdown(false);
       };
       reader.readAsDataURL(file);
@@ -68,15 +72,7 @@ export default function UserProfile({ username = 'Mozart' }) {
     <div className="user-profile-container">
       {/* Fixed Header Block */}
       <div className="user-profile-fixed-header">
-        <div className="user-profile-navbar">
-          <div className="navbar-logo">MyMusic</div>
-          <div className="navbar-links">
-            <a href="/">Home</a>
-            <a href="/nitai-practices">Practices</a>
-            <a href="/course/1">Courses</a>
-            <a href="/articles">Articles</a>
-          </div>
-        </div>
+        <Navbar />
 
         <div className="user-profile-banner"></div>
 
@@ -98,7 +94,6 @@ export default function UserProfile({ username = 'Mozart' }) {
           +
           {showDropdown && (
             <div className="user-profile-dropdown">
-              {/* Upload option at the top */}
               <div className="user-profile-option upload-option">
                 <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                   <img
@@ -116,7 +111,6 @@ export default function UserProfile({ username = 'Mozart' }) {
                 </label>
               </div>
 
-              {/* Default avatars */}
               {profileOptions.map(({ name, file }) => (
                 <div
                   key={file}
@@ -175,6 +169,8 @@ export default function UserProfile({ username = 'Mozart' }) {
           </div>
         </section>
       </div>
+      <Footer />  {/* ✅ Added footer here */}
+
     </div>
   );
 }

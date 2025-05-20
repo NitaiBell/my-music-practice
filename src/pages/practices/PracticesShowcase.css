@@ -1,0 +1,101 @@
+/* src/pages/practices/PracticesShowcase.css */
+
+.practice-showcase-wrapper {
+    /* height: 100vh; ❌ REMOVE THIS */
+    min-height: 100vh; /* ✅ Allows content to grow */
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #d1fae5;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  
+  .practice-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .practice-section {
+    position: relative; /* 🔧 Add this */
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 80px;
+    padding-right: 80px;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom right, #bbf7d0, #99f6e4);
+  }
+  
+  .practice-count {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #065f46;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 6px 14px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .practice-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+  
+  .practice-logo {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .practice-logo:hover {
+    transform: scale(1.05);
+  }
+  
+  .practice-logo img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+  }
+  
+  .practice-description {
+    flex: 1;
+    padding-left: 60px;
+    color: #064e3b;
+  }
+  
+  .practice-description h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #047857;
+  }
+  
+  .practice-description p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+  
+  .practice-description button {
+    background-color: #10b981;
+    color: white;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .practice-description button:hover {
+    background-color: #059669;
+  }

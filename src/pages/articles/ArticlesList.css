@@ -1,0 +1,86 @@
+/* Sticky layout like practices */
+
+.articles-wrapper {
+  min-height: 100vh; /* Use min-height instead of fixed height */
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #a4e7b1;
+  display: flex;
+  flex-direction: column;
+}
+
+.articles-scroll-container {
+  flex: 1; /* Takes all available vertical space */
+  overflow-y: auto;
+}
+
+/* Article content layout */
+
+.articles-list-container {
+  padding: 80px 40px 100px; /* Added bottom padding for space above footer */
+  background-color: #a4e7b1;
+  box-sizing: border-box;
+}
+
+.articles-heading {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 48px;
+  text-align: center;
+  text-shadow: 0 1px 0 white;
+}
+
+.articles-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.article-card {
+  background: #ffffff;
+  padding: 26px 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: #065f46;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #def7eb;
+}
+
+.article-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  color: #047857;
+}
+
+.article-card p {
+  font-size: 1.05rem;
+  color: #334155;
+  flex-grow: 1;
+  margin-bottom: 24px;
+  line-height: 1.65;
+}
+
+.article-card span.read-more {
+  align-self: flex-start;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #10b981;
+  transition: color 0.2s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+.article-card:hover span.read-more {
+  color: #059669;
+  text-decoration: underline;
+}

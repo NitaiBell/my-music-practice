@@ -8,7 +8,16 @@ import Home from './pages/Home.jsx';
 import NitaiPractices from './pages/NitaiPractices.jsx';
 import CoursePage from './pages/course/CoursePage.jsx';
 import FullViewPage from './pages/course/FullViewPage.jsx';
-import UserProfile from './pages/userprofile/UserProfile.jsx'; // ✅ NEW
+import UserProfile from './pages/userprofile/UserProfile.jsx';
+import PracticesShowcase from './pages/practices/PracticesShowcase.jsx';
+
+// Auth Pages
+import SignIn from './pages/auth/SignIn.jsx';
+import SignUp from './pages/auth/SignUp.jsx';
+
+// Article Pages
+import ArticlesList from './pages/articles/ArticlesList.jsx';
+import ArticlePage from './pages/articles/ArticlePage.jsx';
 
 // Simple Practices
 import PlayNote from './practices/playnote/PlayNote.jsx';
@@ -31,9 +40,8 @@ import WriteNotesPracticeContainer from './practices/write_notes_practice/WriteN
 import ChordsForMelodyContainer from './practices/chords_for_melody/ChordsForMelodyContainer.jsx';
 import SpecialChordPracticeContainer from './practices/special_chord_practice/SpecialChordPracticeContainer.jsx';
 import MelodicDictationContainer from './practices/melodic_dictation/MelodicDictationContainer.jsx';
-import HarmonicDictationContainer from './practices/harmonic_dictation/HarmonicDictationContainer.jsx'; // ✅
-
-import ListOfValidProgressions from './practices/harmonic_dictation/ListOfValidProgressions.jsx'; // ✅ NEW
+import HarmonicDictationContainer from './practices/harmonic_dictation/HarmonicDictationContainer.jsx';
+import ListOfValidProgressions from './practices/harmonic_dictation/ListOfValidProgressions.jsx';
 
 export default function App() {
   return (
@@ -44,7 +52,16 @@ export default function App() {
         <Route path="/nitai-practices" element={<NitaiPractices />} />
         <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/fullview/:courseId" element={<FullViewPage />} />
-        <Route path="/profile" element={<UserProfile />} /> {/* ✅ NEW ROUTE */}
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/practices-showcase" element={<PracticesShowcase />} />
+
+        {/* Auth Pages */}
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        {/* Articles */}
+        <Route path="/articles" element={<ArticlesList />} />
+        <Route path="/articles/:slug" element={<ArticlePage />} />
 
         {/* Simple Practices */}
         <Route path="/play" element={<PlayNote />} />
@@ -67,8 +84,8 @@ export default function App() {
         <Route path="/chords-for-melody/*" element={<ChordsForMelodyContainer />} />
         <Route path="/special_chord/*" element={<SpecialChordPracticeContainer />} />
         <Route path="/melodic-dictation/*" element={<MelodicDictationContainer />} />
-        <Route path="/harmonic/*" element={<HarmonicDictationContainer />} /> {/* ✅ */}
-        <Route path="/harmonic/progressions" element={<ListOfValidProgressions />} /> {/* ✅ NEW */}
+        <Route path="/harmonic/*" element={<HarmonicDictationContainer />} />
+        <Route path="/harmonic/progressions" element={<ListOfValidProgressions />} />
       </Routes>
     </Router>
   );

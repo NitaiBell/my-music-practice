@@ -1,4 +1,3 @@
-// src/practices/which_higher_note/WhichHigherNote.jsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './WhichHigherNote.css';
@@ -6,21 +5,7 @@ import './WhichHigherNote.css';
 export default function WhichHigherNote() {
   const { state } = useLocation();
   const navigate = useNavigate();
-
-  const {
-    rounds = 10,
-    octaves = [3, 4],
-  } = state || {};
-
-  const [currentRound, setCurrentRound] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [wrongCount, setWrongCount] = useState(0);
-  const [triesCount, setTriesCount] = useState(0);
-  const [notePair, setNotePair] = useState([]);
-  const [canAnswer, setCanAnswer] = useState(false);
-  const [statusMessage, setStatusMessage] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
-  const [flashButton, setFlashButton] = useState('');
+  const { rounds = 10, octaves = [3, 4] } = state || {};
 
   const allNotes = [];
   ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'].forEach((note) => {
@@ -28,45 +13,75 @@ export default function WhichHigherNote() {
   });
 
   const noteOrder = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
-
   const getNoteBase = (note) => note.replace(/\d/, '');
   const getNoteIndex = (note) => noteOrder.indexOf(getNoteBase(note));
+  const playNote = (note) => new Audio(`/clean_cut_notes/${note}.wav`).play();
+  const playCorrect = () => new Audio('/wrong_right/correct.mp3').play();
+  const playWrong = () => new Audio('/wrong_right/wrong.mp3').play();
 
-  const playNote = (note) => {
-    const audio = new Audio(`/clean_cut_notes/${note}.wav`);
-    audio.play();
+  const [currentRound, setCurrentRound] = useState(0);
+  const [notePair, setNotePair] = useState([]);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
+  const [triesCount, setTriesCount] = useState(0);
+  const [canAnswer, setCanAnswer] = useState(false);
+  const [madeMistake, setMadeMistake] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [rank, setRank] = useState(100);
+
+  const getRandomNotePair = () => {
+    let first, second, idx1, idx2;
+    while (true) {
+      const index = Math.floor(Math.random() * (allNotes.length - 1));
+      first = allNotes[index];
+      second = allNotes[index + 1];
+      idx1 = getNoteIndex(getNoteBase(first));
+      idx2 = getNoteIndex(getNoteBase(second));
+      if (Math.abs(idx1 - idx2) <= 2) break;
+    }
+    return Math.random() < 0.5 ? [first, second] : [second, first];
   };
 
-  const playCorrect = () => {
-    const audio = new Audio('/wrong_right/correct.mp3');
-    audio.play();
+  const startRound = () => {
+    const pair = getRandomNotePair();
+    setNotePair(pair);
+    setCanAnswer(true);
+    setMadeMistake(false);
+    playNote(pair[0]);
+    setTimeout(() => playNote(pair[1]), 800);
   };
 
-  const playWrong = () => {
-    const audio = new Audio('/wrong_right/wrong.mp3');
-    audio.play();
-  };
+  const handleAnswer = (choice) => {
+    if (!canAnswer) return;
+    setTriesCount((t) => t + 1);
+    setCanAnswer(false);
 
-  const generateNotePair = () => {
-    const firstNote = allNotes[Math.floor(Math.random() * allNotes.length)];
-    const firstIdx = getNoteIndex(firstNote);
-    const firstOctave = parseInt(firstNote.replace(/\D/g, ''), 10);
+    const [first, second] = notePair;
+    const correct = getNoteIndex(getNoteBase(first)) > getNoteIndex(getNoteBase(second)) ? 'first' : 'second';
 
-    const offsets = [-3, -2, -1, 1, 2, 3];
-    const offset = offsets[Math.floor(Math.random() * offsets.length)];
-    let secondIdx = firstIdx + offset;
-    let secondOctave = firstOctave;
-
-    if (secondIdx < 0) {
-      secondIdx += 12;
-      secondOctave -= 1;
-    } else if (secondIdx > 11) {
-      secondIdx -= 12;
-      secondOctave += 1;
+    if (choice === correct) {
+      playCorrect();
+      if (!madeMistake) setCorrectCount((c) => c + 1);
+    } else {
+      playWrong();
+      if (!madeMistake) {
+        setWrongCount((w) => w + 1);
+        setRank((prev) => Math.max(0, prev - Math.round(100 / rounds)));
+      }
+      setMadeMistake(true);
     }
 
-    const secondNote = `${noteOrder[secondIdx]}${secondOctave}`;
-    return [firstNote, secondNote];
+    setTimeout(() => {
+      const next = currentRound + 1;
+      if (next >= rounds) {
+        setIsPlaying(false);
+        setShowPopup(true);
+      } else {
+        setCurrentRound(next);
+        setTimeout(startRound, 1000);
+      }
+    }, 1000);
   };
 
   const startGame = () => {
@@ -75,135 +90,60 @@ export default function WhichHigherNote() {
     setWrongCount(0);
     setTriesCount(0);
     setShowPopup(false);
-    loadNextRound();
+    setIsPlaying(true);
+    setRank(100);
+    setTimeout(startRound, 500);
   };
 
-  const loadNextRound = () => {
-    if (currentRound >= rounds) {
-      setShowPopup(true);
-      return;
-    }
-    const newPair = generateNotePair();
-    setNotePair(newPair);
-    setCanAnswer(false);
-    setStatusMessage('🎶 Listen carefully...');
-    setFlashButton('');
-
-    setTimeout(() => {
-      playNote(newPair[0]);
-      setTimeout(() => {
-        playNote(newPair[1]);
-        setTimeout(() => {
-          setCanAnswer(true);
-          setStatusMessage('');
-        }, 500);
-      }, 600);
-    }, 500);
+  const restartGame = () => {
+    startGame();
   };
 
-  const handleAnswer = (choice) => {
-    if (!canAnswer) return;
-    setTriesCount((t) => t + 1);
-
-    const firstIdx = getNoteIndex(notePair[0]) + 12 * parseInt(notePair[0].replace(/\D/g, ''), 10);
-    const secondIdx = getNoteIndex(notePair[1]) + 12 * parseInt(notePair[1].replace(/\D/g, ''), 10);
-
-    const correctChoice = firstIdx > secondIdx ? 'first' : 'second';
-
-    if (choice === correctChoice) {
-      playCorrect();
-      setStatusMessage('✅ Correct!');
-      setFlashButton(choice + '-correct');
-      setCorrectCount((c) => c + 1);
-      setCanAnswer(false);
-      setTimeout(() => {
-        setCurrentRound((r) => r + 1);
-        loadNextRound();
-      }, 1000);
-    } else {
-      playWrong();
-      setStatusMessage('❌ Wrong! Try Again.');
-      setFlashButton(choice + '-wrong');
-      setWrongCount((w) => w + 1);
-      setTimeout(() => setFlashButton(''), 800);
-    }
-  };
-
-  const handleReplayBoth = () => {
-    if (notePair.length) {
-      playNote(notePair[0]);
-      setTimeout(() => playNote(notePair[1]), 600);
-    }
-  };
-
-  const handleReplayFirst = () => {
-    if (notePair[0]) playNote(notePair[0]);
-  };
-
-  const handleReplaySecond = () => {
-    if (notePair[1]) playNote(notePair[1]);
+  const goToSettings = () => {
+    navigate('/which-higher-note');
   };
 
   return (
-    <div className="which_higher_note-container">
-      <nav className="which_higher_note-navbar">
-        <div className="which_higher_note-navbar-left">
-          <div className="which_higher_note-logo">Which Note is Higher?</div>
-          <button className="which_higher_note-btn" onClick={handleReplayBoth}>🔁 Replay Both</button>
-          <button className="which_higher_note-btn" onClick={handleReplayFirst}>🎵 First</button>
-          <button className="which_higher_note-btn" onClick={handleReplaySecond}>🎶 Second</button>
+    <div className="which_higher_game-container">
+      <nav className="which_higher-navbar">
+        <div className="which_higher-nav-buttons">
+          <button onClick={() => handleAnswer('first')} disabled={!canAnswer}>
+            First
+          </button>
+          <button onClick={() => handleAnswer('second')} disabled={!canAnswer}>
+            Second
+          </button>
         </div>
-
-        <div className="which_higher_note-stats">
-          <span className="which_higher_note-stat total">{rounds}</span> /
-          <span className="which_higher_note-stat current">{currentRound + 1}</span> /
-          <span className="which_higher_note-stat correct">{correctCount}</span> /
-          <span className="which_higher_note-stat wrong">{wrongCount}</span> /
-          <span className="which_higher_note-stat tries">{triesCount}</span>
+        <div className="which_higher-nav-stats">
+          <div>Round: {currentRound + 1} / {rounds}</div>
+          <div>Correct: {correctCount}</div>
+          <div>Wrong: {wrongCount}</div>
+          <div>Tries: {triesCount}</div>
         </div>
-
-        <button className="which_higher_note-btn which_higher_note-start-btn" onClick={startGame}>
-          {currentRound === 0 ? 'Start' : 'Restart'}
-        </button>
+        <div className="which_higher-nav-controls">
+          {!isPlaying ? (
+            <button onClick={startGame}>Start</button>
+          ) : (
+            <button onClick={restartGame}>Restart</button>
+          )}
+        </div>
       </nav>
 
-      {statusMessage && (
-        <div className="which_higher_note-floating-message">{statusMessage}</div>
-      )}
-
-      <div className="which_higher_note-fill-space" />
-
-      <div className="which_higher_note-bottom">
-        <button
-          className={`which_higher_note-answer-btn ${
-            flashButton === 'first-correct' ? 'flash-correct-which-note' : ''
-          } ${flashButton === 'first-wrong' ? 'flash-wrong-which-note' : ''}`}
-          onClick={() => handleAnswer('first')}
-        >
-          First Note
-        </button>
-
-        <button
-          className={`which_higher_note-answer-btn ${
-            flashButton === 'second-correct' ? 'flash-correct-which-note' : ''
-          } ${flashButton === 'second-wrong' ? 'flash-wrong-which-note' : ''}`}
-          onClick={() => handleAnswer('second')}
-        >
-          Second Note
-        </button>
+      <div className="which_higher-instructions">
+        🎵 Listen to the two notes. Which one was higher? Click "First" or "Second".
       </div>
 
       {showPopup && (
-        <div className="which_higher_note-popup-overlay">
-          <div className="which_higher_note-popup">
-            <h2>🎉 Practice Complete!</h2>
-            <p><strong>Rounds:</strong> {rounds}</p>
-            <p><strong>Correct:</strong> {correctCount}</p>
-            <p><strong>Wrong:</strong> {wrongCount}</p>
-            <p><strong>Total Attempts:</strong> {triesCount}</p>
-            <div className="which_higher_note-popup-buttons">
-              <button onClick={startGame}>🔁 Restart</button>
-              <button onClick={() => navigate('/which-higher-note/settings')}>⚙️ Settings</button>
+        <div className="which_higher-popup">
+          <div className="which_higher-popup-box">
+            <h2>🎉 Game Over</h2>
+            <p>Correct: {correctCount}</p>
+            <p>Wrong: {wrongCount}</p>
+            <p>Total Tries: {triesCount}</p>
+            <p>🏆 Rank: {rank} / 100</p>
+            <div className="which_higher-popup-buttons">
+              <button onClick={restartGame}>🔁 Restart</button>
+              <button onClick={goToSettings}>⚙️ Settings</button>
             </div>
           </div>
         </div>

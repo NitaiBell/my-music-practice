@@ -1,75 +1,23 @@
-/* Base reset and layout */
-.welcome-page {
-  background: linear-gradient(to bottom right, #ffffff, #f5e487);
-  min-height: 100vh;
-  padding: 5rem 2rem;
-  text-align: center;
+/* Wrapper that includes Navbar + content */
+.home-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom right, #ffffff, #9ff587);
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Headings and text */
-.welcome-heading {
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
-  color: #222;
-}
-
-.welcome-text {
-  font-size: 1.25rem;
-  color: #444;
-  margin-bottom: 3rem;
-}
-
-/* Button group layout */
-.button-stack {
+/* Centered content container */
+.home-centered {
+  flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
   align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-/* Base button style */
-.action-btn {
-  padding: 1rem 2.5rem;
-  font-size: 1.15rem;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-}
-
-/* Button colors */
-.orange-btn {
-  background-color: #ff9e2c;
-}
-.orange-btn:hover {
-  background-color: #e67e00;
-  transform: scale(1.05);
-}
-
-.teal-btn {
-  background-color: #00b2b2;
-}
-.teal-btn:hover {
-  background-color: #008b8b;
-  transform: scale(1.05);
-}
-
-.purple-btn {
-  background-color: #7c4dff;
-}
-.purple-btn:hover {
-  background-color: #5e35b1;
-  transform: scale(1.05);
-}
-
-
-.blue-btn {
-  background-color: #4285f4;
-}
-.blue-btn:hover {
-  background-color: #3367d6;
-  transform: scale(1.05);
+/* Text styling */
+.home-welcome-text {
+  font-size: 2.8rem;
+  color: #222;
 }

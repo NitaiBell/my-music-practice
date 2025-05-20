@@ -1,222 +1,182 @@
-/* src/practices/which_higher_note/WhichHigherNote.css */
+/* Main container */
+.which_higher_game-container {
+  height: 100vh;
+  background: linear-gradient(to bottom, #c2f86a, #18230F);
+  color: #F1EFEC;
+  font-family: 'Segoe UI', sans-serif;
+  padding-top: 110px;
+  box-sizing: border-box;
+  position: relative;
+}
 
-.which_higher_note-container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(to bottom, #c2f86a, #18230F);
-    color: #F1EFEC;
-    font-family: 'Segoe UI', sans-serif;
-    overflow: hidden;
-  }
-  
-  /* Navbar */
-  .which_higher_note-navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 28px;
-    min-height: 90px;
-    background: linear-gradient(to right, #1F7D53, #255F38);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    border-bottom: 3px solid #5CFF70;
-  }
-  
-  .which_higher_note-navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  
-  .which_higher_note-logo {
-    font-size: 1.9rem;
-    font-weight: bold;
-    background: #27391C;
-    padding: 12px 20px;
-    border-radius: 14px;
-    border: 2px solid #F1EFEC;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Buttons in Navbar */
-  .which_higher_note-btn {
-    background: linear-gradient(to right, #2C9C7A, #247355);
-    color: #F1EFEC;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 14px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-  }
-  
-  .which_higher_note-btn:hover {
-    background: linear-gradient(to right, #247355, #2C9C7A);
-    transform: scale(1.07);
-  }
-  
-  .which_higher_note-start-btn {
-    background: linear-gradient(to right, #5CFF70, #3AC97C);
-    color: #18230F;
-    box-shadow: 0 0 12px rgba(92, 255, 112, 0.6);
-  }
-  
-  /* Stats in Navbar */
-  .which_higher_note-stats {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: bold;
-    font-size: 1.25rem;
-    background: #27391C;
-    padding: 8px 16px;
-    border-radius: 14px;
-    border: 2px solid #F1EFEC;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  .which_higher_note-stat {
-    background: #1f3c2b;
-    padding: 6px 12px;
-    border-radius: 10px;
-    font-size: 1.1rem;
-  }
-  
-  /* Floating message */
-  .which_higher_note-floating-message {
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 14px 24px;
-    border-radius: 16px;
-    backdrop-filter: blur(6px);
-    z-index: 10;
-    pointer-events: none;
-    animation: messageFadeIn 0.4s ease;
-  }
-  
-  /* Fill space */
-  .which_higher_note-fill-space {
-    flex: 1;
-  }
-  
-  /* Bottom answer buttons */
-  .which_higher_note-bottom {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    padding: 24px;
-    background: #27391C;
-  }
-  
-  .which_higher_note-answer-btn {
-    flex: 1;
-    max-width: 400px;
-    padding: 22px 0;
-    font-size: 2rem;
-    font-weight: bold;
-    border-radius: 18px;
-    background: linear-gradient(to right, #1F7D53, #255F38);
-    color: #F1EFEC;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-  
-  .which_higher_note-answer-btn:hover {
-    background: linear-gradient(to right, #255F38, #1F7D53);
-    transform: scale(1.07);
-  }
-  
-  /* Popup overlay */
-  .which_higher_note-popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(24, 35, 15, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 20;
-  }
-  
-  .which_higher_note-popup {
-    background: #c2f86a;
-    padding: 40px;
-    border-radius: 22px;
-    text-align: center;
-    color: #18230F;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  }
-  
-  .which_higher_note-popup h2 {
-    font-size: 2.3rem;
-    margin-bottom: 20px;
-  }
-  
-  .which_higher_note-popup p {
-    font-size: 1.2rem;
-    margin: 8px 0;
-  }
-  
-  .which_higher_note-popup-buttons {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  
-  .which_higher_note-popup-buttons button {
-    background: linear-gradient(to right, #1F7D53, #255F38);
-    color: #F1EFEC;
-    border: none;
-    padding: 14px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .which_higher_note-popup-buttons button:hover {
-    background: linear-gradient(to right, #255F38, #1F7D53);
-    transform: scale(1.07);
-  }
-  
-  /* Animations */
-  @keyframes messageFadeIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -12px);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-  }
-  
+/* Navbar */
+.which_higher-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 90px;
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  border-bottom: 3px solid #5CFF70;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 32px;
+  z-index: 100;
+  border-radius: 0 0 16px 16px;
+}
 
-  .flash-correct-which-note {
-    background: linear-gradient(to right, #5CFF70, #3AC97C) !important;
-    color: #18230F !important;
-    transform: scale(1.05);
+/* Answer buttons */
+.which_higher-nav-buttons button {
+  padding: 12px 20px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  background: #27391C;
+  color: #F1EFEC;
+  border: 2px solid #F1EFEC;
+  border-radius: 14px;
+  cursor: pointer;
+  margin-right: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.which_higher-nav-buttons button:hover:not(:disabled) {
+  background-color: #1f3c2b;
+  transform: scale(1.07);
+}
+
+.which_higher-nav-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Stats section */
+.which_higher-nav-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 1.2rem;
+  text-align: right;
+}
+
+/* Start/Restart button */
+.which_higher-nav-controls button {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.which_higher-nav-controls button:hover {
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.08);
+}
+
+/* Instructions */
+.which_higher-instructions {
+  position: absolute;
+  top: 120px;
+  width: 100%;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  padding: 18px 28px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  border-radius: 14px;
+  margin: 0 auto;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Popup overlay */
+.which_higher-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 25, 10, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+/* Popup box */
+.which_higher-popup-box {
+  background: #27391C;
+  padding: 36px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  border: 2px solid #5CFF70;
+  max-width: 340px;
+  width: 90%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Popup content */
+.which_higher-popup-box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #5CFF70;
+}
+
+.which_higher-popup-box p {
+  font-size: 1.2rem;
+  color: #F1EFEC;
+  margin: 8px 0;
+}
+
+/* Popup buttons */
+.which_higher-popup-buttons {
+  margin-top: 20px;
+}
+
+.which_higher-popup-buttons button {
+  margin: 10px;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.which_higher-popup-buttons button:first-child {
+  background-color: #5CFF70;
+  color: #18230F;
+}
+
+.which_higher-popup-buttons button:last-child {
+  background-color: #2196f3;
+  color: white;
+}
+
+.which_higher-popup-buttons button:hover {
+  transform: scale(1.05);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
   }
-  
-  .flash-wrong-which-note {
-    background: linear-gradient(to right, #FF6B6B, #C92A2A) !important;
-    color: #fff !important;
-    transform: scale(1.05);
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
-  
+}

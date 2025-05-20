@@ -1,19 +1,60 @@
+// RealMelody.jsx (Updated with Rank Calculation)
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './RealMelody.css';
 import RealMelodyKeyboardView from './RealMelodyKeyboardView';
 
+function calculateRealMelodyRank({
+  selectedNotes = [],
+  correctCount,
+  triesCount,
+  rounds,
+  totalAnswerTimeSec = 0,
+  normalMode = true,
+}) {
+  const baseLevel = Math.min(12, selectedNotes.length);
+  const level = baseLevel + (normalMode ? 0 : 1);
+
+  const accuracy = correctCount / Math.max(1, rounds);
+  const efficiency = rounds / Math.max(1, triesCount);
+  const avgTime = totalAnswerTimeSec / Math.max(1, triesCount);
+
+  const rightScore = Math.round(accuracy * 75);
+  const tryScore = Math.round(efficiency * 15);
+
+  let speedScore = 0;
+  if (avgTime <= 3) speedScore = 10;
+  else if (avgTime <= 6) speedScore = 8;
+  else if (avgTime <= 9) speedScore = 6;
+  else if (avgTime <= 12) speedScore = 4;
+  else if (avgTime <= 16) speedScore = 2;
+
+  const score = rightScore + tryScore + speedScore;
+
+  return {
+    level,
+    score,
+    max: 100,
+    rightScore,
+    tryScore,
+    speedScore,
+    avgTimePerAnswer: +avgTime.toFixed(2),
+  };
+}
+
 export default function RealMelody() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
+  const answerStartRef = useRef(null);
+  const totalAnswerTimeRef = useRef(0);
 
   const {
     selectedScale = 'C',
     selectedNotes = [],
     rounds = 10,
     octaves = [4],
-    normalMode = true, // ✅ renamed from beginnerMode
+    normalMode = true,
   } = state || {};
 
   const [sequence, setSequence] = useState([]);
@@ -27,22 +68,14 @@ export default function RealMelody() {
   const [hasFailedThisRound, setHasFailedThisRound] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const [rankData, setRankData] = useState(null);
 
   const generateSequence = () => {
     const allChoices = [];
-    selectedNotes.forEach((note) =>
-      octaves.forEach((oct) => allChoices.push(`${note}${oct}`))
-    );
-
+    selectedNotes.forEach((note) => octaves.forEach((oct) => allChoices.push(`${note}${oct}`)));
     const tonicChoices = octaves.map((oct) => `${selectedScale}${oct}`);
-    const sequence = Array.from({ length: rounds - 2 }, () =>
-      allChoices[Math.floor(Math.random() * allChoices.length)]
-    );
-
-    const firstTonic = tonicChoices[Math.floor(Math.random() * tonicChoices.length)];
-    const lastTonic = tonicChoices[Math.floor(Math.random() * tonicChoices.length)];
-
-    return [firstTonic, ...sequence, lastTonic];
+    const body = Array.from({ length: rounds - 2 }, () => allChoices[Math.floor(Math.random() * allChoices.length)]);
+    return [tonicChoices[Math.floor(Math.random() * tonicChoices.length)], ...body, tonicChoices[Math.floor(Math.random() * tonicChoices.length)]];
   };
 
   const startGame = () => {
@@ -53,10 +86,12 @@ export default function RealMelody() {
     setCorrectCount(0);
     setWrongCount(0);
     setTriesCount(0);
+    totalAnswerTimeRef.current = 0;
     setIsPlaying(true);
     setStatusMessage('');
     setShowPopup(false);
     setHasFailedThisRound(false);
+    setRankData(null);
     setTimeout(() => playNextNote(seq[0]), 300);
   };
 
@@ -66,6 +101,7 @@ export default function RealMelody() {
     setCanAnswer(true);
     setHasFailedThisRound(false);
     setStatusMessage('');
+    answerStartRef.current = Date.now();
   };
 
   const handleReplay = () => {
@@ -83,6 +119,8 @@ export default function RealMelody() {
 
   const handleAnswer = (note) => {
     if (!isPlaying || !canAnswer) return;
+    const timeTaken = Date.now() - answerStartRef.current;
+    totalAnswerTimeRef.current += timeTaken / 1000;
     setTriesCount((t) => t + 1);
 
     const isCorrect = normalMode
@@ -99,6 +137,15 @@ export default function RealMelody() {
       }
 
       if (currentIndex + 1 >= sequence.length) {
+        const rank = calculateRealMelodyRank({
+          selectedNotes,
+          correctCount: correctCount + 1,
+          triesCount: triesCount + 1,
+          rounds,
+          totalAnswerTimeSec: totalAnswerTimeRef.current,
+          normalMode,
+        });
+        setRankData(rank);
         setIsPlaying(false);
         setShowPopup(true);
       } else {
@@ -124,12 +171,8 @@ export default function RealMelody() {
       <nav className="real-melodygame-navbar">
         <div className="real-melodygame-navbar-left">
           <div className="real-melodygame-logo">{selectedScale} Melody</div>
-          <button className="real-melodygame-btn" onClick={handleReplay}>
-            🔁 Replay
-          </button>
-          <button className="real-melodygame-btn tonic-btn" onClick={handlePlayTonic}>
-            {selectedScale}
-          </button>
+          <button className="real-melodygame-btn" onClick={handleReplay}>🔁 Replay</button>
+          <button className="real-melodygame-btn tonic-btn" onClick={handlePlayTonic}>{selectedScale}</button>
         </div>
 
         <div className="real-melodygame-stats">
@@ -140,18 +183,12 @@ export default function RealMelody() {
           <span className="real-melodygame-stat tries">{triesCount}</span>
         </div>
 
-        <button
-          className="real-melodygame-btn real-melodygame-start-btn"
-          onClick={startGame}
-        >
+        <button className="real-melodygame-btn real-melodygame-start-btn" onClick={startGame}>
           {isPlaying ? 'Restart' : 'Start'}
         </button>
       </nav>
 
-      {statusMessage && (
-        <div className="real-melodygame-floating-message">{statusMessage}</div>
-      )}
-
+      {statusMessage && <div className="real-melodygame-floating-message">{statusMessage}</div>}
       <div className="real-melodygame-fill-space" />
 
       <div className="real-melodygame-bottom">
@@ -164,7 +201,7 @@ export default function RealMelody() {
         </div>
       </div>
 
-      {showPopup && (
+      {showPopup && rankData && (
         <div className="real-melodygame-popup-overlay">
           <div className="real-melodygame-popup">
             <h2>🎉 Practice Complete!</h2>
@@ -172,6 +209,14 @@ export default function RealMelody() {
             <p><strong>Correct:</strong> {correctCount}</p>
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Attempts:</strong> {triesCount}</p>
+            <p><strong>Level:</strong> {rankData.level}</p>
+            <p><strong>Rank:</strong> {rankData.score} / 100</p>
+            <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+              <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+              <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+              <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
+            </ul>
+            <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
             <div className="real-melodygame-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/real-melody')}>⚙️ Settings</button>

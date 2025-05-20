@@ -1,0 +1,25 @@
+.article-page {
+    padding: 60px;
+    max-width: 800px;
+    margin: 0 auto;
+  background-color: #a4e7b1;
+    font-family: 'Segoe UI', sans-serif;
+    color: #1e3a2f;
+  }
+  
+  .article-page h1 {
+    color: #065f46;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+  }
+  
+  .article-content p {
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  
+  .article-content h3 {
+    color: #047857;
+    margin-top: 2rem;
+  }
+  
