@@ -1,23 +1,17 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import pkg from 'pg';
+import cors from 'cors';
+import userRoutes from './routes/userRoutes.js';
+import { pool } from './db.js';
 
 dotenv.config();
-
-const { Pool } = pkg;
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// PostgreSQL connection setup
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-// JSON middleware
+app.use(cors());
 app.use(express.json());
 
-// Test route
 app.get('/', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -27,7 +21,8 @@ app.get('/', async (req, res) => {
   }
 });
 
-// Start server
+app.use('/api/users', userRoutes);
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

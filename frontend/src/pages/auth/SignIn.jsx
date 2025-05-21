@@ -1,17 +1,36 @@
 // pages/auth/SignIn.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar'; // ✅ import navbar
 import './SignIn.css';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // ✅ added for redirection
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign In:', { email, password });
-    // later: send to backend
+
+    try {
+      const res = await fetch('http://localhost:5000/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('user', JSON.stringify(data));
+        navigate('/profile'); // ✅ redirect to profile
+      } else {
+        alert(data.error || 'Login failed.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      alert('Something went wrong. Try again.');
+    }
   };
 
   return (

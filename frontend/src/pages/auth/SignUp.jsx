@@ -9,16 +9,47 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [imageUrl, setImageUrl] = useState('/profiles/mozart-profile.png'); // default image
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (password !== confirm) {
       alert("Passwords don't match");
       return;
     }
-
-    // Later: send this data to backend
-    console.log('Sign Up:', { name, email, password });
+  
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long.");
+      return;
+    }
+  
+    try {
+      const response = await fetch('http://localhost:5000/api/users/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          imageUrl,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Signed up user:', data);
+        localStorage.setItem('user', JSON.stringify(data));
+        alert(`Welcome, ${data.name}!`);
+      } else {
+        alert(data.error || 'Signup failed.');
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      alert('An error occurred. Please try again.');
+    }
   };
 
   return (

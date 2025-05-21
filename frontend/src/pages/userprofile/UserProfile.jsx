@@ -37,8 +37,9 @@ const practiceLinks = [
   { name: 'Melodic Dictation', path: '/melodic-dictation' },
 ];
 
-export default function UserProfile({ username = 'Mozart' }) {
-  const [selectedImage, setSelectedImage] = useState('/profiles/mozart profile.png');
+export default function UserProfile() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = user?.name || 'Guest';  const [selectedImage, setSelectedImage] = useState('/profiles/mozart profile.png');
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
 
