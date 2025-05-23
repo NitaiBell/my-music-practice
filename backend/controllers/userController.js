@@ -42,3 +42,17 @@ export const login = async (req, res) => {
     }
   };
   
+
+  export const updateImage = async (req, res) => {
+    const { userId, imageUrl } = req.body;
+    try {
+      const result = await pool.query(
+        'UPDATE users SET image_url = $1 WHERE id = $2 RETURNING id, name, email, image_url',
+        [imageUrl, userId]
+      );
+      res.json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+  

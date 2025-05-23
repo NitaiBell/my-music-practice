@@ -1,9 +1,8 @@
-// pages/userprofile/UserProfile.jsx
+// src/pages/userprofile/UserProfile.jsx
 import React, { useState } from 'react';
 import './UserProfile.css';
-import Navbar from '../../components/Navbar'; // from anywhere
-import Footer from '../../components/Footer'; // ✅ shared footer
-
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
 const profileOptions = [
   { name: 'Mozart', file: 'mozart profile.png' },
@@ -23,28 +22,117 @@ const profileOptions = [
 ];
 
 const practiceLinks = [
-  { name: 'Chord Type Practice', path: '/chord-type' },
-  { name: 'Chords for Melody', path: '/chords-for-melody' },
-  { name: 'Degree Notice Training', path: '/degree-notice' },
-  { name: 'Difference Practice', path: '/difference' },
-  { name: 'Harmony Training', path: '/harmony' },
-  { name: 'Interval Training', path: '/interval-practice' },
-  { name: 'Learn Piano', path: '/learn-piano' },
-  { name: 'Learn Piano Chords', path: '/learn-piano-chords' },
-  { name: 'Real Melody Training', path: '/real-melody' },
-  { name: 'Which Higher Note', path: '/which-higher-note' },
-  { name: 'Harmonic Dictation', path: '/harmonic' },
-  { name: 'Melodic Dictation', path: '/melodic-dictation' },
+  {
+    name: 'Chord Type Practice',
+    path: '/chord-type',
+    logo: '/practices_logos/chord type practice.png',
+    description: 'Identify chord types like maj7, dim, or sus by ear.',
+    background: 'linear-gradient(to bottom right, #fff7d6, #facc15)', // soft gold
+  },
+  {
+    name: 'Chords for Melody',
+    path: '/chords-for-melody',
+    logo: '/practices_logos/chords for harmony.png',
+    description: 'Choose the right chord to match a melody line.',
+    background: 'linear-gradient(to bottom right, #dbeafe, #3b82f6)', // soft to strong blue
+  },
+  {
+    name: 'Degree Notice Training',
+    path: '/degree-notice',
+    logo: '/practices_logos/degree notice training.png',
+    description: 'Match scale degrees with notes in different keys.',
+    background: 'linear-gradient(to bottom right, #ede9fe, #a78bfa)', // soft violet
+  },
+  {
+    name: 'Difference Practice',
+    path: '/difference',
+    logo: '/practices_logos/spot the difference.png',
+    description: 'Spot the difference between two musical examples.',
+    background: 'linear-gradient(to bottom right, #fef9c3, #fde047)', // pastel to bright yellow
+  },
+  {
+    name: 'Harmony Training',
+    path: '/harmony',
+    logo: '/practices_logos/ping pong harmony.png',
+    description: 'Practice functional harmony recognition in real time.',
+    background: 'linear-gradient(to bottom right, #c7f9cc, #38b000)', // fresh green
+  },
+  {
+    name: 'Interval Training',
+    path: '/interval-practice',
+    logo: '/practices_logos/interval trainer.png',
+    description: 'Identify musical intervals between two notes.',
+    background: 'linear-gradient(to bottom right, #d0f0fd, #38bdf8)', // sky blue gradient
+  },
+  {
+    name: 'Learn Piano',
+    path: '/learn-piano',
+    logo: '/practices_logos/piano notes.png',
+    description: 'Play back note sequences shown on screen.',
+    background: 'linear-gradient(to bottom right, #e0f7fa, #80deea)', // cyan light
+  },
+  {
+    name: 'Learn Piano Chords',
+    path: '/learn-piano-chords',
+    logo: '/practices_logos/piano chords.png',
+    description: 'Identify chords visually and aurally on the keyboard.',
+    background: 'linear-gradient(to bottom right, #f3e8ff, #c084fc)', // light to bright purple
+  },
+  {
+    name: 'Real Melody Training',
+    path: '/real-melody',
+    logo: '/practices_logos/ping pong melody.png',
+    description: 'Play back melodies using buttons or the keyboard.',
+    background: 'linear-gradient(to bottom right, #bbf7d0, #34d399)', // green mint to emerald
+  },
+  {
+    name: 'Which Higher Note',
+    path: '/which-higher-note',
+    logo: '/practices_logos/which is higher.png',
+    description: 'Listen to two notes and choose the higher one.',
+    background: 'linear-gradient(to bottom right, #ffe0e0, #ff6b6b)', // soft red to bold red
+  },
+  {
+    name: 'Harmonic Dictation',
+    path: '/harmonic',
+    logo: '/practices_logos/harmonic dictation.png',
+    description: 'Write down chord progressions by ear.',
+    background: 'linear-gradient(to bottom right, #e0f2f1, #26c6da)', // light cyan-teal
+  },
+  {
+    name: 'Melodic Dictation',
+    path: '/melodic-dictation',
+    logo: '/practices_logos/melodic dictation.png',
+    description: 'Transcribe melodies played by the system.',
+    background: 'linear-gradient(to bottom right, #fce7f3, #f472b6)', // light pink to magenta
+  },
 ];
 
 export default function UserProfile() {
   const user = JSON.parse(localStorage.getItem('user'));
-  const username = user?.name || 'Guest';  const [selectedImage, setSelectedImage] = useState('/profiles/mozart profile.png');
+  const username = user?.name || 'Guest';
+  const [selectedImage, setSelectedImage] = useState(user?.image_url || '/profiles/mozart profile.png');
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
 
+  const updateImageOnServer = async (newImageUrl) => {
+    try {
+      const res = await fetch('http://localhost:5000/api/users/update-image', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, imageUrl: newImageUrl }),
+      });
+      const updated = await res.json();
+      localStorage.setItem('user', JSON.stringify(updated));
+    } catch (err) {
+      console.error('Failed to update image:', err);
+    }
+  };
+
   const handleSelectImage = (file) => {
-    setSelectedImage(`/profiles/${file}`);
+    const url = `/profiles/${file}`;
+    setSelectedImage(url);
+    updateImageOnServer(url);
     setShowDropdown(false);
   };
 
@@ -53,8 +141,10 @@ export default function UserProfile() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUploadedImage(reader.result);
-        setSelectedImage(reader.result);
+        const base64 = reader.result;
+        setUploadedImage(base64);
+        setSelectedImage(base64);
+        updateImageOnServer(base64);
         setShowDropdown(false);
       };
       reader.readAsDataURL(file);
@@ -71,10 +161,8 @@ export default function UserProfile() {
 
   return (
     <div className="user-profile-container">
-      {/* Fixed Header Block */}
       <div className="user-profile-fixed-header">
         <Navbar />
-
         <div className="user-profile-banner"></div>
 
         <div className="user-profile-subnavbar">
@@ -103,21 +191,11 @@ export default function UserProfile() {
                     style={{ width: '36px', height: '36px', borderRadius: '50%' }}
                   />
                   <span>Upload Image</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={handleUpload}
-                  />
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
                 </label>
               </div>
-
               {profileOptions.map(({ name, file }) => (
-                <div
-                  key={file}
-                  className="user-profile-option"
-                  onClick={() => handleSelectImage(file)}
-                >
+                <div key={file} className="user-profile-option" onClick={() => handleSelectImage(file)}>
                   <img src={`/profiles/${file}`} alt={name} />
                   <span>{name}</span>
                 </div>
@@ -127,17 +205,30 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* Scrollable Content */}
       <div className="user-profile-content">
         <h2 className="user-profile-welcome">Welcome {username}</h2>
 
         <section id="practices" className="user-profile-section">
           <h3>My Practices</h3>
-          <div className="user-profile-cards">
+          <div className="user-profile-practice-list">
             {practiceLinks.map((p) => (
-              <a className="user-profile-card" key={p.path} href={p.path}>
-                {p.name}
-              </a>
+              <div className="user-practice-item" key={p.path}>
+<div className="practice-logo-wrapper" style={{ background: p.background }}>
+  <img src={p.logo} alt={p.name} className="practice-logo-img" />
+</div>
+                <div className="practice-info">
+  <h4>{p.name}</h4>
+  <p>{p.description}</p>
+  <div className="practice-stats">
+  <span>🎯 Highest Score: 98 (Level 2)</span>
+  <span>🕓 Last Score: 84 (Level 1)</span>
+</div>
+</div>
+                <div className="practice-actions">
+                  <a className="practice-play-btn" href={p.path}>Play</a>
+                  <button className="practice-performance-btn">Practice Log</button>
+                </div>
+              </div>
             ))}
           </div>
         </section>
@@ -170,8 +261,8 @@ export default function UserProfile() {
           </div>
         </section>
       </div>
-      <Footer />  {/* ✅ Added footer here */}
 
+      <Footer />
     </div>
   );
 }

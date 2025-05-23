@@ -1,107 +1,158 @@
-/* src/pages/practices/PracticesShowcase.css */
-
 .practice-showcase-wrapper {
-    /* height: 100vh; ❌ REMOVE THIS */
-    min-height: 100vh; /* ✅ Allows content to grow */
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #d1fae5;
-    display: flex;
-    flex-direction: column;
-  }
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
 
-  .practice-fixed-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-  }
-  
-  .practice-scroll-container {
-    flex: 1;
-    overflow-y: auto;
-  }
-  
-  .practice-section {
-    position: relative; /* 🔧 Add this */
-    height: calc(100vh - 60px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-left: 80px;
-    padding-right: 80px;
-    box-sizing: border-box;
-    background: linear-gradient(to bottom right, #bbf7d0, #99f6e4);
-  }
-  
-  .practice-count {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #065f46;
-    background: rgba(255, 255, 255, 0.6);
-    padding: 6px 14px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .practice-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-grow: 1;
-  }
-  
-  .practice-logo {
-    flex: 1;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  
-  .practice-logo:hover {
-    transform: scale(1.05);
-  }
-  
-  .practice-logo img {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
-  }
-  
-  .practice-description {
-    flex: 1;
-    padding-left: 60px;
-    color: #064e3b;
-  }
-  
-  .practice-description h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: #047857;
-  }
-  
-  .practice-description p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
-  }
-  
-  .practice-description button {
-    background-color: #10b981;
-    color: white;
-    font-size: 1rem;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .practice-description button:hover {
-    background-color: #059669;
-  }
+.practice-fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Spacer that exactly matches combined height of nav + subnav */
+.practice-navbar-spacer {
+  height: 90px; /* Adjust to your actual navbar + sub-navbar height */
+}
+
+.practice-sub-navbar {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  background-color: #f9fafb; /* soft gray */
+  padding: 4px 12px; /* ⬇️ reduced padding to lower total height */
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: inset 0 -1px 0 #e5e7eb;
+  gap: 8px;
+  scrollbar-width: thin;
+  margin-bottom: -1px; /* 🔧 closes subtle visual gap */
+}
+
+.practice-sub-button {
+  background-color: #ffffff;
+  color: #334155; /* slate-800 */
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 3px 10px; /* ⬇️ even more compact */
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.02);
+}
+
+.practice-sub-button:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a; /* slate-900 */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.practice-sub-button:active {
+  background-color: #e2e8f0;
+  transform: scale(0.97);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+
+
+
+.practice-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 0; /* ✅ Removed */
+}
+
+.practice-section {
+  position: relative;
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 80px;
+  padding-right: 80px;
+  box-sizing: border-box;
+  background: linear-gradient(to bottom right, #bbf7d0, #99f6e4);
+}
+
+.practice-count {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #065f46;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 6px 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.practice-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.practice-logo {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.practice-logo:hover {
+  transform: scale(1.05);
+}
+
+.practice-logo img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.practice-description {
+  flex: 1;
+  padding-left: 60px;
+  color: #064e3b;
+}
+
+.practice-description h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #047857;
+}
+
+.practice-description p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.practice-description button {
+  background-color: #10b981;
+  color: white;
+  font-size: 1rem;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.practice-description button:hover {
+  background-color: #059669;
+}
+
+.practice-footer-wrapper {
+  background-color: white;
+}
