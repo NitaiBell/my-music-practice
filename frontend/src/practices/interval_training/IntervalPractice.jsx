@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './IntervalPractice.css';
 import IntervalPracticeKeyboardView from "./IntervalPracticeKeyboardView";
 import { calculateIntervalPracticeRank } from './calculateIntervalPracticeRank'; // ✅ import rank function
+import { logPracticeResult } from "../../../utils/logPracticeResult";
+
 
 export default function IntervalPractice() {
   const { state } = useLocation();
@@ -136,6 +138,7 @@ export default function IntervalPractice() {
     }
   };
 
+
   const handleAnswer = (note) => {
     if (!isPlaying || intervalPair.length !== 2) return;
   
@@ -168,14 +171,36 @@ export default function IntervalPractice() {
             selectedNotes: baseNotes,
             selectedIntervals,
             correctCount: newCorrect,
-            triesCount: newTries, // ✅ fixed: use updated tries
+            triesCount: newTries,
             rounds,
             totalAnswerTimeSec: totalAnswerTimeRef.current,
           });
+  
           setRankData(rank);
           setShowPopup(true);
           setIsPlaying(false);
           setHighlightNote('');
+  
+          // ✅ LOG TO BACKEND ON GAME OVER
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+const gmail = storedUser?.email || null; // or use context if preferred
+          console.log("📡 Game over, logging with email:", gmail); // Debug log
+          if (gmail && rounds >= 5) {
+            logPracticeResult({
+              gmail,
+              practiceName: 'Interval Training',
+              correct: newCorrect,
+              wrong: wrongCount,
+              tries: newTries,
+              level: rank.level,
+              rank: rank.score,
+              maxRank: rank.max,
+              rightScore: rank.rightScore,
+              tryScore: rank.tryScore,
+              speedScore: rank.speedScore,
+              avgTimePerAnswer: rank.avgTimePerAnswer,
+            });
+          }
         } else {
           const newPair = generateIntervalPair();
           setTimeout(() => {
@@ -200,7 +225,7 @@ export default function IntervalPractice() {
       }
     }
   };
-  
+
   
   return (
     <div className="interval_practice-container">

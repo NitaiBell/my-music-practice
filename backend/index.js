@@ -2,22 +2,21 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
+import practiceRoutes from './routes/practiceRoutes.js';
 import { pool } from './db.js';
-import { createUsersTableIfNotExists } from './initDb.js';
+import { createUsersTableIfNotExists, createPracticeLogTableIfNotExists } from './initDb.js';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ✅ CORS: Allow requests from frontend
+// ✅ Middleware
 app.use(cors());
-
-// ✅ Increase JSON and URL-encoded payload limits to handle image uploads
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ limit: '5mb', extended: true }));
 
-// ✅ Simple test route
+// ✅ Test route
 app.get('/', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -27,11 +26,15 @@ app.get('/', async (req, res) => {
   }
 });
 
-// ✅ Route group for user-related actions (signup, login, image updates)
+// ✅ Routes
 app.use('/api/users', userRoutes);
+app.use('/api/practice', practiceRoutes);
 
-// ✅ Ensure users table exists before starting the server
-createUsersTableIfNotExists().then(() => {
+// ✅ Start server after ensuring tables exist
+Promise.all([
+  createUsersTableIfNotExists(),
+  createPracticeLogTableIfNotExists(),
+]).then(() => {
   app.listen(port, () => {
     console.log(`✅ Server running on port ${port}`);
   });

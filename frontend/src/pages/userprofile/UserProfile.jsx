@@ -1,5 +1,5 @@
 // src/pages/userprofile/UserProfile.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -115,6 +115,33 @@ export default function UserProfile() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
 
+  const [practiceStats, setPracticeStats] = useState({});
+
+  const gmail = user?.email || '';
+
+
+  useEffect(() => {
+    if (!gmail) return;
+
+    const fetchStats = async () => {
+      const allStats = {};
+      for (const practice of practiceLinks) {
+        try {
+          const res = await fetch(
+            `http://localhost:5000/api/practice/stats?gmail=${gmail}&practiceName=${encodeURIComponent(practice.name)}`
+          );
+          const data = await res.json();
+          allStats[practice.name] = data;
+        } catch (err) {
+          console.error(`Failed to fetch stats for ${practice.name}`, err);
+        }
+      }
+      setPracticeStats(allStats);
+    };
+
+    fetchStats();
+  }, [gmail]);
+
   const updateImageOnServer = async (newImageUrl) => {
     try {
       const res = await fetch('http://localhost:5000/api/users/update-image', {
@@ -220,8 +247,12 @@ export default function UserProfile() {
   <h4>{p.name}</h4>
   <p>{p.description}</p>
   <div className="practice-stats">
-  <span>🎯 Highest Score: 98 (Level 2)</span>
-  <span>🕓 Last Score: 84 (Level 1)</span>
+  <span>
+    🎯 Highest Score: {practiceStats[p.name]?.highestScore || 0} (Level {practiceStats[p.name]?.highestLevel || 0})
+  </span>
+  <span>
+    🕓 Last Score: {practiceStats[p.name]?.lastScore || 0} (Level {practiceStats[p.name]?.lastLevel || 0})
+  </span>
 </div>
 </div>
                 <div className="practice-actions">
