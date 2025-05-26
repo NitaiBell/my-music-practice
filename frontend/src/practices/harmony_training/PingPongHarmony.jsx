@@ -6,6 +6,8 @@ import './PingPongHarmony.css';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
 import { chordNoteMap } from './HarmonyTrainingData';
 import { calculatePingPongHarmonyRank } from './calculatePingPongHarmonyRank';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -88,6 +90,8 @@ const PingPongHarmony = () => {
   const keyboardRef = useRef();
   const answerTimeStartRef = useRef(null);
   const totalAnswerTimeRef = useRef(0);
+  const hasLoggedRef = useRef(false);
+
 
   const {
     selectedScale = 'C',
@@ -102,6 +106,7 @@ const PingPongHarmony = () => {
   const [currentRound, setCurrent] = useState(0);
   const [isPlaying, setPlaying] = useState(false);
   const [correct, setCorrect] = useState(0);
+
   const [wrong, setWrong] = useState(0);
   const [tries, setTries] = useState(0);
   const [canAnswer, setCanAnswer] = useState(false);
@@ -244,108 +249,133 @@ const PingPongHarmony = () => {
       hasSpecialChords: specialChordMode,
       totalAnswerTimeSec,
     });
-  return (
-    <div className="harmonygame-container">
-      {/* ── Navbar ── */}
-      <nav className="harmonygame-navbar">
-        <div className="harmonygame-navbar-left">
-          <div className="harmonygame-logo">Sabers Harmony</div>
-          <button className="harmonygame-btn" onClick={() => playChord(tonic)}>
-            {tonic}
-          </button>
-          <button
-            className={`harmonygame-btn ${awaitRetry ? 'bounce-flash' : ''}`}
-            onClick={handleCurrent}
-          >
-            Current
-          </button>
-        </div>
-
-        <div className="harmonygame-stats">
-          <span className="harmonygame-stat total">{rounds}</span>/
-          <span className={`harmonygame-stat current ${statFlash === 'current' ? 'stat-flash' : ''}`}>
-            {currentRound}
-          </span>/
-          <span className={`harmonygame-stat correct ${statFlash === 'correct' ? 'stat-flash' : ''}`}>
-            {correct}
-          </span>/
-          <span className={`harmonygame-stat wrong ${statFlash === 'wrong' ? 'stat-flash' : ''}`}>
-            {wrong}
-          </span>/
-          <span className={`harmonygame-stat tries ${statFlash === 'tries' ? 'stat-flash' : ''}`}>
-            {tries}
-          </span>
-        </div>
-
-        <button className="harmonygame-btn harmonygame-start-btn" onClick={startGame}>
-          {isPlaying ? 'Restart' : 'Start'}
-        </button>
-      </nav>
-
-      {/* ── Floating status message ── */}
-      {msg && <div className="floating-message">{msg}</div>}
-
-      <div className="harmonygame-fill-space" />
-
-      {/* ── Chord buttons & keyboard ── */}
-      <div className="harmonygame-bottom">
-        <div
-          className="harmonygame-chords"
-          style={{
-            gridTemplateRows: `repeat(${rows}, 1fr)`,
-            gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          }}
-        >
-          {unique.map((ch) => (
-            <button
-              key={ch}
-              className={`harmonygame-chord-btn ${
-                flashMap[ch] === 'correct' ? 'btn-flash-correct' : ''
-              } ${flashMap[ch] === 'wrong' ? 'btn-flash-wrong' : ''}`}
-              onClick={() => handleAnswer(ch)}
-            >
-              {ch}
+    return (
+      <div className="harmonygame-container">
+        {/* ── Navbar ── */}
+        <nav className="harmonygame-navbar">
+          <div className="harmonygame-navbar-left">
+            <div className="harmonygame-logo">Sabers Harmony</div>
+            <button className="harmonygame-btn" onClick={() => playChord(tonic)}>
+              {tonic}
             </button>
-          ))}
-        </div>
-
-        <div className="harmonygame-keyboard">
-          <PingPongHarmonyKeyboardView ref={keyboardRef} />
-        </div>
-      </div>
-
-      {/* ── End‑of‑game popup ── */}
-      {popup && (
-        <div className="harmonygame-popup-overlay">
-          <div className="harmonygame-popup">
-            <h2>🎉 Game Over!</h2>
-            <p>You completed the harmony practice!</p>
-            <p><strong>Correct:</strong> {correct}</p>
-            <p><strong>Wrong:</strong> {wrong}</p>
-            <p><strong>Total Tries:</strong> {tries}</p>
-            {rounds >= 5 ? (
-              <>
-                <p><strong>Level:</strong> {level}</p>
-                <p><strong>Rank:</strong> {score} / {max}</p>
-                <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
-                  <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
-                  <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
-                  <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
-                </ul>
-                <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
-              </>
-            ) : (
-              <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
-            )}
-            <div className="harmonygame-popup-buttons">
-              <button onClick={startGame}>🔁 Restart</button>
-              <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
-            </div>
+            <button
+              className={`harmonygame-btn ${awaitRetry ? 'bounce-flash' : ''}`}
+              onClick={handleCurrent}
+            >
+              Current
+            </button>
+          </div>
+    
+          <div className="harmonygame-stats">
+            <span className="harmonygame-stat total">{rounds}</span>/
+            <span className={`harmonygame-stat current ${statFlash === 'current' ? 'stat-flash' : ''}`}>
+              {currentRound}
+            </span>/
+            <span className={`harmonygame-stat correct ${statFlash === 'correct' ? 'stat-flash' : ''}`}>
+              {correct}
+            </span>/
+            <span className={`harmonygame-stat wrong ${statFlash === 'wrong' ? 'stat-flash' : ''}`}>
+              {wrong}
+            </span>/
+            <span className={`harmonygame-stat tries ${statFlash === 'tries' ? 'stat-flash' : ''}`}>
+              {tries}
+            </span>
+          </div>
+    
+          <button className="harmonygame-btn harmonygame-start-btn" onClick={startGame}>
+            {isPlaying ? 'Restart' : 'Start'}
+          </button>
+        </nav>
+    
+        {/* ── Floating status message ── */}
+        {msg && <div className="floating-message">{msg}</div>}
+    
+        <div className="harmonygame-fill-space" />
+    
+        {/* ── Chord buttons & keyboard ── */}
+        <div className="harmonygame-bottom">
+          <div
+            className="harmonygame-chords"
+            style={{
+              gridTemplateRows: `repeat(${rows}, 1fr)`,
+              gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            }}
+          >
+            {unique.map((ch) => (
+              <button
+                key={ch}
+                className={`harmonygame-chord-btn ${
+                  flashMap[ch] === 'correct' ? 'btn-flash-correct' : ''
+                } ${flashMap[ch] === 'wrong' ? 'btn-flash-wrong' : ''}`}
+                onClick={() => handleAnswer(ch)}
+              >
+                {ch}
+              </button>
+            ))}
+          </div>
+    
+          <div className="harmonygame-keyboard">
+            <PingPongHarmonyKeyboardView ref={keyboardRef} />
           </div>
         </div>
-      )}
-    </div>
-  );
-};
-
-export default PingPongHarmony;
+    
+        {/* ── End-of-game popup ── */}
+        {popup && (() => {
+          if (rounds >= 5 && !hasLoggedRef.current) {
+            const storedUser = JSON.parse(localStorage.getItem('user'));
+            const gmail = storedUser?.email || null;
+    
+            if (gmail) {
+              logPracticeResult({
+                gmail,
+                practiceName: PRACTICE_NAMES.PINGPONG_HARMONY,
+                correct,
+                wrong,
+                tries,
+                level,
+                rank: score,
+                maxRank: max,
+                rightScore,
+                tryScore,
+                speedScore,
+                avgTimePerAnswer,
+              });
+            }
+    
+            hasLoggedRef.current = true;
+          }
+    
+          return (
+            <div className="harmonygame-popup-overlay">
+              <div className="harmonygame-popup">
+                <h2>🎉 Game Over!</h2>
+                <p>You completed the harmony practice!</p>
+                <p><strong>Correct:</strong> {correct}</p>
+                <p><strong>Wrong:</strong> {wrong}</p>
+                <p><strong>Total Tries:</strong> {tries}</p>
+                {rounds >= 5 ? (
+                  <>
+                    <p><strong>Level:</strong> {level}</p>
+                    <p><strong>Rank:</strong> {score} / {max}</p>
+                    <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                      <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
+                      <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
+                      <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+                    </ul>
+                    <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
+                  </>
+                ) : (
+                  <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
+                )}
+                <div className="harmonygame-popup-buttons">
+                  <button onClick={startGame}>🔁 Restart</button>
+                  <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+    );
+  };
+    export default PingPongHarmony;   

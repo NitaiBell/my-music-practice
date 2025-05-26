@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './MelodicDictation.css';
 import MelodicDictationKeyboard from './MelodicDictationKeyboard';
 import { calculateMelodicDictationRank } from './calculateMelodicDictationRank';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 export default function MelodicDictation() {
   const { state } = useLocation();
@@ -42,19 +44,15 @@ export default function MelodicDictation() {
   );
 
   const generateSequence = () => {
-    const sequence = [];
-    for (let i = 0; i < sequenceLength; i++) {
-      const note = allChoices[Math.floor(Math.random() * allChoices.length)];
-      sequence.push(note);
-    }
-    return sequence;
+    return Array.from({ length: sequenceLength }, () =>
+      allChoices[Math.floor(Math.random() * allChoices.length)]
+    );
   };
 
   const playSequence = async (seq) => {
     setCanAnswer(false);
     for (let i = 0; i < seq.length; i++) {
-      const note = seq[i];
-      keyboardRef.current.playNote(note, false);
+      keyboardRef.current.playNote(seq[i], false);
       await new Promise((res) => setTimeout(res, 650));
     }
     setUserInput([]);
@@ -121,6 +119,28 @@ export default function MelodicDictation() {
               totalAnswerTimeSec: totalAnswerTimeRef.current,
             });
             setRankData(rank);
+
+            const user = JSON.parse(localStorage.getItem('user'));
+            const gmail = user?.email || null;
+
+            if (gmail) {
+              logPracticeResult({
+                gmail,
+                practiceName: PRACTICE_NAMES.MELODIC_DICTATION,
+                correct: correctCount + 1,
+                wrong: wrongCount,
+                tries: triesCount + 1,
+                level: rank.level,
+                rank: rank.score,
+                maxRank: rank.max,
+                rightScore: rank.rightScore,
+                tryScore: rank.tryScore,
+                speedScore: rank.speedScore,
+                avgTimePerAnswer: rank.avgTimePerAnswer,
+                date: new Date().toISOString(),
+              });
+            }
+
             setShowPopup(true);
           };
         } else {

@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+// src/practices/which_higher_note/WhichHigherNote.jsx
+import React, { useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './WhichHigherNote.css';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 export default function WhichHigherNote() {
   const { state } = useLocation();
@@ -29,6 +32,8 @@ export default function WhichHigherNote() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [rank, setRank] = useState(100);
+  const totalTimeRef = useRef(0);
+  const answerStartRef = useRef(null);
 
   const getRandomNotePair = () => {
     let first, second, idx1, idx2;
@@ -50,6 +55,7 @@ export default function WhichHigherNote() {
     setMadeMistake(false);
     playNote(pair[0]);
     setTimeout(() => playNote(pair[1]), 800);
+    answerStartRef.current = Date.now();
   };
 
   const handleAnswer = (choice) => {
@@ -59,6 +65,7 @@ export default function WhichHigherNote() {
 
     const [first, second] = notePair;
     const correct = getNoteIndex(getNoteBase(first)) > getNoteIndex(getNoteBase(second)) ? 'first' : 'second';
+    totalTimeRef.current += (Date.now() - answerStartRef.current) / 1000;
 
     if (choice === correct) {
       playCorrect();
@@ -76,6 +83,34 @@ export default function WhichHigherNote() {
       const next = currentRound + 1;
       if (next >= rounds) {
         setIsPlaying(false);
+
+        // ✅ Log to backend
+        const user = JSON.parse(localStorage.getItem('user'));
+        const gmail = user?.email || null;
+
+        const avgTimePerAnswer = +(totalTimeRef.current / Math.max(1, triesCount)).toFixed(2);
+        const rightScore = Math.round((correctCount / rounds) * 75);
+        const tryScore = Math.round((rounds / Math.max(1, triesCount)) * 15);
+        const speedScore = 0; // not implemented
+
+        if (gmail) {
+          logPracticeResult({
+            gmail,
+            practiceName: PRACTICE_NAMES.WHICH_HIGHER,
+            correct: correctCount,
+            wrong: wrongCount,
+            tries: triesCount,
+            level: 1,
+            rank,
+            maxRank: 100,
+            rightScore,
+            tryScore,
+            speedScore,
+            avgTimePerAnswer,
+            date: new Date().toISOString(),
+          });
+        }
+
         setShowPopup(true);
       } else {
         setCurrentRound(next);
@@ -92,27 +127,19 @@ export default function WhichHigherNote() {
     setShowPopup(false);
     setIsPlaying(true);
     setRank(100);
+    totalTimeRef.current = 0;
     setTimeout(startRound, 500);
   };
 
-  const restartGame = () => {
-    startGame();
-  };
-
-  const goToSettings = () => {
-    navigate('/which-higher-note');
-  };
+  const restartGame = () => startGame();
+  const goToSettings = () => navigate('/which-higher-note');
 
   return (
     <div className="which_higher_game-container">
       <nav className="which_higher-navbar">
         <div className="which_higher-nav-buttons">
-          <button onClick={() => handleAnswer('first')} disabled={!canAnswer}>
-            First
-          </button>
-          <button onClick={() => handleAnswer('second')} disabled={!canAnswer}>
-            Second
-          </button>
+          <button onClick={() => handleAnswer('first')} disabled={!canAnswer}>First</button>
+          <button onClick={() => handleAnswer('second')} disabled={!canAnswer}>Second</button>
         </div>
         <div className="which_higher-nav-stats">
           <div>Round: {currentRound + 1} / {rounds}</div>

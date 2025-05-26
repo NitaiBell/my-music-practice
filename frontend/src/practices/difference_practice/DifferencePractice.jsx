@@ -1,10 +1,10 @@
-// src/practices/difference_practice/DifferencePractice.jsx
-
 import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './DifferencePractice.css';
 import DifferencePracticeKeyboardView from './DifferencePracticeKeyboardView';
 import { calculateDifferenceRank } from './calculateDifferenceRank';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 const DifferencePractice = () => {
   const { state } = useLocation();
@@ -36,6 +36,7 @@ const DifferencePractice = () => {
   const [buttonFlashes, setButtonFlashes] = useState({});
   const [statFlash, setStatFlash] = useState('');
   const [roundMistake, setRoundMistake] = useState(false);
+  const [rankData, setRankData] = useState(null);
 
   const playNote = (note) => {
     const normalized = note.replace('#', 's').replace('b', 'f');
@@ -104,6 +105,7 @@ const DifferencePractice = () => {
     setStatusMessage('');
     setShowPopup(false);
     setButtonFlashes({});
+    setRankData(null);
     totalAnswerTimeRef.current = 0;
     prepareNextRound();
   };
@@ -160,8 +162,40 @@ const DifferencePractice = () => {
       setCanAnswer(false);
 
       if (currentRound + 1 >= rounds) {
-        setIsPlaying(false);
+        const result = calculateDifferenceRank({
+          selectedNotes,
+          sequenceLength,
+          correctCount: correctCount + (!roundMistake ? 1 : 0),
+          triesCount: triesCount + 1,
+          rounds,
+          totalAnswerTimeSec: totalAnswerTimeRef.current / 1000,
+        });
+
+        setRankData(result);
         setShowPopup(true);
+        setIsPlaying(false);
+
+        if (rounds >= 5) {
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+          const gmail = storedUser?.email || null;
+          if (gmail) {
+            logPracticeResult({
+              gmail,
+              practiceName: PRACTICE_NAMES.DIFFERENCE,
+              correct: correctCount + (!roundMistake ? 1 : 0),
+              wrong: wrongCount + (roundMistake ? 1 : 0),
+              tries: triesCount + 1,
+              level: result.level,
+              rank: result.score,
+              maxRank: result.max,
+              rightScore: result.rightScore,
+              tryScore: result.tryScore,
+              speedScore: result.speedScore,
+              avgTimePerAnswer: result.avgTimePerAnswer,
+            });
+          }
+        }
+
       } else {
         await new Promise((resolve) => setTimeout(resolve, 800));
         setCurrentRound((r) => r + 1);
@@ -237,57 +271,32 @@ const DifferencePractice = () => {
         </div>
       </div>
 
-      {showPopup && (
-  <div className="differencegame-popup-overlay">
-    <div className="differencegame-popup">
-      <h2>🎉 Great Job!</h2>
-      <p>You finished the difference practice!</p>
-      <p><strong>Correct:</strong> {correctCount}</p>
-      <p><strong>Wrong:</strong> {wrongCount}</p>
-      <p><strong>Total Tries:</strong> {triesCount}</p>
+      {showPopup && rankData && (
+        <div className="differencegame-popup-overlay">
+          <div className="differencegame-popup">
+            <h2>🎉 Great Job!</h2>
+            <p>You finished the difference practice!</p>
+            <p><strong>Correct:</strong> {correctCount}</p>
+            <p><strong>Wrong:</strong> {wrongCount}</p>
+            <p><strong>Total Tries:</strong> {triesCount}</p>
 
-      {rounds >= 5 ? (() => {
-        const {
-          score,
-          max,
-          avgTimePerAnswer,
-          level,
-          rightScore,
-          tryScore,
-          speedScore
-        } = calculateDifferenceRank({
-          selectedNotes,
-          sequenceLength,
-          correctCount,
-          triesCount,
-          rounds,
-          totalAnswerTimeSec: totalAnswerTimeRef.current / 1000,
-        });
-
-        return (
-          <>
-            <p><strong>Level:</strong> {level}</p>
-            <p><strong>Overall Rank:</strong> {score} / {max}</p>
+            <p><strong>Level:</strong> {rankData.level}</p>
+            <p><strong>Overall Rank:</strong> {rankData.score} / {rankData.max}</p>
             <p><strong>Breakdown:</strong></p>
             <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
-              <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
-              <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
-              <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+              <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+              <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+              <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
             </ul>
-            <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
-          </>
-        );
-      })() : (
-        <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
-      )}
+            <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
 
-      <div className="differencegame-popup-buttons">
-        <button onClick={startGame}>🔁 Restart</button>
-        <button onClick={() => navigate('/difference/settings')}>⚙️ Back to Settings</button>
-      </div>
-    </div>
-  </div>
-)}
+            <div className="differencegame-popup-buttons">
+              <button onClick={startGame}>🔁 Restart</button>
+              <button onClick={() => navigate('/difference/settings')}>⚙️ Back to Settings</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

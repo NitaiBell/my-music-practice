@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './DegreeNotice.css';
 import { calculateDegreeNoticeRank } from './calculateDegreeNoticeRank';
-
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 const fullChordMap = {
   C: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
@@ -69,6 +70,8 @@ export default function DegreeNotice() {
   const [roundFlash, setRoundFlash] = useState(false);
   const [musicMuted, setMusicMuted] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [rankData, setRankData] = useState(null);
+
   const startTimeRef = useRef(null);
 
   useEffect(() => {
@@ -86,7 +89,7 @@ export default function DegreeNotice() {
     const noteAnswer = fullChordMap[scale][degreeNum];
     const correctAnswer = mode === 'scaleToDegree' ? degreeLabels[degreeNum] : noteAnswer;
     const questionPrompt = mode === 'scaleToDegree' ? displayNote(noteAnswer) : degree;
-  
+
     const options = new Set([correctAnswer]);
     while (options.size < 4) {
       const randIdx = Math.floor(Math.random() * 7);
@@ -95,7 +98,7 @@ export default function DegreeNotice() {
         : fullChordMap[scale][randIdx];
       options.add(distractor);
     }
-  
+
     return {
       scale,
       degree,
@@ -114,7 +117,6 @@ export default function DegreeNotice() {
     setRoundFlash(true);
     setTimeout(() => setRoundFlash(false), 400);
     setFeedbackMessage('🎵 New round started!');
-
     pageTurnSound.currentTime = 0;
     pageTurnSound.play();
 
@@ -153,6 +155,12 @@ export default function DegreeNotice() {
 
     setQuestionPool(finalCombos);
     setModeSequence(modes);
+    setCurrentIndex(0);
+    setCorrectCount(0);
+    setWrongCount(0);
+    setTriesCount(0);
+    setShowPopup(false);
+    setRankData(null);
     startRound(finalCombos[0], modes[0]);
   };
 
@@ -168,15 +176,50 @@ export default function DegreeNotice() {
       setFlashCorrect(true);
       if (!wasWrongThisRound) setCorrectCount(c => c + 1);
       else setWrongCount(w => w + 1);
+
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
+
       setTimeout(() => {
         if (nextIndex === rounds) {
+          const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
+          if (rounds >= 10) {
+            const rank = calculateDegreeNoticeRank({
+              selectedScales,
+              selectedDegrees,
+              correctCount: correctCount + (!wasWrongThisRound ? 1 : 0),
+              triesCount: triesCount + 1,
+              rounds,
+              totalTimeSec
+            });
+            setRankData(rank);
+
+            const storedUser = JSON.parse(localStorage.getItem('user'));
+            const gmail = storedUser?.email || null;
+            if (gmail) {
+              logPracticeResult({
+                gmail,
+                practiceName: PRACTICE_NAMES.DEGREE_NOTICE,
+                correct: correctCount + (!wasWrongThisRound ? 1 : 0),
+                wrong: wrongCount + (wasWrongThisRound ? 1 : 0),
+                tries: triesCount + 1,
+                level: rank.level,
+                rank: rank.score,
+                maxRank: rank.max,
+                rightScore: rank.rightScore,
+                tryScore: rank.tryScore,
+                speedScore: rank.speedScore,
+                avgTimePerAnswer: rank.avgTimePerAnswer,
+              });
+            }
+          }
+
           setShowPopup(true);
         } else {
           startRound(questionPool[nextIndex], modeSequence[nextIndex]);
         }
       }, 600);
+
     } else {
       wrongSound.currentTime = 0;
       wrongSound.play();
@@ -247,39 +290,19 @@ export default function DegreeNotice() {
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Attempts:</strong> {triesCount}</p>
 
-            {rounds >= 10 ? (() => {
-              const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
-              const {
-                score,
-                max,
-                level,
-                avgTimePerAnswer,
-                rightScore,
-                tryScore,
-                speedScore
-              } = calculateDegreeNoticeRank({
-                selectedScales,
-                selectedDegrees,
-                correctCount,
-                triesCount,
-                rounds,
-                totalTimeSec
-              });
-              return (
-                <>
-                  <p><strong>Level:</strong> {level}</p>
-                  <p><strong>Overall Rank:</strong> {score} / {max}</p>
-                  <p><strong>Breakdown:</strong></p>
-                  <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
-                    <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
-                    <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
-                    <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
-                  </ul>
-                  <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
-                </>
-              );
-            })() : (
-              <p><strong>Rank:</strong> Not calculated (minimum 20 rounds required)</p>
+            {rankData ? (
+              <>
+                <p><strong>Level:</strong> {rankData.level}</p>
+                <p><strong>Overall Rank:</strong> {rankData.score} / {rankData.max}</p>
+                <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                  <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+                  <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+                  <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
+                </ul>
+                <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
+              </>
+            ) : (
+              <p><strong>Rank:</strong> Not calculated (minimum 10 rounds required)</p>
             )}
 
             <div className="degree-notice-popup-buttons">

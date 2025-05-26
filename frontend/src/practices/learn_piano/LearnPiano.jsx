@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './LearnPiano.css';
 import LearnPianoKeyboard from './LearnPianoKeyboard';
 import { calculateLearnPianoRank } from './calculateLearnPianoRank';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 const displayNoteName = (note, key) => {
   const base = note.replace(/\d/, '');
@@ -47,7 +49,7 @@ export default function LearnPiano() {
   const [hasFailedThisRound, setHasFailedThisRound] = useState(false);
   const [rankData, setRankData] = useState(null);
 
-  const allNotes = [ 'C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B' ];
+  const allNotes = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
   const octaves = [3, 4, 5];
   const allChoices = freestyleMode
     ? octaves.flatMap((oct) => allNotes.map((note) => `${note}${oct}`))
@@ -87,14 +89,14 @@ export default function LearnPiano() {
 
   const handleAnswer = (note) => {
     if (!isPlaying) return;
-  
+
     keyboardRef.current.playNote(note);
-  
+
     const expected = currentSequence[userInput.length];
     const isCorrect = normalMode
       ? getNoteBase(note) === getNoteBase(expected)
       : note === expected;
-  
+
     if (!isCorrect) {
       keyboardRef.current.setFlashWrong(note);
       setStatusMessage('❌ Wrong! Try again');
@@ -104,15 +106,15 @@ export default function LearnPiano() {
       setUserInput([]);
       return;
     }
-  
+
     keyboardRef.current.setFlashRight(note);
     const nextInput = [...userInput, note];
     setUserInput(nextInput);
-  
+
     if (nextInput.length === currentSequence.length) {
       const elapsed = Date.now() - (answerTimeStartRef.current || Date.now());
       totalAnswerTimeRef.current += elapsed / 1000;
-  
+
       const updatedTries = triesCount + 1;
       let updatedCorrect = correctCount;
       if (!hasFailedThisRound) {
@@ -120,7 +122,7 @@ export default function LearnPiano() {
         setCorrectCount(updatedCorrect);
       }
       setTriesCount(updatedTries);
-  
+
       if (currentRound + 1 >= rounds) {
         const rank = calculateLearnPianoRank({
           selectedNotes,
@@ -131,6 +133,26 @@ export default function LearnPiano() {
           rounds,
           totalAnswerTimeSec: totalAnswerTimeRef.current,
         });
+
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const gmail = storedUser?.email || null;
+        if (gmail) {
+          logPracticeResult({
+            gmail,
+            practiceName: PRACTICE_NAMES.LEARN_PIANO,
+            correct: updatedCorrect,
+            wrong: wrongCount,
+            tries: updatedTries,
+            level: rank.level,
+            rank: rank.score,
+            maxRank: 100,
+            rightScore: rank.rightScore,
+            tryScore: rank.tryScore,
+            speedScore: rank.speedScore,
+            avgTimePerAnswer: rank.avgTimePerAnswer,
+          });
+        }
+
         setRankData(rank);
         setIsPlaying(false);
         setShowPopup(true);
@@ -145,7 +167,7 @@ export default function LearnPiano() {
       setStatusMessage('✅ Correct... keep going');
     }
   };
-  
+
   return (
     <div className="learn_piano-game-container">
       <nav className="learn_piano-game-navbar">
@@ -208,36 +230,36 @@ export default function LearnPiano() {
       </div>
 
       {showPopup && (
-  <div className="learn_piano-popup-overlay">
-    <div className="learn_piano-popup">
-      <h2>🎉 Practice Complete!</h2>
-      <p><strong>Rounds:</strong> {rounds}</p>
-      <p><strong>Correct:</strong> {correctCount}</p>
-      <p><strong>Wrong:</strong> {wrongCount}</p>
-      <p><strong>Total Attempts:</strong> {triesCount}</p>
+        <div className="learn_piano-popup-overlay">
+          <div className="learn_piano-popup">
+            <h2>🎉 Practice Complete!</h2>
+            <p><strong>Rounds:</strong> {rounds}</p>
+            <p><strong>Correct:</strong> {correctCount}</p>
+            <p><strong>Wrong:</strong> {wrongCount}</p>
+            <p><strong>Total Attempts:</strong> {triesCount}</p>
 
-      {rounds >= 5 && rankData ? (
-        <>
-          <p><strong>Level:</strong> {rankData.level}</p>
-          <p><strong>Rank:</strong> {rankData.score} / 100</p>
-          <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
-            <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
-            <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
-            <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
-          </ul>
-          <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
-        </>
-      ) : (
-        <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
+            {rounds >= 5 && rankData ? (
+              <>
+                <p><strong>Level:</strong> {rankData.level}</p>
+                <p><strong>Rank:</strong> {rankData.score} / 100</p>
+                <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                  <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+                  <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+                  <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
+                </ul>
+                <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
+              </>
+            ) : (
+              <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
+            )}
+
+            <div className="learn_piano-popup-buttons">
+              <button onClick={startGame}>🔁 Restart</button>
+              <button onClick={() => navigate('/learn-piano')}>⚙️ Settings</button>
+            </div>
+          </div>
+        </div>
       )}
-
-      <div className="learn_piano-popup-buttons">
-        <button onClick={startGame}>🔁 Restart</button>
-        <button onClick={() => navigate('/learn-piano')}>⚙️ Settings</button>
-      </div>
-    </div>
-  </div>
-)}
     </div>
   );
 }

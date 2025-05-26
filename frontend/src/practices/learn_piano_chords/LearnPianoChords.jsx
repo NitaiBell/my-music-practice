@@ -1,9 +1,11 @@
-// LearnPianoChords.jsx
+// LearnPianoChords.jsx — with backend logging logic
 import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LearnPianoChords.css';
 import LearnPianoChordsKeyboardView from './LearnPianoChordsKeyboardView';
 import { calculateLearnPianoChordsRank } from './calculateLearnPianoChordsRank';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 const chordNoteMap = {
   C: ['C3', 'E3', 'G3'], D: ['D3', 'Fs3', 'A3'], Dm: ['D3', 'F3', 'A3'], Em: ['E3', 'G3', 'B3'],
@@ -15,11 +17,10 @@ const chordNoteMap = {
   'D#m': ['Ds3', 'Fs3', 'As3'], 'F#': ['Fs3', 'As3', 'Cs4'], 'A#dim': ['As3', 'Cs4', 'E4'],
   Cm: ['C3', 'Ds3', 'G3'], 'C7': ['C3', 'E3', 'G3', 'As3'], 'Cm7': ['C3', 'Ds3', 'G3', 'As3'],
   D7: ['D3', 'Fs3', 'A3', 'C4'], Dmaj7: ['D3', 'Fs3', 'A3', 'Cs4'], Dm7: ['D3', 'F3', 'A3', 'C4'],
-  E7: ['E3', 'Gs3', 'B3', 'D4'],
-  F7: ['F3', 'A3', 'C4', 'Ds4'], Fmaj7: ['F3', 'A3', 'C4', 'E4'], Fm7: ['F3', 'Gs3', 'C4', 'Ds4'],
-  G7: ['G3', 'B3', 'D4', 'F4'], Gmaj7: ['G3', 'B3', 'D4', 'Fs4'], Gm7: ['G3', 'As3', 'D4', 'F4'],
-  A7: ['A3', 'Cs4', 'E4', 'G4'], Amaj7: ['A3', 'Cs4', 'E4', 'Gs4'], Am7: ['A3', 'C4', 'E4', 'G4'],
-  B7: ['B3', 'Ds4', 'Fs4', 'A4'], Bm7: ['B3', 'D4', 'Fs4', 'A4'],
+  E7: ['E3', 'Gs3', 'B3', 'D4'], F7: ['F3', 'A3', 'C4', 'Ds4'], Fmaj7: ['F3', 'A3', 'C4', 'E4'],
+  Fm7: ['F3', 'Gs3', 'C4', 'Ds4'], G7: ['G3', 'B3', 'D4', 'F4'], Gmaj7: ['G3', 'B3', 'D4', 'Fs4'],
+  Gm7: ['G3', 'As3', 'D4', 'F4'], A7: ['A3', 'Cs4', 'E4', 'G4'], Amaj7: ['A3', 'Cs4', 'E4', 'Gs4'],
+  Am7: ['A3', 'C4', 'E4', 'G4'], B7: ['B3', 'Ds4', 'Fs4', 'A4'], Bm7: ['B3', 'D4', 'Fs4', 'A4'],
   'Db': ['Cs3', 'F3', 'Gs3'], 'Eb': ['Ds3', 'G3', 'As3'], 'Ab': ['Gs3', 'C4', 'Ds4'],
   'Dbm': ['Cs3', 'E3', 'Gs3'], 'Ebm': ['Ds3', 'Fs3', 'As3'], 'Abm': ['Gs3', 'B3', 'Ds4'],
   'Bbm': ['As2', 'Cs3', 'F3'], 'Bbm7': ['As2', 'Cs3', 'F3', 'Gs3']
@@ -33,6 +34,7 @@ const LearnPianoChords = () => {
   const keyboardRef = useRef();
   const totalAnswerTimeRef = useRef(0);
   const answerTimeStartRef = useRef(null);
+  const hasLoggedRef = useRef(false);
 
   const {
     selectedScale = 'C',
@@ -62,18 +64,15 @@ const LearnPianoChords = () => {
   const [canAnswer, setCanAnswer] = useState(false);
   const [rankData, setRankData] = useState(null);
 
-  const playNote = (note) => {
-    const audio = new Audio(`/clean_cut_notes/${encodeURIComponent(note)}.wav`);
-    audio.play();
-  };
+  const playNote = (note) => new Audio(`/clean_cut_notes/${encodeURIComponent(note)}.wav`).play();
   const playChord = (chord) => chordNoteMap[chord]?.forEach(playNote);
   const flashButton = (chord, type) => {
-    setButtonFlashes(prev => ({ ...prev, [chord]: type }));
-    setTimeout(() => setButtonFlashes(prev => ({ ...prev, [chord]: null })), 500);
+    setButtonFlashes((prev) => ({ ...prev, [chord]: type }));
+    setTimeout(() => setButtonFlashes((prev) => ({ ...prev, [chord]: null })), 500);
   };
 
   const startGame = () => {
-    const chordPool = freestyleMode ? allChords : selectedChords.filter(c => chordNoteMap[c]);
+    const chordPool = freestyleMode ? allChords : selectedChords.filter((c) => chordNoteMap[c]);
     if (chordPool.length === 0) return;
     const generated = Array.from({ length: rounds }, () => chordPool[Math.floor(Math.random() * chordPool.length)]);
     setSequence(generated);
@@ -90,6 +89,7 @@ const LearnPianoChords = () => {
     setRankData(null);
     totalAnswerTimeRef.current = 0;
     answerTimeStartRef.current = Date.now();
+    hasLoggedRef.current = false;
     setTimeout(() => showNextChord(generated[0]), 300);
   };
 
@@ -119,13 +119,13 @@ const LearnPianoChords = () => {
     totalAnswerTimeRef.current += elapsed / 1000;
     answerTimeStartRef.current = Date.now();
 
-    setTriesCount(t => t + 1);
+    setTriesCount((t) => t + 1);
     setStatFlash('tries');
     setTimeout(() => setStatFlash(''), 400);
 
     if (arraysEqual(answer, expected)) {
       if (!roundMistakeMade && !roundOutcomeSet) {
-        setCorrectCount(c => c + 1);
+        setCorrectCount((c) => c + 1);
         setStatFlash('correct');
         setTimeout(() => setStatFlash(''), 400);
         setRoundOutcomeSet(true);
@@ -147,9 +147,29 @@ const LearnPianoChords = () => {
         setRankData(rank);
         setIsPlaying(false);
         setShowPopup(true);
+
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const gmail = storedUser?.email || null;
+        if (gmail && rounds >= 5 && !hasLoggedRef.current) {
+          logPracticeResult({
+            gmail,
+            practiceName: PRACTICE_NAMES.LEARN_PIANO_CHORDS,
+            correct: correctCount + 1,
+            wrong: wrongCount,
+            tries: triesCount + 1,
+            level: rank.level,
+            rank: rank.score,
+            maxRank: 100,
+            rightScore: rank.rightScore,
+            tryScore: rank.tryScore,
+            speedScore: rank.speedScore,
+            avgTimePerAnswer: rank.avgTimePerAnswer,
+          });
+          hasLoggedRef.current = true;
+        }
       } else {
         setTimeout(() => {
-          setCurrentRound(r => r + 1);
+          setCurrentRound((r) => r + 1);
           setRoundMistakeMade(false);
           setRoundOutcomeSet(false);
           showNextChord(sequence[currentRound + 1]);
@@ -158,7 +178,7 @@ const LearnPianoChords = () => {
       }
     } else {
       if (!roundOutcomeSet) {
-        setWrongCount(w => w + 1);
+        setWrongCount((w) => w + 1);
         setStatFlash('wrong');
         setTimeout(() => setStatFlash(''), 400);
         setRoundOutcomeSet(true);

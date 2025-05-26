@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './ChordTypePractice.css';
 import ChordTypeKeyboard from './ChordTypeKeyboard';
 import { calculateChordTypeRank } from './calculateChordTypeRank';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 const chordIntervals = {
   Major: [0, 4, 7],
@@ -70,6 +72,7 @@ const ChordTypePractice = () => {
   const [buttonFlashes, setButtonFlashes] = useState({});
   const [statFlash, setStatFlash] = useState('');
   const [roundMistake, setRoundMistake] = useState(false);
+  const [rankData, setRankData] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
   const playNote = (note) => {
@@ -104,8 +107,6 @@ const ChordTypePractice = () => {
     while (newSequence.length < actualRounds && attempts < 1000) {
       const chordType = selectedChordTypes[Math.floor(Math.random() * selectedChordTypes.length)];
       const base = getRandomBase();
-      const root = base + '3';
-      const chordNotes = buildChord(root, chordType);
       newSequence.push({ chordType, base });
       attempts++;
     }
@@ -122,6 +123,7 @@ const ChordTypePractice = () => {
     setIsPlaying(true);
     setCanAnswer(false);
     setShowPopup(false);
+    setRankData(null);
 
     setTimeout(() => playNextChord(newSequence[0]), 400);
   };
@@ -170,6 +172,40 @@ const ChordTypePractice = () => {
       if (currentRound + 1 >= sequence.length) {
         setIsPlaying(false);
         setShowPopup(true);
+
+        if (rounds >= 10) {
+          const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
+          const rank = calculateChordTypeRank({
+            selectedChordTypes,
+            correctCount,
+            triesCount,
+            rounds,
+            totalTimeSec,
+          });
+
+          setRankData(rank);
+
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+          const gmail = storedUser?.email || null;
+
+          if (gmail) {
+            logPracticeResult({
+              gmail,
+              practiceName: PRACTICE_NAMES.CHORD_TYPE,
+              correct: correctCount,
+              wrong: wrongCount,
+              tries: triesCount,
+              level: rank.level,
+              rank: rank.score,
+              maxRank: rank.max,
+              rightScore: rank.rightScore,
+              tryScore: rank.tryScore,
+              speedScore: rank.speedScore,
+              avgTimePerAnswer: rank.avgTimePerAnswer,
+            });
+          }
+        }
+
       } else {
         setTimeout(() => {
           const next = sequence[currentRound + 1];
@@ -177,6 +213,7 @@ const ChordTypePractice = () => {
           playNextChord(next);
         }, 700);
       }
+
     } else {
       setRoundMistake(true);
       setStatusMessage("❌ Try again!");
@@ -261,38 +298,19 @@ const ChordTypePractice = () => {
             <p><strong>Wrong:</strong> {wrongCount}</p>
             <p><strong>Total Tries:</strong> {triesCount}</p>
 
-            {rounds >= 10 ? (() => {
-              const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
-              const {
-                level,
-                score,
-                max,
-                avgTimePerAnswer,
-                rightScore,
-                tryScore,
-                speedScore,
-              } = calculateChordTypeRank({
-                selectedChordTypes,
-                correctCount,
-                triesCount,
-                rounds,
-                totalTimeSec,
-              });
-
-              return (
-                <>
-                  <p><strong>Level:</strong> {level}</p>
-                  <p><strong>Overall Rank:</strong> {score} / {max}</p>
-                  <p><strong>Breakdown:</strong></p>
-                  <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
-                    <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
-                    <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
-                    <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
-                  </ul>
-                  <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
-                </>
-              );
-            })() : (
+            {rankData ? (
+              <>
+                <p><strong>Level:</strong> {rankData.level}</p>
+                <p><strong>Overall Rank:</strong> {rankData.score} / {rankData.max}</p>
+                <p><strong>Breakdown:</strong></p>
+                <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+                  <li>✅ Right/Wrong: <strong>{rankData.rightScore}</strong> / 75</li>
+                  <li>🔁 Tries: <strong>{rankData.tryScore}</strong> / 15</li>
+                  <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
+                </ul>
+                <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
+              </>
+            ) : (
               <p><strong>Rank:</strong> Not calculated (minimum 10 rounds required)</p>
             )}
 

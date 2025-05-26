@@ -1,8 +1,10 @@
-// RealMelody.jsx (Updated with Rank Calculation)
+// RealMelody.jsx (Updated with Backend Logging)
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './RealMelody.css';
 import RealMelodyKeyboardView from './RealMelodyKeyboardView';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
+import { PRACTICE_NAMES } from '../../../utils/constants';
 
 function calculateRealMelodyRank({
   selectedNotes = [],
@@ -48,6 +50,7 @@ export default function RealMelody() {
   const keyboardRef = useRef();
   const answerStartRef = useRef(null);
   const totalAnswerTimeRef = useRef(0);
+  const hasLoggedRef = useRef(false);
 
   const {
     selectedScale = 'C',
@@ -74,8 +77,14 @@ export default function RealMelody() {
     const allChoices = [];
     selectedNotes.forEach((note) => octaves.forEach((oct) => allChoices.push(`${note}${oct}`)));
     const tonicChoices = octaves.map((oct) => `${selectedScale}${oct}`);
-    const body = Array.from({ length: rounds - 2 }, () => allChoices[Math.floor(Math.random() * allChoices.length)]);
-    return [tonicChoices[Math.floor(Math.random() * tonicChoices.length)], ...body, tonicChoices[Math.floor(Math.random() * tonicChoices.length)]];
+    const body = Array.from({ length: rounds - 2 }, () =>
+      allChoices[Math.floor(Math.random() * allChoices.length)]
+    );
+    return [
+      tonicChoices[Math.floor(Math.random() * tonicChoices.length)],
+      ...body,
+      tonicChoices[Math.floor(Math.random() * tonicChoices.length)],
+    ];
   };
 
   const startGame = () => {
@@ -87,6 +96,7 @@ export default function RealMelody() {
     setWrongCount(0);
     setTriesCount(0);
     totalAnswerTimeRef.current = 0;
+    hasLoggedRef.current = false;
     setIsPlaying(true);
     setStatusMessage('');
     setShowPopup(false);
@@ -148,6 +158,28 @@ export default function RealMelody() {
         setRankData(rank);
         setIsPlaying(false);
         setShowPopup(true);
+
+        if (!hasLoggedRef.current && rounds >= 5) {
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+          const gmail = storedUser?.email || null;
+          if (gmail) {
+            logPracticeResult({
+              gmail,
+              practiceName: PRACTICE_NAMES.REAL_MELODY,
+              correct: correctCount + 1,
+              wrong: wrongCount,
+              tries: triesCount + 1,
+              level: rank.level,
+              rank: rank.score,
+              maxRank: rank.max,
+              rightScore: rank.rightScore,
+              tryScore: rank.tryScore,
+              speedScore: rank.speedScore,
+              avgTimePerAnswer: rank.avgTimePerAnswer,
+            });
+          }
+          hasLoggedRef.current = true;
+        }
       } else {
         setTimeout(() => {
           const nextIndex = currentIndex + 1;
@@ -158,7 +190,6 @@ export default function RealMelody() {
     } else {
       keyboardRef.current.setFlashWrong(note);
       setStatusMessage("❌ Wrong! Hit Replay");
-
       if (!hasFailedThisRound) {
         setWrongCount((w) => w + 1);
         setHasFailedThisRound(true);
