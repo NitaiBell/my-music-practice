@@ -93,3 +93,22 @@ export const getPracticeStats = async (req, res) => {
     res.status(500).json({ error: 'Failed to get practice stats' });
   }
 };
+
+export const getPracticeLog = async (req, res) => {
+  const { gmail, practiceName } = req.query;
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM user_practice_log
+       WHERE gmail = $1 AND practice_name = $2
+       ORDER BY date DESC
+       LIMIT 120`, // optional limit
+      [gmail, practiceName]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error('❌ Failed to fetch full log:', err.message);
+    res.status(500).json({ error: 'Failed to get practice log' });
+  }
+};

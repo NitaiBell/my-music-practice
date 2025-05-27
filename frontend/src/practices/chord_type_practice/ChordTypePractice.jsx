@@ -170,42 +170,51 @@ const ChordTypePractice = () => {
       setButtonFlash(type, 'correct');
 
       if (currentRound + 1 >= sequence.length) {
+        // -- 1. freeze the final numbers ---------------------------------
+        const finalCorrect = roundMistake ? correctCount : correctCount + 1;
+        const finalWrong   = wrongCount;
+        const finalTries   = triesCount + 1;      // we already incremented triesCount just above
+      
+        // commit to state so the popup shows the right numbers
+        setCorrectCount(finalCorrect);
+        setTriesCount(finalTries);
+      
+        // -- 2. stop game & show popup ------------------------------------
         setIsPlaying(false);
         setShowPopup(true);
-
+      
+        // -- 3. calculate rank with *final* numbers -----------------------
         if (rounds >= 10) {
           const totalTimeSec = (performance.now() - startTimeRef.current) / 1000;
           const rank = calculateChordTypeRank({
             selectedChordTypes,
-            correctCount,
-            triesCount,
+            correctCount: finalCorrect,
+            triesCount : finalTries,
             rounds,
             totalTimeSec,
           });
-
+      
           setRankData(rank);
-
-          const storedUser = JSON.parse(localStorage.getItem('user'));
-          const gmail = storedUser?.email || null;
-
+      
+          // optional: log to backend
+          const gmail = JSON.parse(localStorage.getItem('user'))?.email;
           if (gmail) {
             logPracticeResult({
               gmail,
               practiceName: PRACTICE_NAMES.CHORD_TYPE,
-              correct: correctCount,
-              wrong: wrongCount,
-              tries: triesCount,
-              level: rank.level,
-              rank: rank.score,
-              maxRank: rank.max,
-              rightScore: rank.rightScore,
-              tryScore: rank.tryScore,
-              speedScore: rank.speedScore,
-              avgTimePerAnswer: rank.avgTimePerAnswer,
+              correct : finalCorrect,
+              wrong   : finalWrong,
+              tries   : finalTries,
+              level   : rank.level,
+              rank    : rank.score,
+              maxRank : rank.max,
+              rightScore : rank.rightScore,
+              tryScore   : rank.tryScore,
+              speedScore : rank.speedScore,
+              avgTimePerAnswer : rank.avgTimePerAnswer,
             });
           }
         }
-
       } else {
         setTimeout(() => {
           const next = sequence[currentRound + 1];

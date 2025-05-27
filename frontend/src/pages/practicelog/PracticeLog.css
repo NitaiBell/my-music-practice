@@ -1,0 +1,125 @@
+/* === Wrapper and Layout === */
+.practice-log-wrapper {
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #97f2c6;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .practice-log-fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+  }
+  
+  .practice-log-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  /* === Main Content Area === */
+  .practice-log-content {
+    padding: 80px 40px 100px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #97f2c6;
+    box-sizing: border-box;
+    color: #333;
+  }
+  
+  .practice-log-title {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #14532d;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 1px 0 white;
+  }
+  
+  /* === Top Button Row === */
+  .log-actions-top {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+  
+  .log-button {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.25s ease, transform 0.2s ease;
+  }
+  
+  .log-button:hover {
+    background: #0f766e;
+    transform: translateY(-1px);
+  }
+  
+  /* === Entry List and Cards === */
+  .log-entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .log-entry {
+    background: #ffffff;
+    padding: 22px 24px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease;
+  }
+  
+  .log-entry:hover {
+    transform: translateY(-4px);
+  }
+  
+  /* === Entry Header === */
+  .log-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    color: #2563eb;
+    margin-bottom: 10px;
+  }
+  
+  .entry-number {
+    font-weight: 700;
+  }
+  
+  .entry-date {
+    font-style: italic;
+    color: #475569;
+  }
+  
+  /* === Entry Body === */
+  .log-entry-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #1e293b;
+  }
+  
+  .log-entry-row {
+    margin: 6px 0;
+  }
+  
+  .loading-text,
+  .empty-text {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #334155;
+    margin-top: 40px;
+  }
+  

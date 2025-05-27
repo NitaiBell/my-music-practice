@@ -56,3 +56,5 @@ export const login = async (req, res) => {
     }
   };
   
+
+  // GET full log for user + practice

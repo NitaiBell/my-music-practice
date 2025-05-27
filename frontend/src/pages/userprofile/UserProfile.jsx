@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const profileOptions = [
   { name: 'Mozart', file: 'mozart profile.png' },
@@ -27,109 +28,111 @@ const practiceLinks = [
     path: '/chord-type',
     logo: '/practices_logos/chord type practice.png',
     description: 'Identify chord types like maj7, dim, or sus by ear.',
-    background: 'linear-gradient(to bottom right, #fff7d6, #facc15)', // soft gold
-  },
-  {
-    name: 'Chords for Melody',
-    path: '/chords-for-melody',
-    logo: '/practices_logos/chords for harmony.png',
-    description: 'Choose the right chord to match a melody line.',
-    background: 'linear-gradient(to bottom right, #dbeafe, #3b82f6)', // soft to strong blue
+    background: 'linear-gradient(to bottom right, #fffbe6, #facc15)', // pale yellow to gold
   },
   {
     name: 'Degree Notice Training',
     path: '/degree-notice',
     logo: '/practices_logos/degree notice training.png',
     description: 'Match scale degrees with notes in different keys.',
-    background: 'linear-gradient(to bottom right, #ede9fe, #a78bfa)', // soft violet
+    background: 'linear-gradient(to bottom right, #f3e8ff, #a855f7)', // lavender to vibrant purple
   },
   {
     name: 'Difference Practice',
     path: '/difference',
     logo: '/practices_logos/spot the difference.png',
     description: 'Spot the difference between two musical examples.',
-    background: 'linear-gradient(to bottom right, #fef9c3, #fde047)', // pastel to bright yellow
+    background: 'linear-gradient(to bottom right, #ffe4e6, #f472b6)', // pale pink to rose
   },
   {
     name: 'Harmony Training',
     path: '/harmony',
     logo: '/practices_logos/ping pong harmony.png',
     description: 'Practice functional harmony recognition in real time.',
-    background: 'linear-gradient(to bottom right, #c7f9cc, #38b000)', // fresh green
+    background: 'linear-gradient(to bottom right, #e8f5e9, #43a047)', // light mint to green
   },
   {
     name: 'Interval Training',
     path: '/interval-practice',
     logo: '/practices_logos/interval trainer.png',
     description: 'Identify musical intervals between two notes.',
-    background: 'linear-gradient(to bottom right, #d0f0fd, #38bdf8)', // sky blue gradient
+    background: 'linear-gradient(to bottom right, #e0f7fa, #0288d1)', // cyan to ocean blue
   },
   {
     name: 'Learn Piano',
     path: '/learn-piano',
     logo: '/practices_logos/piano notes.png',
     description: 'Play back note sequences shown on screen.',
-    background: 'linear-gradient(to bottom right, #e0f7fa, #80deea)', // cyan light
+    background: 'linear-gradient(to bottom right, #fef3c7, #fb923c)', // warm yellow to orange
   },
   {
     name: 'Learn Piano Chords',
     path: '/learn-piano-chords',
     logo: '/practices_logos/piano chords.png',
     description: 'Identify chords visually and aurally on the keyboard.',
-    background: 'linear-gradient(to bottom right, #f3e8ff, #c084fc)', // light to bright purple
+    background: 'linear-gradient(to bottom right, #e0f2f1, #26c6da)', // turquoise gradient
   },
   {
     name: 'Real Melody Training',
     path: '/real-melody',
     logo: '/practices_logos/ping pong melody.png',
     description: 'Play back melodies using buttons or the keyboard.',
-    background: 'linear-gradient(to bottom right, #bbf7d0, #34d399)', // green mint to emerald
+    background: 'linear-gradient(to bottom right, #fce7f3, #f43f5e)', // soft pink to coral red
   },
   {
     name: 'Which Higher Note',
     path: '/which-higher-note',
     logo: '/practices_logos/which is higher.png',
     description: 'Listen to two notes and choose the higher one.',
-    background: 'linear-gradient(to bottom right, #ffe0e0, #ff6b6b)', // soft red to bold red
+    background: 'linear-gradient(to bottom right, #f1f5f9, #64748b)', // light gray to slate
   },
   {
     name: 'Harmonic Dictation',
     path: '/harmonic',
     logo: '/practices_logos/harmonic dictation.png',
     description: 'Write down chord progressions by ear.',
-    background: 'linear-gradient(to bottom right, #e0f2f1, #26c6da)', // light cyan-teal
+    background: 'linear-gradient(to bottom right, #fffaf0, #eab308)', // ivory to rich gold
   },
   {
     name: 'Melodic Dictation',
     path: '/melodic-dictation',
     logo: '/practices_logos/melodic dictation.png',
     description: 'Transcribe melodies played by the system.',
-    background: 'linear-gradient(to bottom right, #fce7f3, #f472b6)', // light pink to magenta
+    background: 'linear-gradient(to bottom right, #fdf4ff, #d946ef)', // pastel violet to fuchsia
   },
 ];
 
+
+
+const chordsForMelodyPractice = {
+  name: 'Chords for Melody',
+  path: '/chords-for-melody',
+  logo: '/practices_logos/chords for harmony.png',
+  description: 'Choose the right chord to match a melody line.',
+  background: 'linear-gradient(to bottom right, #dbeafe, #3b82f6)',
+};
+
+const mainPracticeLinks = practiceLinks.filter(
+  (p) => p.name !== 'Chords for Melody'
+);
+
 export default function UserProfile() {
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
   const username = user?.name || 'Guest';
   const [selectedImage, setSelectedImage] = useState(user?.image_url || '/profiles/mozart profile.png');
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
-
   const [practiceStats, setPracticeStats] = useState({});
-
   const gmail = user?.email || '';
-
 
   useEffect(() => {
     if (!gmail) return;
-
     const fetchStats = async () => {
       const allStats = {};
-      for (const practice of practiceLinks) {
+      for (const practice of [...practiceLinks, chordsForMelodyPractice]) {
         try {
-          const res = await fetch(
-            `http://localhost:5000/api/practice/stats?gmail=${gmail}&practiceName=${encodeURIComponent(practice.name)}`
-          );
+          const res = await fetch(`http://localhost:5000/api/practice/stats?gmail=${gmail}&practiceName=${encodeURIComponent(practice.name)}`);
           const data = await res.json();
           allStats[practice.name] = data;
         } catch (err) {
@@ -138,7 +141,6 @@ export default function UserProfile() {
       }
       setPracticeStats(allStats);
     };
-
     fetchStats();
   }, [gmail]);
 
@@ -191,17 +193,14 @@ export default function UserProfile() {
       <div className="user-profile-fixed-header">
         <Navbar />
         <div className="user-profile-banner"></div>
-
         <div className="user-profile-subnavbar">
           <button onClick={() => scrollToSection('practices')}>My Practices</button>
           <button onClick={() => scrollToSection('courses')}>My Courses</button>
           <button onClick={() => scrollToSection('articles')}>My Articles</button>
         </div>
-
         <div className="user-profile-image-wrapper">
           <img src={selectedImage} alt="User Avatar" className="user-profile-image" />
         </div>
-
         <div
           className="user-profile-plus-button"
           onMouseEnter={() => setShowDropdown(true)}
@@ -212,11 +211,7 @@ export default function UserProfile() {
             <div className="user-profile-dropdown">
               <div className="user-profile-option upload-option">
                 <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-                  <img
-                    src={uploadedImage || '/icons/upload-icon.png'}
-                    alt="Upload"
-                    style={{ width: '36px', height: '36px', borderRadius: '50%' }}
-                  />
+                  <img src={uploadedImage || '/icons/upload-icon.png'} alt="Upload" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
                   <span>Upload Image</span>
                   <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
                 </label>
@@ -238,29 +233,50 @@ export default function UserProfile() {
         <section id="practices" className="user-profile-section">
           <h3>My Practices</h3>
           <div className="user-profile-practice-list">
-            {practiceLinks.map((p) => (
+            {mainPracticeLinks.map((p) => (
               <div className="user-practice-item" key={p.path}>
-<div className="practice-logo-wrapper" style={{ background: p.background }}>
-  <img src={p.logo} alt={p.name} className="practice-logo-img" />
-</div>
+                <div className="practice-logo-wrapper" style={{ background: p.background }}>
+                  <img src={p.logo} alt={p.name} className="practice-logo-img" />
+                </div>
                 <div className="practice-info">
-  <h4>{p.name}</h4>
-  <p>{p.description}</p>
-  <div className="practice-stats">
-  <span>
-    🎯 Highest Score: {practiceStats[p.name]?.highestScore || 0} (Level {practiceStats[p.name]?.highestLevel || 0})
-  </span>
-  <span>
-    🕓 Last Score: {practiceStats[p.name]?.lastScore || 0} (Level {practiceStats[p.name]?.lastLevel || 0})
-  </span>
-</div>
-</div>
+                  <h4>{p.name}</h4>
+                  <p>{p.description}</p>
+                  <div className="practice-stats">
+                    <span>🎯 Highest Score: {practiceStats[p.name]?.highestScore || 0} (Level {practiceStats[p.name]?.highestLevel || 0})</span>
+                    <span>🕓 Last Score: {practiceStats[p.name]?.lastScore || 0} (Level {practiceStats[p.name]?.lastLevel || 0})</span>
+                  </div>
+                </div>
                 <div className="practice-actions">
                   <a className="practice-play-btn" href={p.path}>Play</a>
-                  <button className="practice-performance-btn">Practice Log</button>
+                  <button className="practice-performance-btn" onClick={() => navigate(`/practice-log/${encodeURIComponent(p.name)}`)}>
+                    Practice Log
+                  </button>
                 </div>
               </div>
             ))}
+          </div>
+
+          <h3 style={{ marginTop: '40px' }}>Chords for Melody</h3>
+          <div className="user-profile-practice-list">
+            <div className="user-practice-item" key={chordsForMelodyPractice.path}>
+              <div className="practice-logo-wrapper" style={{ background: chordsForMelodyPractice.background }}>
+                <img src={chordsForMelodyPractice.logo} alt={chordsForMelodyPractice.name} className="practice-logo-img" />
+              </div>
+              <div className="practice-info">
+                <h4>{chordsForMelodyPractice.name}</h4>
+                <p>{chordsForMelodyPractice.description}</p>
+                <div className="practice-stats">
+                  <span>🎯 Highest Score: {practiceStats[chordsForMelodyPractice.name]?.highestScore || 0} (Level {practiceStats[chordsForMelodyPractice.name]?.highestLevel || 0})</span>
+                  <span>🕓 Last Score: {practiceStats[chordsForMelodyPractice.name]?.lastScore || 0} (Level {practiceStats[chordsForMelodyPractice.name]?.lastLevel || 0})</span>
+                </div>
+              </div>
+              <div className="practice-actions">
+                <a className="practice-play-btn" href={chordsForMelodyPractice.path}>Play</a>
+                <button className="practice-performance-btn" onClick={() => navigate(`/practice-log/${encodeURIComponent(chordsForMelodyPractice.name)}`)}>
+                  Practice Log
+                </button>
+              </div>
+            </div>
           </div>
         </section>
 

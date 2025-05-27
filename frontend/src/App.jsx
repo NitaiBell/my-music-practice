@@ -10,6 +10,8 @@ import CoursePage from './pages/course/CoursePage.jsx';
 import FullViewPage from './pages/course/FullViewPage.jsx';
 import UserProfile from './pages/userprofile/UserProfile.jsx';
 import PracticesShowcase from './pages/practices/PracticesShowcase.jsx';
+import PracticeLog from './pages/practicelog/PracticeLog.jsx';
+
 
 // Auth Pages
 import SignIn from './pages/auth/SignIn.jsx';
@@ -54,6 +56,8 @@ export default function App() {
         <Route path="/fullview/:courseId" element={<FullViewPage />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/practices-showcase" element={<PracticesShowcase />} />
+        <Route path="/practice-log/:practiceName" element={<PracticeLog />} />
+
 
         {/* Auth Pages */}
         <Route path="/signin" element={<SignIn />} />
