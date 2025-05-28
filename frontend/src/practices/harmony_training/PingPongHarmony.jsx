@@ -142,6 +142,7 @@ const PingPongHarmony = () => {
 
   const startGame = () => {
     if (!selectedChords.map(normalizeChord).includes(tonic)) return;
+  
     const middle = [];
     let prev = tonic;
     let wasSpecial = isReallySpecial(chordFunctionMap[tonic]);
@@ -151,6 +152,7 @@ const PingPongHarmony = () => {
       middle.push(next);
       prev = next;
     }
+  
     const seq = [tonic, ...middle, tonic];
     setSequence(seq);
     setCurrent(0);
@@ -158,6 +160,10 @@ const PingPongHarmony = () => {
     setWrong(0);
     setTries(0);
     totalAnswerTimeRef.current = 0;
+  
+    // ✅ Reset log state on game start
+    hasLoggedRef.current = false;
+  
     setPlaying(true);
     setCanAnswer(false);
     setMistake(false);
@@ -165,9 +171,9 @@ const PingPongHarmony = () => {
     setRetry(false);
     setMsg('');
     setPopup(false);
+  
     setTimeout(() => playNextChord(seq[0]), 300);
   };
-
   const playNextChord = (c) => {
     playChord(c);
     setCanAnswer(true);
@@ -319,62 +325,63 @@ const PingPongHarmony = () => {
           </div>
         </div>
     
-        {/* ── End-of-game popup ── */}
-        {popup && (() => {
-          if (rounds >= 5 && !hasLoggedRef.current) {
-            const storedUser = JSON.parse(localStorage.getItem('user'));
-            const gmail = storedUser?.email || null;
-    
-            if (gmail) {
-              logPracticeResult({
-                gmail,
-                practiceName: PRACTICE_NAMES.PINGPONG_HARMONY,
-                correct,
-                wrong,
-                tries,
-                level,
-                rank: score,
-                maxRank: max,
-                rightScore,
-                tryScore,
-                speedScore,
-                avgTimePerAnswer,
-              });
-            }
-    
-            hasLoggedRef.current = true;
-          }
-    
-          return (
-            <div className="harmonygame-popup-overlay">
-              <div className="harmonygame-popup">
-                <h2>🎉 Game Over!</h2>
-                <p>You completed the harmony practice!</p>
-                <p><strong>Correct:</strong> {correct}</p>
-                <p><strong>Wrong:</strong> {wrong}</p>
-                <p><strong>Total Tries:</strong> {tries}</p>
-                {rounds >= 5 ? (
-                  <>
-                    <p><strong>Level:</strong> {level}</p>
-                    <p><strong>Rank:</strong> {score} / {max}</p>
-                    <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
-                      <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
-                      <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
-                      <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
-                    </ul>
-                    <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
-                  </>
-                ) : (
-                  <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
-                )}
-                <div className="harmonygame-popup-buttons">
-                  <button onClick={startGame}>🔁 Restart</button>
-                  <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
-                </div>
-              </div>
-            </div>
-          );
-        })()}
+{/* ── End-of-game popup ── */}
+{popup && (() => {
+  if (rounds >= 5 && !hasLoggedRef.current) {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const gmail = storedUser?.email || null;
+
+    if (gmail) {
+      logPracticeResult({
+        gmail,
+        practiceName: PRACTICE_NAMES.PINGPONG_HARMONY,
+        correct,
+        wrong,
+        tries,
+        level,
+        rank: score,
+        maxRank: max,
+        rightScore,
+        tryScore,
+        speedScore,
+        avgTimePerAnswer,
+      });
+    }
+
+    hasLoggedRef.current = true;
+  }
+
+  return (
+    <div className="harmonygame-popup-overlay">
+      <div className="harmonygame-popup">
+        <h2>🎉 Game Over!</h2>
+        <p>You completed the harmony practice!</p>
+        <p><strong>Correct:</strong> {correct}</p>
+        <p><strong>Wrong:</strong> {wrong}</p>
+        <p><strong>Total Tries:</strong> {tries}</p>
+        {rounds >= 5 ? (
+          <>
+            <p><strong>Level:</strong> {level}</p>
+            <p><strong>Rank:</strong> {score} / {max}</p>
+            <ul style={{ lineHeight: '1.6', listStyleType: 'none', paddingLeft: 0 }}>
+              <li>✅ Right/Wrong: <strong>{rightScore}</strong> / 75</li>
+              <li>🔁 Tries: <strong>{tryScore}</strong> / 15</li>
+              <li>⚡ Speed: <strong>{speedScore}</strong> / 10</li>
+            </ul>
+            <p><strong>Avg Time per Answer:</strong> {avgTimePerAnswer}s</p>
+          </>
+        ) : (
+          <p><strong>Rank:</strong> Not calculated (minimum 5 rounds required)</p>
+        )}
+        <div className="harmonygame-popup-buttons">
+          <button onClick={startGame}>🔁 Restart</button>
+          <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
+        </div>
+      </div>
+    </div>
+  );
+})()}
+
       </div>
     );
   };

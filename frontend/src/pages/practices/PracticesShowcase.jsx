@@ -15,7 +15,7 @@ export default function PracticesShowcase() {
       description: 'Identify chord types like maj7, dim, or sus by ear.',
       logo: '/practices_logos/chord type practice.png',
       link: '/chord-type',
-      background: 'linear-gradient(to bottom right, #fffbe6, #facc15)', // pale yellow to gold
+      background: 'linear-gradient(to bottom right, #e6ffe6, #38b000)', // bright → dark
     },
     {
       number: 2,
@@ -23,7 +23,7 @@ export default function PracticesShowcase() {
       description: 'Match scale degrees with notes in different keys.',
       logo: '/practices_logos/degree notice training.png',
       link: '/degree-notice',
-      background: 'linear-gradient(to bottom right, #f3e8ff, #a855f7)', // lavender to vibrant purple
+      background: 'linear-gradient(to bottom right, #38b000, #d1fae5)', // dark → bright
     },
     {
       number: 3,
@@ -31,7 +31,7 @@ export default function PracticesShowcase() {
       description: 'Spot the difference between two musical examples.',
       logo: '/practices_logos/spot the difference.png',
       link: '/difference',
-      background: 'linear-gradient(to bottom right, #ffe4e6, #f472b6)', // pale pink to rose
+      background: 'linear-gradient(to bottom right, #e6fff7, #166534)', // bright → dark green
     },
     {
       number: 4,
@@ -39,7 +39,7 @@ export default function PracticesShowcase() {
       description: 'Practice functional harmony recognition in real time.',
       logo: '/practices_logos/ping pong harmony.png',
       link: '/harmony',
-      background: 'linear-gradient(to bottom right, #e8f5e9, #43a047)', // light mint to green
+      background: 'linear-gradient(to bottom right, #166534, #ccfbf1)', // dark → bright
     },
     {
       number: 5,
@@ -47,7 +47,7 @@ export default function PracticesShowcase() {
       description: 'Identify musical intervals between two notes.',
       logo: '/practices_logos/interval trainer.png',
       link: '/interval-practice',
-      background: 'linear-gradient(to bottom right, #e0f7fa, #0288d1)', // cyan to ocean blue
+      background: 'linear-gradient(to bottom right,rgb(156, 248, 182), #1f7d53)', // bright → deep green
     },
     {
       number: 6,
@@ -55,7 +55,7 @@ export default function PracticesShowcase() {
       description: 'Play back note sequences shown on screen.',
       logo: '/practices_logos/piano notes.png',
       link: '/learn-piano',
-      background: 'linear-gradient(to bottom right, #fef3c7, #fb923c)', // warm yellow to orange
+      background: 'linear-gradient(to bottom right, #1f7d53, rgb(156, 248, 182))', // dark → bright
     },
     {
       number: 7,
@@ -63,7 +63,7 @@ export default function PracticesShowcase() {
       description: 'Identify chords visually and aurally on the keyboard.',
       logo: '/practices_logos/piano chords.png',
       link: '/learn-piano-chords',
-      background: 'linear-gradient(to bottom right, #e0f2f1, #26c6da)', // turquoise gradient
+      background: 'linear-gradient(to bottom right, #e6ffe6, #3f6212)', // bright → dark olive
     },
     {
       number: 8,
@@ -71,7 +71,7 @@ export default function PracticesShowcase() {
       description: 'Play back melodies using buttons or the keyboard.',
       logo: '/practices_logos/ping pong melody.png',
       link: '/real-melody',
-      background: 'linear-gradient(to bottom right, #fce7f3, #f43f5e)', // soft pink to coral red
+      background: 'linear-gradient(to bottom right, #3f6212, #f0fff4)', // dark → bright
     },
     {
       number: 9,
@@ -79,7 +79,7 @@ export default function PracticesShowcase() {
       description: 'Listen to two notes and choose the higher one.',
       logo: '/practices_logos/which is higher.png',
       link: '/which-higher-note',
-      background: 'linear-gradient(to bottom right, #f1f5f9, #64748b)', // light gray to slate
+      background: 'linear-gradient(to bottom right, #e6ffe6, #2e7d32)', // bright → deep green
     },
     {
       number: 10,
@@ -87,7 +87,7 @@ export default function PracticesShowcase() {
       description: 'Write down chord progressions by ear.',
       logo: '/practices_logos/harmonic dictation.png',
       link: '/harmonic',
-      background: 'linear-gradient(to bottom right, #fffaf0, #eab308)', // ivory to rich gold
+      background: 'linear-gradient(to bottom right, #2e7d32, #ecfdf5)', // dark → bright
     },
     {
       number: 11,
@@ -95,7 +95,7 @@ export default function PracticesShowcase() {
       description: 'Transcribe melodies played by the system.',
       logo: '/practices_logos/melodic dictation.png',
       link: '/melodic-dictation',
-      background: 'linear-gradient(to bottom right, #fdf4ff, #d946ef)', // pastel violet to fuchsia
+      background: 'linear-gradient(to bottom right, #e6ffe6, #006400)', // bright → dark forest green
     },
     {
       number: 12,
@@ -103,9 +103,13 @@ export default function PracticesShowcase() {
       description: 'Listen to a melody and choose the matching chord that fits harmonically.',
       logo: '/practices_logos/chords for harmony.png',
       link: '/chords-for-melody',
-      background: 'linear-gradient(to bottom right, #dbeafe, #3b82f6)', // soft to strong blue
+      background: 'linear-gradient(to bottom right, #006400, #e6ffe6)', // dark → bright
     },
   ];
+  
+
+  
+
   
  
   

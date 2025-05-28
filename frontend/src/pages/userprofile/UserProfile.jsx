@@ -28,79 +28,80 @@ const practiceLinks = [
     path: '/chord-type',
     logo: '/practices_logos/chord type practice.png',
     description: 'Identify chord types like maj7, dim, or sus by ear.',
-    background: 'linear-gradient(to bottom right, #fffbe6, #facc15)', // pale yellow to gold
+    background: 'linear-gradient(to bottom right, #e6ffe6, #38b000)', // bright → forest green
   },
   {
     name: 'Degree Notice Training',
     path: '/degree-notice',
     logo: '/practices_logos/degree notice training.png',
     description: 'Match scale degrees with notes in different keys.',
-    background: 'linear-gradient(to bottom right, #f3e8ff, #a855f7)', // lavender to vibrant purple
+    background: 'linear-gradient(to bottom right, #38b000, #d1fae5)', // dark → light mint
   },
   {
     name: 'Difference Practice',
     path: '/difference',
     logo: '/practices_logos/spot the difference.png',
     description: 'Spot the difference between two musical examples.',
-    background: 'linear-gradient(to bottom right, #ffe4e6, #f472b6)', // pale pink to rose
+    background: 'linear-gradient(to bottom right, #e6fff7, #166534)', // mint → deep green
   },
   {
     name: 'Harmony Training',
     path: '/harmony',
     logo: '/practices_logos/ping pong harmony.png',
     description: 'Practice functional harmony recognition in real time.',
-    background: 'linear-gradient(to bottom right, #e8f5e9, #43a047)', // light mint to green
+    background: 'linear-gradient(to bottom right, #166534, #ccfbf1)', // dark → pale green
   },
   {
     name: 'Interval Training',
     path: '/interval-practice',
     logo: '/practices_logos/interval trainer.png',
     description: 'Identify musical intervals between two notes.',
-    background: 'linear-gradient(to bottom right, #e0f7fa, #0288d1)', // cyan to ocean blue
+    background: 'linear-gradient(to bottom right, #e0ffe9, #1f7d53)', // bright → jungle green
   },
   {
     name: 'Learn Piano',
     path: '/learn-piano',
     logo: '/practices_logos/piano notes.png',
     description: 'Play back note sequences shown on screen.',
-    background: 'linear-gradient(to bottom right, #fef3c7, #fb923c)', // warm yellow to orange
+    background: 'linear-gradient(to bottom right, #1f7d53, #ebfbee)', // dark → soft mint
   },
   {
     name: 'Learn Piano Chords',
     path: '/learn-piano-chords',
     logo: '/practices_logos/piano chords.png',
     description: 'Identify chords visually and aurally on the keyboard.',
-    background: 'linear-gradient(to bottom right, #e0f2f1, #26c6da)', // turquoise gradient
+    background: 'linear-gradient(to bottom right, #e6ffe6, #3f6212)', // bright → olive green
   },
   {
     name: 'Real Melody Training',
     path: '/real-melody',
     logo: '/practices_logos/ping pong melody.png',
     description: 'Play back melodies using buttons or the keyboard.',
-    background: 'linear-gradient(to bottom right, #fce7f3, #f43f5e)', // soft pink to coral red
+    background: 'linear-gradient(to bottom right, #3f6212, #f0fff4)', // dark → pale green
   },
   {
     name: 'Which Higher Note',
     path: '/which-higher-note',
     logo: '/practices_logos/which is higher.png',
     description: 'Listen to two notes and choose the higher one.',
-    background: 'linear-gradient(to bottom right, #f1f5f9, #64748b)', // light gray to slate
+    background: 'linear-gradient(to bottom right, #e6ffe6, #2e7d32)', // bright → green
   },
   {
     name: 'Harmonic Dictation',
     path: '/harmonic',
     logo: '/practices_logos/harmonic dictation.png',
     description: 'Write down chord progressions by ear.',
-    background: 'linear-gradient(to bottom right, #fffaf0, #eab308)', // ivory to rich gold
+    background: 'linear-gradient(to bottom right, #2e7d32, #ecfdf5)', // dark → mint
   },
   {
     name: 'Melodic Dictation',
     path: '/melodic-dictation',
     logo: '/practices_logos/melodic dictation.png',
     description: 'Transcribe melodies played by the system.',
-    background: 'linear-gradient(to bottom right, #fdf4ff, #d946ef)', // pastel violet to fuchsia
+    background: 'linear-gradient(to bottom right, #e6ffe6, #006400)', // bright → forest green
   },
 ];
+
 
 
 

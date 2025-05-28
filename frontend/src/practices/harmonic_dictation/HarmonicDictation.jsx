@@ -1,141 +1,134 @@
 /* ──────────────────────────────────────────────────────────────
    HarmonicDictation.jsx  – plays chord on each user answer with instruction message
    ────────────────────────────────────────────────────────────── */
+// HarmonicDictation.jsx – full version with correct backend logging
+import React, { useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './HarmonicDictation.css';
 
-   import React, { useRef, useState } from 'react';
-   import { useLocation, useNavigate } from 'react-router-dom';
-   import './HarmonicDictation.css';
-   
-   import HarmonicDictationKeyboardView from './HarmonicDictationKeyboardView';
-   import { chordNoteMap, scaleChordsMap } from '../harmony_training/HarmonyTrainingData';
-   import { progressionBank } from './ProgressionBank';
-   import { calculateHarmonicDictationRank } from './calculateHarmonicDictationRank';
-   import { logPracticeResult } from '../../../utils/logPracticeResult';
+import HarmonicDictationKeyboardView from './HarmonicDictationKeyboardView';
+import { chordNoteMap, scaleChordsMap } from '../harmony_training/HarmonyTrainingData';
+import { progressionBank } from './ProgressionBank';
+import { calculateHarmonicDictationRank } from './calculateHarmonicDictationRank';
+import { logPracticeResult } from '../../../utils/logPracticeResult';
 import { PRACTICE_NAMES } from '../../../utils/constants';
-   
-   const NOTE_TO_SEMI = { C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11 };
-   const SEMI_TO_NOTE = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-   const fifthUp = (root) => SEMI_TO_NOTE[(NOTE_TO_SEMI[root] + 7) % 12];
-   
-   const normalizeChord = (c) => c.trim().replace(/\u266D/g, 'b').replace(/\u266F/g, '#');
-   
-   const degreeToChord = (deg, scale) => {
-     const m = /^V7\/([ivIV]+)$/.exec(deg);
-     if (m) {
-       const tgt = degreeToChord(m[1], scale);
-       const root = /^([A-G](?:#|b)?)/.exec(tgt)?.[1];
-       return root ? `${fifthUp(root)}7` : deg;
-     }
-     const diatonic = scaleChordsMap[scale] || [];
-     const idx = { I:0, II:1, III:2, IV:3, V:4, VI:5, VII:6 }[deg.replace(/\u00B0/g, '').toUpperCase()];
-     return idx !== undefined ? diatonic[idx] : deg;
-   };
-   
-   const getAllPlayableProgressions = (scale, selectedChords) => {
-     if (!selectedChords.length) return [];
-     const sel = new Set(selectedChords.map(normalizeChord));
-     const diatonic = new Set(scaleChordsMap[scale].map(normalizeChord));
-     const special = [...sel].filter((c) => !diatonic.has(c));
-   
-     const categories = Object.entries(progressionBank)
-       .map(([key, progs]) => {
-         const set = new Set();
-         progs.forEach((p) => p.forEach((d) => set.add(normalizeChord(degreeToChord(d, scale)))));
-         return { progs, set };
-       })
-       .filter(({ set }) => [...set].every((c) => sel.has(c)));
-   
-     if (!categories.length) return [];
-     let filtered = categories;
-     if (special.length) {
-       filtered = categories.filter(({ set }) => special.every((sp) => set.has(sp)));
-       if (!filtered.length) filtered = categories;
-     }
-     const max = Math.max(...filtered.map((c) => c.set.size));
-     return filtered
-       .filter((c) => c.set.size === max)
-       .flatMap(({ progs }) => progs.map((p) => p.map((d) => degreeToChord(d, scale))));
-   };
-   
-   const playChordSequence = (seq, play, gap = 1000) =>
-     seq.forEach((ch, i) => setTimeout(() => play(ch), gap * i));
-   
-   export default function HarmonicDictation() {
-     const { state } = useLocation();
-     const navigate = useNavigate();
-     const keyboardRef = useRef();
-     const startAnswerTimeRef = useRef(null);
-     const totalAnswerTimeRef = useRef(0);
-   
-     const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
-     const tonic = normalizeChord(selectedScale.replace(/m$/, ''));
-   
-     const [progressions, setProgressions] = useState([]);
-     const [currentRound, setCurrentRound] = useState(0);
-     const [noProgressions, setNoProgressions] = useState(false);
 
-     const [currentStep, setCurrentStep] = useState(0);
-     const [correct, setCorrect] = useState(0);
-     const [wrong, setWrong] = useState(0);
-     const [tries, setTries] = useState(0);
-     const [isPlaying, setIsPlaying] = useState(false);
-     const [canAnswer, setCanAnswer] = useState(false);
-     const [roundMistake, setRoundMistake] = useState(false);
-     const [wrongAlreadyCounted, setWrongAlreadyCounted] = useState(false);
-     const [awaitRetry, setAwaitRetry] = useState(false);
-     const [popup, setPopup] = useState(false);
-     const [flashMap, setFlashMap] = useState({});
-     const [statFlash, setStatFlash] = useState('');
-     const [msg, setMsg] = useState('');
-     const [instruction, setInstruction] = useState('👂 Listen and identify the chords');
-   
-     const playNote = (n) => new Audio(`/clean_cut_notes/${encodeURIComponent(n)}.wav`).play();
-     const playChord = (c) => (chordNoteMap[normalizeChord(c)] || []).forEach(playNote);
-   
-     const flashBtn = (c, type) => {
-       const key = normalizeChord(c);
-       setFlashMap((p) => ({ ...p, [key]: type }));
-       setTimeout(() => setFlashMap((p) => ({ ...p, [key]: null })), 500);
-     };
-   
-     const startGame = () => {
-      const playable = getAllPlayableProgressions(selectedScale, selectedChords);
-    
-      // ⛔ No progressions matched — show popup
-      if (!playable.length) {
-        setIsPlaying(true);            // This enables the popup rendering
-        setNoProgressions(true);      // Triggers the "no progressions" popup
-        return;
-      }
-    
-      // ✅ Reset state and start game
-      const picked = Array.from({ length: rounds }, () =>
-        playable[Math.floor(Math.random() * playable.length)]
-      );
-    
-      setProgressions(picked);
-      setCurrentRound(0);
-      setCurrentStep(0);
-      setCorrect(0);
-      setWrong(0);
-      setTries(0);
-      setRoundMistake(false);
-      setWrongAlreadyCounted(false);
+const NOTE_TO_SEMI = { C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11 };
+const SEMI_TO_NOTE = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const fifthUp = (root) => SEMI_TO_NOTE[(NOTE_TO_SEMI[root] + 7) % 12];
+const normalizeChord = (c) => c.trim().replace(/♭/g, 'b').replace(/♯/g, '#');
+
+const degreeToChord = (deg, scale) => {
+  const m = /^V7\/([ivIV]+)$/.exec(deg);
+  if (m) {
+    const tgt = degreeToChord(m[1], scale);
+    const root = /^([A-G](?:#|b)?)/.exec(tgt)?.[1];
+    return root ? `${fifthUp(root)}7` : deg;
+  }
+  const diatonic = scaleChordsMap[scale] || [];
+  const idx = { I:0, II:1, III:2, IV:3, V:4, VI:5, VII:6 }[deg.replace(/\u00B0/g, '').toUpperCase()];
+  return idx !== undefined ? diatonic[idx] : deg;
+};
+
+const getAllPlayableProgressions = (scale, selectedChords) => {
+  if (!selectedChords.length) return [];
+  const sel = new Set(selectedChords.map(normalizeChord));
+  const diatonic = new Set(scaleChordsMap[scale].map(normalizeChord));
+  const special = [...sel].filter((c) => !diatonic.has(c));
+
+  const categories = Object.entries(progressionBank)
+    .map(([key, progs]) => {
+      const set = new Set();
+      progs.forEach((p) => p.forEach((d) => set.add(normalizeChord(degreeToChord(d, scale)))));
+      return { progs, set };
+    })
+    .filter(({ set }) => [...set].every((c) => sel.has(c)));
+
+  if (!categories.length) return [];
+  let filtered = categories;
+  if (special.length) {
+    filtered = categories.filter(({ set }) => special.every((sp) => set.has(sp)));
+    if (!filtered.length) filtered = categories;
+  }
+  const max = Math.max(...filtered.map((c) => c.set.size));
+  return filtered
+    .filter((c) => c.set.size === max)
+    .flatMap(({ progs }) => progs.map((p) => p.map((d) => degreeToChord(d, scale))));
+};
+
+const playChordSequence = (seq, play, gap = 1000) =>
+  seq.forEach((ch, i) => setTimeout(() => play(ch), gap * i));
+
+export default function HarmonicDictation() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const keyboardRef = useRef();
+  const startAnswerTimeRef = useRef(null);
+  const totalAnswerTimeRef = useRef(0);
+  const hasLoggedRef = useRef(false);
+
+  const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
+  const tonic = normalizeChord(selectedScale.replace(/m$/, ''));
+
+  const [progressions, setProgressions] = useState([]);
+  const [currentRound, setCurrentRound] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  const [wrong, setWrong] = useState(0);
+  const [tries, setTries] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [canAnswer, setCanAnswer] = useState(false);
+  const [roundMistake, setRoundMistake] = useState(false);
+  const [wrongAlreadyCounted, setWrongAlreadyCounted] = useState(false);
+  const [awaitRetry, setAwaitRetry] = useState(false);
+  const [popup, setPopup] = useState(false);
+  const [flashMap, setFlashMap] = useState({});
+  const [statFlash, setStatFlash] = useState('');
+  const [msg, setMsg] = useState('');
+  const [instruction, setInstruction] = useState('👂 Listen and identify the chords');
+  const [noProgressions, setNoProgressions] = useState(false);
+
+  const playNote = (n) => new Audio(`/clean_cut_notes/${encodeURIComponent(n)}.wav`).play();
+  const playChord = (c) => (chordNoteMap[normalizeChord(c)] || []).forEach(playNote);
+  const flashBtn = (c, type) => {
+    const key = normalizeChord(c);
+    setFlashMap((p) => ({ ...p, [key]: type }));
+    setTimeout(() => setFlashMap((p) => ({ ...p, [key]: null })), 500);
+  };
+
+  const startGame = () => {
+    const playable = getAllPlayableProgressions(selectedScale, selectedChords);
+    if (!playable.length) {
       setIsPlaying(true);
-      setCanAnswer(false);
-      setAwaitRetry(false);
-      setMsg('');
-      setInstruction('👂 Listen and identify the chords');
-      setPopup(false);
-      setNoProgressions(false);       // Reset error popup
-      totalAnswerTimeRef.current = 0;
-    
-      playChordSequence(picked[0], playChord);
-      setTimeout(() => {
-        setCanAnswer(true);
-        startAnswerTimeRef.current = performance.now();
-      }, picked[0].length * 1000);
-    };
+      setNoProgressions(true);
+      return;
+    }
+    const picked = Array.from({ length: rounds }, () => playable[Math.floor(Math.random() * playable.length)]);
+
+    setProgressions(picked);
+    setCurrentRound(0);
+    setCurrentStep(0);
+    setCorrect(0);
+    setWrong(0);
+    setTries(0);
+    setRoundMistake(false);
+    setWrongAlreadyCounted(false);
+    setIsPlaying(true);
+    setCanAnswer(false);
+    setAwaitRetry(false);
+    setMsg('');
+    setInstruction('👂 Listen and identify the chords');
+    setPopup(false);
+    setNoProgressions(false);
+    hasLoggedRef.current = false;
+    totalAnswerTimeRef.current = 0;
+
+    playChordSequence(picked[0], playChord);
+    setTimeout(() => {
+      setCanAnswer(true);
+      startAnswerTimeRef.current = performance.now();
+    }, picked[0].length * 1000);
+  };
     
    
      const handleCurrent = () => {
@@ -334,10 +327,10 @@ import { PRACTICE_NAMES } from '../../../utils/constants';
           hasSpecialChords: hasSpecial,
         });
 
-        // 🔁 Save to backend
         const user = JSON.parse(localStorage.getItem('user'));
         const gmail = user?.email || null;
-        if (gmail) {
+
+        if (gmail && !hasLoggedRef.current) {
           logPracticeResult({
             gmail,
             practiceName: PRACTICE_NAMES.HARMONIC_DICTATION,
@@ -353,6 +346,7 @@ import { PRACTICE_NAMES } from '../../../utils/constants';
             avgTimePerAnswer,
             date: new Date().toISOString(),
           });
+          hasLoggedRef.current = true;
         }
 
         return (
@@ -379,6 +373,7 @@ import { PRACTICE_NAMES } from '../../../utils/constants';
     </div>
   </div>
 )}
+
 
     {!progressions.length && isPlaying && (
   <div className="harmony_dictation-popup-overlay">
