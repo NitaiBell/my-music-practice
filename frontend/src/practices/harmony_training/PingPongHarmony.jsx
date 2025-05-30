@@ -376,6 +376,8 @@ const PingPongHarmony = () => {
         <div className="harmonygame-popup-buttons">
           <button onClick={startGame}>🔁 Restart</button>
           <button onClick={() => navigate('/harmony')}>⚙️ Back to Settings</button>
+          <button onClick={() => navigate('/profile')}>Back to Profile</button>
+
         </div>
       </div>
     </div>

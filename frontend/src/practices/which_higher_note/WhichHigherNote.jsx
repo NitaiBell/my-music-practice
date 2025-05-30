@@ -171,6 +171,7 @@ export default function WhichHigherNote() {
             <div className="which_higher-popup-buttons">
               <button onClick={restartGame}>🔁 Restart</button>
               <button onClick={goToSettings}>⚙️ Settings</button>
+              <button onClick={() => navigate('/profile')}>Profile</button>
             </div>
           </div>
         </div>

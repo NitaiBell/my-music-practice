@@ -308,6 +308,8 @@ export default function DegreeNotice() {
             <div className="degree-notice-popup-buttons">
               <button onClick={() => window.location.reload()}>🔁 Restart</button>
               <button onClick={() => navigate('/degree-notice')}>⚙️ Settings</button>
+              <button onClick={() => navigate('/profile')}>Back to Profile</button>
+
             </div>
           </div>
         </div>

@@ -251,6 +251,7 @@ export default function RealMelody() {
             <div className="real-melodygame-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/real-melody')}>⚙️ Settings</button>
+              <button onClick={() => navigate('/profile')}>Back to Profile</button>
             </div>
           </div>
         </div>

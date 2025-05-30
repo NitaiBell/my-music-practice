@@ -11,6 +11,8 @@ import FullViewPage from './pages/course/FullViewPage.jsx';
 import UserProfile from './pages/userprofile/UserProfile.jsx';
 import PracticesShowcase from './pages/practices/PracticesShowcase.jsx';
 import PracticeLog from './pages/practicelog/PracticeLog.jsx';
+import About from './pages/about/About.jsx';
+
 
 
 // Auth Pages
@@ -62,6 +64,10 @@ export default function App() {
         {/* Auth Pages */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+
+
+        <Route path="/about" element={<About />} />
+
 
         {/* Articles */}
         <Route path="/articles" element={<ArticlesList />} />

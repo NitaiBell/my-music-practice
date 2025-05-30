@@ -326,6 +326,7 @@ const ChordTypePractice = () => {
             <div className="chord_type_game-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/chord-type')}>⚙️ Back to Settings</button>
+              <button onClick={() => navigate('/profile')}>Back to Profile</button>
             </div>
           </div>
         </div>

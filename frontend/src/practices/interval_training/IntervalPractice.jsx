@@ -291,6 +291,8 @@ const gmail = storedUser?.email || null; // or use context if preferred
             <div className="interval_practice-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/interval-practice')}>⚙️ Settings</button>
+              <button onClick={() => navigate('/profile')}>Back to Profile</button>
+
             </div>
           </div>
         </div>

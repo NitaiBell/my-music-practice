@@ -1,4 +1,3 @@
-// src/pages/articles/ArticlesList.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { articles } from './articlesData';
@@ -24,6 +23,11 @@ export default function ArticlesList() {
           <div className="articles-card-grid">
             {articles.map((article) => (
               <Link key={article.slug} to={`/articles/${article.slug}`} className="article-card">
+                <img
+                  src="/article_images/pianoplaying.png"
+                  alt={`${article.title} cover`}
+                  className="article-card-image"
+                />
                 <h3>{article.title}</h3>
                 <p>{article.summary}</p>
                 <span className="read-more">Read more →</span>

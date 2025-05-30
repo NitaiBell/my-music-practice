@@ -266,6 +266,8 @@ const LearnPianoChords = () => {
             <div className="learn_piano_chords-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/learn-piano-chords')}>⚙️ Back to Settings</button>
+              <button onClick={() => navigate('/profile')}>Back to Profile</button>
+
             </div>
           </div>
         </div>

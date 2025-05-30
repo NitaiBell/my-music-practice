@@ -256,6 +256,8 @@ export default function LearnPiano() {
             <div className="learn_piano-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/learn-piano')}>⚙️ Settings</button>
+              <button onClick={() => navigate('/profile')}>Back to Profile</button>
+
             </div>
           </div>
         </div>

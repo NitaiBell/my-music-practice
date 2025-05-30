@@ -31,7 +31,7 @@ export default function PracticesShowcase() {
       description: 'Spot the difference between two musical examples.',
       logo: '/practices_logos/spot the difference.png',
       link: '/difference',
-      background: 'linear-gradient(to bottom right, #e6fff7, #166534)', // bright → dark green
+      background: 'linear-gradient(to bottom right, #e6fff7,rgb(19, 197, 158))', // mint → deep green
     },
     {
       number: 4,
@@ -39,7 +39,7 @@ export default function PracticesShowcase() {
       description: 'Practice functional harmony recognition in real time.',
       logo: '/practices_logos/ping pong harmony.png',
       link: '/harmony',
-      background: 'linear-gradient(to bottom right, #166534, #ccfbf1)', // dark → bright
+      background: 'linear-gradient(to bottom right, rgb(19, 197, 158), #ccfbf1)', // dark → pale green
     },
     {
       number: 5,
@@ -95,7 +95,7 @@ export default function PracticesShowcase() {
       description: 'Transcribe melodies played by the system.',
       logo: '/practices_logos/melodic dictation.png',
       link: '/melodic-dictation',
-      background: 'linear-gradient(to bottom right, #e6ffe6, #006400)', // bright → dark forest green
+      background: 'linear-gradient(to bottom right, #e6ffe6,rgb(123, 245, 239))', // bright → dark forest green
     },
     {
       number: 12,
@@ -103,7 +103,7 @@ export default function PracticesShowcase() {
       description: 'Listen to a melody and choose the matching chord that fits harmonically.',
       logo: '/practices_logos/chords for harmony.png',
       link: '/chords-for-melody',
-      background: 'linear-gradient(to bottom right, #006400, #e6ffe6)', // dark → bright
+      background: 'linear-gradient(to bottom right, rgb(123, 245, 239), #e6ffe6)', // dark → bright
     },
   ];
   

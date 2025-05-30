@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import React from 'react';
 import './Navbar.css';
 
@@ -13,6 +12,7 @@ export default function Navbar() {
           <a href="/practices-showcase">Practices</a>
           <a href="/course/1">Courses</a>
           <a href="/articles">Articles</a>
+          <a href="/about">About</a>
           <a href="/signin" className="navbar-signin-button">Sign In</a>
         </div>
 

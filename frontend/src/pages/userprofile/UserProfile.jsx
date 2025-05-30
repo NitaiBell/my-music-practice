@@ -42,14 +42,14 @@ const practiceLinks = [
     path: '/difference',
     logo: '/practices_logos/spot the difference.png',
     description: 'Spot the difference between two musical examples.',
-    background: 'linear-gradient(to bottom right, #e6fff7, #166534)', // mint → deep green
+    background: 'linear-gradient(to bottom right, #e6fff7,rgb(19, 197, 158))', // mint → deep green
   },
   {
     name: 'Harmony Training',
     path: '/harmony',
     logo: '/practices_logos/ping pong harmony.png',
     description: 'Practice functional harmony recognition in real time.',
-    background: 'linear-gradient(to bottom right, #166534, #ccfbf1)', // dark → pale green
+    background: 'linear-gradient(to bottom right, rgb(19, 197, 158), #ccfbf1)', // dark → pale green
   },
   {
     name: 'Interval Training',

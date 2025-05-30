@@ -369,6 +369,8 @@ export default function HarmonicDictation() {
       <div className="harmony_dictation-popup-buttons">
         <button onClick={startGame}>🔁 Restart</button>
         <button onClick={() => navigate('/harmonic')}>⚙️ Back to Settings</button>
+        <button onClick={() => navigate('/profile')}>Back to Profile</button>
+
       </div>
     </div>
   </div>
@@ -384,6 +386,7 @@ export default function HarmonicDictation() {
       <div className="harmony_dictation-popup-buttons">
         <button onClick={() => navigate('/harmonic')}>⚙️ Back to Settings</button>
         <button onClick={() => navigate('/harmonic/progressions')}>📖 View Valid Progressions</button>
+        
       </div>
     </div>
   </div>
