@@ -1,0 +1,26 @@
+.instruction-practice-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom right, #f0fff4, #e6ffe6);
+  }
+  
+  .instruction-practice-content {
+    flex-grow: 1;
+    padding: 60px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.15rem;
+  }
+  
+  .instruction-practice-content h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .instruction-practice-content p {
+    line-height: 1.6;
+    font-size: 1.1rem;
+  }
+  

@@ -123,3 +123,19 @@
     margin-top: 40px;
   }
   
+
+  .log-sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    font-size: 1rem;
+  }
+  
+  .log-sort-select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  

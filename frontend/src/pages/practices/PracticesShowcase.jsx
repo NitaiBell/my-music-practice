@@ -162,10 +162,15 @@ export default function PracticesShowcase() {
                 <img src={section.logo} alt="Practice Logo" />
               </div>
               <div className="practice-description">
-                <h2>{section.title}</h2>
-                <p>{section.description}</p>
-                <button onClick={() => navigate(section.link)}>Start Practice</button>
-              </div>
+  <h2>{section.title}</h2>
+  <p>{section.description}</p>
+  <div className="practice-button-group">
+    <button onClick={() => navigate(section.link)}>Start Practice</button>
+    <button onClick={() => navigate(`/instructions${section.link}`)}>
+      Instructions
+    </button>
+  </div>
+</div>
             </div>
           </div>
         ))}

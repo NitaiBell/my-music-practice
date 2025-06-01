@@ -1,4 +1,3 @@
-// src/pages/practice/PracticeLog.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
@@ -10,6 +9,7 @@ export default function PracticeLog() {
   const navigate = useNavigate();
   const [logEntries, setLogEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('date'); // default sort
   const user = JSON.parse(localStorage.getItem('user'));
   const gmail = user?.email || '';
 
@@ -54,21 +54,31 @@ export default function PracticeLog() {
     fetchLog();
   }, [gmail, practiceName]);
 
+  const sortedEntries = logEntries.slice().sort((a, b) => {
+    if (sortBy === 'date') {
+      return new Date(b.date) - new Date(a.date);
+    } else if (sortBy === 'rank') {
+      return b.rank - a.rank;
+    } else if (sortBy === 'avgTime') {
+      return (a.avg_time_per_answer || Infinity) - (b.avg_time_per_answer || Infinity);
+    } else if (sortBy === 'correct') {
+      return b.correct - a.correct;
+    }
+    return 0;
+  });
+
   return (
     <div className="practice-log-wrapper">
-      {/* ✅ Fixed Navbar */}
       <div className="practice-log-fixed-navbar">
         <Navbar />
       </div>
 
-      {/* 🔄 Scrollable Content */}
       <div className="practice-log-scroll-container">
-        <div style={{ height: '60px' }} /> {/* Spacer below navbar */}
+        <div style={{ height: '60px' }} />
 
         <div className="practice-log-content">
           <h1 className="practice-log-title">{practiceName} – Practice Log</h1>
 
-          {/* 🎯 Top Action Buttons */}
           <div className="log-actions-top">
             <button className="log-button" onClick={() => navigate('/profile')}>
               ← Back to Profile
@@ -78,33 +88,46 @@ export default function PracticeLog() {
             </a>
           </div>
 
+          {/* 🔽 Sort Options */}
+          <div className="log-sort-controls">
+            <label htmlFor="sort-select">Sort by:</label>
+            <select
+              id="sort-select"
+              className="log-sort-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="date">📅 Date (Newest)</option>
+              <option value="rank">🏆 Rank (Highest)</option>
+              <option value="avgTime">⚡ Avg Time (Fastest)</option>
+              <option value="correct">✅ Correct (Most)</option>
+            </select>
+          </div>
+
           {/* 📜 Log Entries */}
           {loading ? (
             <p className="loading-text">Loading...</p>
-          ) : logEntries.length === 0 ? (
+          ) : sortedEntries.length === 0 ? (
             <p className="empty-text">No practice history found.</p>
           ) : (
-<ul className="log-entry-list">
-  {logEntries
-    .slice()
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .map((entry, i, sorted) => (
-      <li key={i} className="log-entry">
-        <div className="log-entry-header">
-          <span className="entry-number">#{sorted.length - i}</span>
-          <span className="entry-date">{new Date(entry.date).toLocaleString()}</span>
-        </div>
-        <div className="log-entry-body">
-          <div className="log-entry-row">✅ Correct: <strong>{entry.correct}</strong></div>
-          <div className="log-entry-row">❌ Wrong: <strong>{entry.wrong}</strong></div>
-          <div className="log-entry-row">🔁 Tries: <strong>{entry.tries}</strong></div>
-          <div className="log-entry-row">🎯 Level: <strong>{entry.level}</strong></div>
-          <div className="log-entry-row">🏆 Rank: <strong>{entry.rank}</strong> / {entry.max_rank}</div>
-          <div className="log-entry-row">⚡ Avg Time: <strong>{entry.avg_time_per_answer?.toFixed(2)}s</strong></div>
-        </div>
-      </li>
-    ))}
-</ul>
+            <ul className="log-entry-list">
+              {sortedEntries.map((entry, i) => (
+                <li key={i} className="log-entry">
+                  <div className="log-entry-header">
+                    <span className="entry-number">#{sortedEntries.length - i}</span>
+                    <span className="entry-date">{new Date(entry.date).toLocaleString()}</span>
+                  </div>
+                  <div className="log-entry-body">
+                    <div className="log-entry-row">✅ Correct: <strong>{entry.correct}</strong></div>
+                    <div className="log-entry-row">❌ Wrong: <strong>{entry.wrong}</strong></div>
+                    <div className="log-entry-row">🔁 Tries: <strong>{entry.tries}</strong></div>
+                    <div className="log-entry-row">🎯 Level: <strong>{entry.level}</strong></div>
+                    <div className="log-entry-row">🏆 Rank: <strong>{entry.rank}</strong> / {entry.max_rank}</div>
+                    <div className="log-entry-row">⚡ Avg Time: <strong>{entry.avg_time_per_answer?.toFixed(2)}s</strong></div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
 
