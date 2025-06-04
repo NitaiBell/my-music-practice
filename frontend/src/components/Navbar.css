@@ -1,74 +1,154 @@
+/* ─── Base Styles ───────────────────────────────────────────────────── */
 .user-profile-navbar {
-    height: 60px;
-    background: linear-gradient(to right, #34d399, #08714e);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30px;
-    z-index: 1001;
+  background: linear-gradient(to right, #34d399, #08714e);
+  z-index: 1001;
+  padding: 0 30px;
+  position: relative;
+}
+
+.navbar-header {
+  height: 60px;
+  display: flex;
+  justify-content: space-between; /* ✅ pushes logo left, hamburger right */
+  align-items: center;
+  padding: 0 16px;                /* ✅ add space inside the navbar */
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.navbar-hamburger {
+  display: none;
+  font-size: 1.8rem;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 6px 10px;
+  line-height: 1;
+  margin: 0;                /* ❌ remove margin-top */
+}
+
+
+/* Desktop layout */
+.navbar-links-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navbar-links a:hover {
+  color: #c7f9cc;
+}
+
+.navbar-signin-button {
+  background-color: #10b981;
+  color: white;
+  padding: 8px 14px;
+  margin-left: 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.navbar-signin-button:hover {
+  background-color: #059669;
+}
+
+.navbar-profile {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-profile-link {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 8px 12px;
+  border: 2px solid #10b981;
+  border-radius: 6px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar-profile-link:hover {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+/* ─── Mobile Styles ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar-hamburger {
+    display: block;
   }
-  
-  .navbar-logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffffff;
-  }
-  
-  .navbar-links a {
-    margin-left: 20px;
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: 500;
-    transition: color 0.2s ease;
-  }
-  
-  .navbar-links a:hover {
-    color: #c7f9cc;
-  }
-  
-  .navbar-signin-button {
-    background-color: #10b981;
-    color: white;
-    padding: 8px 14px;
-    margin-left: 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s ease;
-  }
-  
-  .navbar-signin-button:hover {
-    background-color: #059669;
-  }
-  
 
   .navbar-links-group {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #065f46;
+    padding: 10px 0;
+    border-top: 1px solid #10b981;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .navbar-links-group.open {
     display: flex;
-    align-items: center;
-    gap: 40px; /* space between main links and profile */
   }
-  
-  /* Already exists */
+
+  .navbar-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 0;
+  }
+
   .navbar-links a {
-    margin-left: 20px;
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: 500;
-    transition: color 0.2s ease;
+    padding: 12px 20px;
+    margin: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
+  .navbar-signin-button {
+    margin: 10px 20px;
+    padding: 10px;
+  }
+
   .navbar-profile-link {
-    color: #ffffff;
-    font-weight: bold;
-    text-decoration: none;
-    padding: 8px 12px;
-    border: 2px solid #10b981;
-    border-radius: 6px;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
-  
-  .navbar-profile-link:hover {
+    width: 100%;
+    text-align: center;
+    padding: 12px 20px;
+    margin: 0;
     background-color: #10b981;
+    border: none;
+    border-radius: 0;
+    font-weight: bold;
+    color: #ffffff;
+    transition: background 0.3s ease;
+  }
+
+  .navbar-profile-link:hover {
+    background-color: #059669;
     color: #ffffff;
   }
-  
+}

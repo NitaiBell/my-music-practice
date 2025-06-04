@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Navbar.css';
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="user-profile-navbar">
-      <div className="navbar-logo">MyMusic</div>
+      <div className="navbar-header">
+        <div className="navbar-logo">MyMusic</div>
+        <div
+          className="navbar-hamburger"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          ☰
+        </div>
+      </div>
 
-      <div className="navbar-links-group">
+      <div className={`navbar-links-group ${isMenuOpen ? 'open' : ''}`}>
         <div className="navbar-links">
           <a href="/">Home</a>
           <a href="/practices-showcase">Practices</a>
@@ -15,7 +25,6 @@ export default function Navbar() {
           <a href="/about">About</a>
           <a href="/signin" className="navbar-signin-button">Sign In</a>
         </div>
-
         <div className="navbar-profile">
           <a href="/profile" className="navbar-profile-link">Profile</a>
         </div>

@@ -340,3 +340,89 @@
   flex-shrink: 0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
+
+/* ─── Responsive: Mobile & Portrait Tablets ───────────── */
+@media (max-width: 768px) {
+  .user-profile-content {
+    padding: 20px;
+    padding-left: 20px;
+    margin-top: 400px; /* slightly more room for the image */
+  }
+
+  .user-profile-image-wrapper {
+    top: 120px; /* ⬅️ moved slightly lower */
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    z-index: 900; /* ⬅️ LOWER than navbar (which is 1000+) */
+  }
+
+  .user-profile-plus-button {
+    top: calc(120px + 100px * 0.7); /* match image new top */
+    left: calc(20px + 100px * 0.7);
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    z-index: 900; /* consistent with image */
+  }
+
+  .user-profile-subnavbar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .user-profile-welcome {
+    font-size: 1.8rem;
+  }
+
+  .user-practice-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .practice-actions {
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .practice-logo-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .practice-logo-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .practice-info h4 {
+    font-size: 1rem;
+  }
+
+  .practice-info p {
+    font-size: 0.85rem;
+  }
+
+  .practice-stats {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+  }
+
+  .user-profile-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .user-profile-card {
+    font-size: 1rem;
+  }
+
+  .user-profile-section h3 {
+    font-size: 1.5rem;
+  }
+}
