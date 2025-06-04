@@ -1,35 +1,154 @@
-/* ──────────────────────────────────────────────────────────────
-   HarmonicDictation.jsx  – plays chord on each user answer with instruction message
-   ────────────────────────────────────────────────────────────── */
-// HarmonicDictation.jsx – full version with correct backend logging
 import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './HarmonicDictation.css';
 
 import HarmonicDictationKeyboardView from './HarmonicDictationKeyboardView';
-import { chordNoteMap, scaleChordsMap } from '../harmony_training/HarmonyTrainingData';
+import {
+  chordNoteMap,
+  scaleChordsMap,
+  chordFunctionsByScale,   // ← NEW
+} from '../harmony_training/HarmonyTrainingData';
 import { progressionBank } from './ProgressionBank';
 import { calculateHarmonicDictationRank } from './calculateHarmonicDictationRank';
 import { logPracticeResult } from '../../../utils/logPracticeResult';
 import { PRACTICE_NAMES } from '../../../utils/constants';
 
-const NOTE_TO_SEMI = { C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11 };
-const SEMI_TO_NOTE = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+/* ─── Pitch ↔︎ semitone helpers ────────────────────────────── */
+const NOTE_TO_SEMI = {
+  C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3,
+  E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8,
+  Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11,
+};
+const SEMI_TO_NOTE = [
+  'C', 'C#', 'D', 'D#', 'E', 'F',
+  'F#', 'G', 'G#', 'A', 'A#', 'B',
+];
 const fifthUp = (root) => SEMI_TO_NOTE[(NOTE_TO_SEMI[root] + 7) % 12];
-const normalizeChord = (c) => c.trim().replace(/♭/g, 'b').replace(/♯/g, '#');
+const normalizeChord = (c) =>
+  (c ? c.trim().replace(/♭/g, 'b').replace(/♯/g, '#') : '');
 
+/* ─── Enharmonic helpers ───────────────────────────────────── */
+const enharmonic = (note) => {
+  if (!note) return null;
+  const semi = NOTE_TO_SEMI[note];
+  if (semi == null) return null;
+  const sharp = SEMI_TO_NOTE[semi];
+  const flatTable = { 1: 'Db', 3: 'Eb', 6: 'Gb', 8: 'Ab', 10: 'Bb' };
+  const flat = flatTable[semi] || sharp;
+  return note === sharp ? flat : sharp;
+};
+
+/* ─── Root helper (no quality) ─────────────────────────────── */
+const getRoot = (ch) =>
+  /^([A-G](?:#|b)?)/.exec(ch || '')?.[1] || ch;
+
+/* ─── Find a playable chord spelling in chordNoteMap ───────── */
+const findChord = (root, quality = '') => {
+  if (!root) return undefined;
+  const want = normalizeChord(`${root}${quality}`);
+  const altRoot = enharmonic(root);
+  const altWant = altRoot ? normalizeChord(`${altRoot}${quality}`) : null;
+
+  const candidates = Object.keys(chordNoteMap);
+
+  // 1️⃣ exact match (incl. enharmonic)
+  let hit = candidates.find((c) => {
+    const n = normalizeChord(c);
+    return n === want || (altWant && n === altWant);
+  });
+  if (hit) return hit;
+
+  // 2️⃣ major-triad fallback
+  if (quality === '') {
+    hit = candidates.find((c) => normalizeChord(c).startsWith(normalizeChord(root)));
+    if (hit) return hit;
+    if (altRoot) {
+      hit = candidates.find((c) =>
+        normalizeChord(c).startsWith(normalizeChord(altRoot)),
+      );
+      if (hit) return hit;
+    }
+  }
+
+  // 3️⃣ last resort
+  return undefined;
+};
+
+/* ─── Degree → chord (null-safe) ───────────────────────────── */
 const degreeToChord = (deg, scale) => {
-  const m = /^V7\/([ivIV]+)$/.exec(deg);
-  if (m) {
-    const tgt = degreeToChord(m[1], scale);
-    const root = /^([A-G](?:#|b)?)/.exec(tgt)?.[1];
+  if (!deg) return deg;
+
+  /* 🛣 1. short-circuit look-up in HarmonyTrainingData */
+  const direct = chordFunctionsByScale[scale]?.[deg];
+  if (direct) return direct;
+
+  /* 🛣 2. original logic … */
+  const diatonic = scaleChordsMap[scale] || [];
+
+  // secondary dominants (V7/ii, etc.)
+  const secDomMatch = /^V7\/(.+)$/i.exec(deg);
+  if (secDomMatch) {
+    const targetChord = degreeToChord(secDomMatch[1], scale);
+    const root = getRoot(targetChord);
     return root ? `${fifthUp(root)}7` : deg;
   }
-  const diatonic = scaleChordsMap[scale] || [];
-  const idx = { I:0, II:1, III:2, IV:3, V:4, VI:5, VII:6 }[deg.replace(/\u00B0/g, '').toUpperCase()];
+
+  const tonic = normalizeChord(scale?.replace(/m$/, ''));
+  const tonicSemi = NOTE_TO_SEMI[tonic];
+  if (tonicSemi == null) return deg;
+
+  const makeRoot = (offset) => SEMI_TO_NOTE[(tonicSemi + offset) % 12];
+
+  const customMap = {
+    iv:      () => findChord(makeRoot(5), 'm') || `${makeRoot(5)}m`,
+    sharpIII:() => findChord(makeRoot(4))      || makeRoot(4),
+    flatIII: () => findChord(makeRoot(3))      || makeRoot(3),
+    chromaticMediant: () =>
+      findChord(makeRoot(8), 'm') || `${makeRoot(8)}m`,
+    flatVII: () => findChord(makeRoot(10))     || makeRoot(10),
+    flatVI:  () => findChord(makeRoot(8))      || makeRoot(8),
+    neapolitan: () => findChord(makeRoot(1))   || makeRoot(1),
+    v: () => findChord(makeRoot(7), 'm')       || `${makeRoot(7)}m`,
+    IV7: () => findChord(makeRoot(5), '7')     || `${makeRoot(5)}7`,
+    V7:  () => findChord(fifthUp(tonic), '7')  || `${fifthUp(tonic)}7`,
+    V7_iv: () => findChord(makeRoot(5), '7')   || `${makeRoot(5)}7`,
+
+    V_iii: () => {
+      const base = degreeToChord('III', scale);      // e.g. "Em"
+      const r = fifthUp(getRoot(base));               // "B"
+      return findChord(r) || r;
+    },
+    V_V: () => {
+      const r = fifthUp(getRoot(degreeToChord('V', scale)));
+      return findChord(r) || r;
+    },
+    V7_V: () => {
+      const r = fifthUp(getRoot(degreeToChord('V', scale)));
+      return findChord(r, '7') || `${r}7`;
+    },
+    V7_iii: () => {
+      const r = fifthUp(getRoot(degreeToChord('III', scale)));
+      return findChord(r, '7') || `${r}7`;
+    },
+    ii_vi: () => {
+      const r = fifthUp(getRoot(degreeToChord('VI', scale)));
+      return findChord(r, 'm') || `${r}m`;
+    },
+  };
+
+  if (customMap[deg]) {
+    const result = customMap[deg]();
+    return result || deg;
+  }
+
+  // Diatonic I–VII
+  const idx = {
+    I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6,
+  }[(deg || '').replace(/\u00B0/g, '').toUpperCase()];
   return idx !== undefined ? diatonic[idx] : deg;
 };
 
+/* ─── Helper: pick playable progressions ───────────────────── */
 const getAllPlayableProgressions = (scale, selectedChords) => {
   if (!selectedChords.length) return [];
   const sel = new Set(selectedChords.map(normalizeChord));
@@ -39,7 +158,9 @@ const getAllPlayableProgressions = (scale, selectedChords) => {
   const categories = Object.entries(progressionBank)
     .map(([key, progs]) => {
       const set = new Set();
-      progs.forEach((p) => p.forEach((d) => set.add(normalizeChord(degreeToChord(d, scale)))));
+      progs.forEach((p) =>
+        p.forEach((d) => set.add(normalizeChord(degreeToChord(d, scale)))),
+      );
       return { progs, set };
     })
     .filter(({ set }) => [...set].every((c) => sel.has(c)));
@@ -47,19 +168,26 @@ const getAllPlayableProgressions = (scale, selectedChords) => {
   if (!categories.length) return [];
   let filtered = categories;
   if (special.length) {
-    filtered = categories.filter(({ set }) => special.every((sp) => set.has(sp)));
+    filtered = categories.filter(({ set }) =>
+      special.every((sp) => set.has(sp)),
+    );
     if (!filtered.length) filtered = categories;
   }
   const max = Math.max(...filtered.map((c) => c.set.size));
   return filtered
     .filter((c) => c.set.size === max)
-    .flatMap(({ progs }) => progs.map((p) => p.map((d) => degreeToChord(d, scale))));
+    .flatMap(({ progs }) =>
+      progs.map((p) => p.map((d) => degreeToChord(d, scale))),
+    );
 };
 
+/* ─── Small utilities ─────────────────────────────────────── */
 const playChordSequence = (seq, play, gap = 1000) =>
   seq.forEach((ch, i) => setTimeout(() => play(ch), gap * i));
 
+/* ─── Component ───────────────────────────────────────────── */
 export default function HarmonicDictation() {
+  /* — React state & refs — */
   const { state } = useLocation();
   const navigate = useNavigate();
   const keyboardRef = useRef();
@@ -88,8 +216,10 @@ export default function HarmonicDictation() {
   const [instruction, setInstruction] = useState('👂 Listen and identify the chords');
   const [noProgressions, setNoProgressions] = useState(false);
 
+  /* — Audio helpers — */
   const playNote = (n) => new Audio(`/clean_cut_notes/${encodeURIComponent(n)}.wav`).play();
   const playChord = (c) => (chordNoteMap[normalizeChord(c)] || []).forEach(playNote);
+
   const flashBtn = (c, type) => {
     const key = normalizeChord(c);
     setFlashMap((p) => ({ ...p, [key]: type }));
