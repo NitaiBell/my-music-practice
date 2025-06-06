@@ -161,6 +161,13 @@
     z-index: 20;
   }
   
+
+  .differencegame-controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
   .differencegame-popup {
     background: #93fc79;
     color: #18230F;
@@ -335,3 +342,112 @@
     100% { transform: scale(1); opacity: 1; }
   }
     
+
+  @media only screen and (max-width: 1000px) and (orientation: landscape) {
+    .differencegame-navbar {
+      flex-wrap: wrap;
+      padding: 12px 16px;
+      gap: 10px;
+    }
+  
+    .differencegame-logo {
+      font-size: 1.3rem;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+  
+    .differencegame-btn,
+    .differencegame-start-btn {
+      font-size: 1rem;
+      padding: 10px 14px !important;
+      border-radius: 8px;
+    }
+  
+    .differencegame-stats {
+      font-size: 1rem;
+      padding: 6px 10px;
+      gap: 6px;
+    }
+  
+    .differencegame-stat {
+      padding: 5px 8px;
+      font-size: 0.95rem;
+    }
+  
+    .differencegame-buttons {
+      padding: 10px;
+      gap: 10px;
+      height: auto;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    }
+  
+    .differencegame-note-btn {
+      font-size: 1.6rem;
+      border-radius: 8px;
+    }
+  
+    .differencegame-keyboard {
+      height: 30vh;
+      padding-bottom: 8px;
+    }
+  
+    .differencegame-popup {
+      max-width: 280px;
+      max-height: 80vh;
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      text-align: center;
+      overflow-y: auto;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      background: #93fc79;
+      color: #18230F;
+      border: 2px solid #5CFF70;
+    }
+  
+    .differencegame-popup h2 {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      color: #000501;
+    }
+  
+    .differencegame-popup p {
+      font-size: 0.85rem;
+      margin: 0.4rem 0;
+      color: #000000;
+    }
+  
+    .differencegame-popup-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+  
+    .differencegame-popup-buttons button {
+      font-size: 0.9rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(to right, #1F7D53, #255F38);
+      color: #f8f8f8;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+  
+    .differencegame-popup-buttons button:hover {
+      transform: scale(1.04);
+      background: linear-gradient(to right, #255F38, #1F7D53);
+    }
+  
+    .differencegame-floating-message {
+      top: 120px;
+      font-size: 1.3rem;
+      padding: 12px 20px;
+      border-radius: 14px;
+    }
+  }
+  
+  

@@ -348,3 +348,84 @@
     transform: scale(1.05);
   }
   
+
+  @media only screen and (max-width: 1000px) and (orientation: landscape) {
+    .real-melodygame-popup {
+      max-width: 280px;
+      max-height: 80vh;
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      text-align: center;
+      overflow-y: auto;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      background: #93fc79;
+      color: #18230F;
+      border: 2px solid #5CFF70;
+    }
+  
+    .real-melodygame-popup h2 {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      color: #000501;
+    }
+  
+    .real-melodygame-popup p {
+      font-size: 0.85rem;
+      margin: 0.4rem 0;
+      color: #000000;
+    }
+  
+    .real-melodygame-popup-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+  
+    .real-melodygame-popup-buttons button {
+      font-size: 0.9rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(to right, #1F7D53, #255F38);
+      color: #f8f8f8;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+  
+    .real-melodygame-popup-buttons button:hover {
+      transform: scale(1.04);
+      background: linear-gradient(to right, #255F38, #1F7D53);
+    }
+  
+    .real-melodygame-floating-message {
+      font-size: 0.9rem;
+      top: 70px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      max-width: 90vw;
+      text-align: center;
+    }
+  
+    .real-melodygame-btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+  
+    .real-melodygame-stats {
+      font-size: 0.9rem;
+      padding: 5px 8px;
+      gap: 6px;
+    }
+  
+    .real-melodygame-stat {
+      padding: 5px 6px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+  }
+  

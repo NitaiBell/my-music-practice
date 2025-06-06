@@ -191,3 +191,57 @@
   }
   
 
+
+
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .melodic_dictation_settings-navbar {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      gap: 10px;
+    }
+  
+    .melodic_dictation_settings-scale-note-wrapper,
+    .melodic_dictation_settings-controls {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+  
+    .melodic_dictation_settings-dropdown-content {
+      font-size: 0.9rem;
+      padding: 10px;
+    }
+  
+    .melodic_dictation_settings-rounds-group {
+      padding: 6px 10px;
+      gap: 6px;
+    }
+  
+    .melodic_dictation_settings-rounds-input {
+      width: 60px;
+      font-size: 1rem;
+    }
+  
+    .melodic_dictation_settings-start-btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+  
+    .melodic_dictation_settings-floating-setup-message {
+      display: none;
+    }
+  
+    .melodic_dictation_settings-summary {
+      font-size: 1rem;
+      padding: 8px 14px;
+    }
+  
+    .melodic_dictation_settings-keyboard-wrapper {
+      padding-bottom: 4px;
+    }
+  }
+  

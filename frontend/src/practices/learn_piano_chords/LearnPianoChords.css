@@ -321,3 +321,162 @@
     box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.1) !important;
     transform: none !important;
   }
+
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .learn_piano_chords-navbar {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 10px;
+    }
+  
+    .learn_piano_chords-controls,
+    .learn_piano_chords-scale-chord-wrapper {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+  
+    .learn_piano_chords-bottom {
+      display: flex;
+      flex-direction: column; /* ⬅️ Swap order: chords above keyboard */
+      margin-top: 0;
+      gap: 0;
+      padding: 0;
+    }
+  
+    .learn_piano_chords-chords {
+      gap: 6px;
+      padding: 6px;
+      margin-bottom: 7px;
+      height: auto; /* Remove fixed height */
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    }
+  
+    .learn_piano_chords-chord-btn {
+      font-size: 1.1rem;
+      padding: 6px;
+    }
+  
+    .learn_piano_chords-start-btn {
+      padding: 8px 14px;
+      font-size: 1rem;
+      width: auto;
+    }
+  
+    .learn_piano_chords-keyboard,
+    .learn_piano_chords-keyboard-wrapper {
+      margin-top: 0;
+      padding-bottom: 2px;
+    }
+  
+    .learn_piano_chords-floating-setup-message,
+    .learn_piano_chords-floating-message {
+      top: 60px; /* ⬇️ Slightly lower position */
+      font-size: 0.95rem;
+      padding: 6px 12px;
+      max-width: 90vw;
+      z-index: 15;
+    }
+  
+    .learn_piano_chords-summary {
+      font-size: 0.9rem;
+      padding: 6px 12px;
+    }
+  }
+  
+  
+  @media only screen and (max-width: 1000px) and (orientation: landscape) {
+    .learn_piano_chords-popup {
+      max-width: 280px;
+      max-height: 80vh;
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      text-align: center;
+      overflow-y: auto;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      background: #93fc79;
+      color: #18230F;
+      border: 2px solid #5CFF70;
+    }
+  
+    .learn_piano_chords-popup h2 {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      color: #000501;
+    }
+  
+    .learn_piano_chords-popup p {
+      font-size: 0.85rem;
+      margin: 0.4rem 0;
+      color: #000000;
+    }
+  
+    .learn_piano_chords-popup-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+  
+    .learn_piano_chords-popup-buttons button {
+      font-size: 0.9rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(to right, #1F7D53, #255F38);
+      color: #f8f8f8;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+  
+    .learn_piano_chords-popup-buttons button:hover {
+      transform: scale(1.04);
+      background: linear-gradient(to right, #255F38, #1F7D53);
+    }
+  
+    .learn_piano_chords-floating-message {
+      font-size: 0.9rem;
+      top: 70px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      max-width: 90vw;
+      text-align: center;
+    }
+  
+    .learn_piano_chords-btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+  
+    .learn_piano_chords-stats {
+      font-size: 0.9rem;
+      padding: 5px 8px;
+      gap: 6px;
+    }
+  
+    .learn_piano_chords-stat {
+      padding: 5px 6px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+  
+    .learn_piano_chords-chords {
+      padding: 8px 10px;
+      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    }
+  
+    .learn_piano_chords-chord-btn {
+      font-size: 1.2rem;
+      padding: 6px;
+      border-radius: 8px;
+    }
+  }
+  

@@ -209,3 +209,125 @@
     align-items: flex-end;
   }
   
+
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .melodic_dictation-navbar {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px 14px;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .melodic_dictation-navbar-left {
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+  
+    .melodic_dictation-btn {
+      padding: 10px 12px;
+      font-size: 0.9rem;
+    }
+  
+    .melodic_dictation-logo {
+      font-size: 1.2rem;
+      padding: 10px 12px;
+    }
+  
+    .melodic_dictation-stats {
+      font-size: 1rem;
+      padding: 8px 12px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+  
+    .melodic_dictation-stat {
+      padding: 6px 10px;
+      font-size: 1rem;
+    }
+  
+    .melodic_dictation-start-btn {
+      font-size: 1rem !important;
+      padding: 10px 14px !important;
+    }
+  
+    .melodic_dictation-floating-message {
+      display: none;
+    }
+  
+    .melodic_dictation-keyboard-wrapper {
+      padding: 4px;
+    }
+  
+    .melodic_dictation-popup {
+      width: 95%;
+      padding: 1.5rem;
+    }
+  
+    .melodic_dictation-popup-buttons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .melodic_dictation-popup-buttons button {
+      font-size: 0.95rem;
+      padding: 0.7rem;
+    }
+  }
+  
+
+  @media only screen and (max-width: 1000px) and (orientation: landscape) {
+    .melodic_dictation-popup {
+      max-width: 280px;
+      max-height: 80vh;
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      text-align: center;
+      overflow-y: auto;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      background: #93fc79;
+      color: #18230F;
+      border: 2px solid #5CFF70;
+    }
+  
+    .melodic_dictation-popup h2 {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      color: #000501;
+    }
+  
+    .melodic_dictation-popup p {
+      font-size: 0.85rem;
+      margin: 0.4rem 0;
+      color: #000000;
+    }
+  
+    .melodic_dictation-popup-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+  
+    .melodic_dictation-popup-buttons button {
+      font-size: 0.9rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(to right, #1F7D53, #255F38);
+      color: #f8f8f8;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+  
+    .melodic_dictation-popup-buttons button:hover {
+      transform: scale(1.04);
+      background: linear-gradient(to right, #255F38, #1F7D53);
+    }
+  }
+  

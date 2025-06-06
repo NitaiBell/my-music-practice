@@ -365,3 +365,100 @@
     background-position: 0% 50%;
   }
 }
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  /* Reposition floating message as high as safely possible */
+  .floating-message {
+    top: 20px;                /* ⬆️ Pushed higher */
+    font-size: 0.95rem;
+    padding: 6px 14px;
+    z-index: 10;
+    max-width: 90vw;
+    text-align: center;
+  }
+
+  /* Bring chord buttons tighter to keyboard */
+  .harmonygame-chords {
+    margin-bottom: 2px;
+    padding-bottom: 0;
+    max-height: 32vh;
+    gap: 6px;
+  }
+
+  /* Reduce keyboard space */
+  .harmonygame-keyboard {
+    padding-bottom: 2px;
+  }
+}
+
+@media only screen and (max-width: 1000px) and (orientation: landscape) {
+  .harmonygame-popup {
+    max-width: 280px;
+    max-height: 80vh;
+    padding: 1rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    text-align: center;
+    overflow-y: auto; /* Always scrollable */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    background: #93fc79;
+    color: #18230F;
+    border: 2px solid #5CFF70;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #4d4d4d #e0e0e0;
+  }
+
+  .harmonygame-popup h2 {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    color: #000501;
+  }
+
+  .harmonygame-popup p {
+    font-size: 0.85rem;
+    margin: 0.4rem 0;
+    color: #000000;
+  }
+
+  .harmonygame-popup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .harmonygame-popup-buttons button {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, #1F7D53, #255F38);
+    color: #f8f8f8;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .harmonygame-popup-buttons button:hover {
+    transform: scale(1.04);
+    background: linear-gradient(to right, #255F38, #1F7D53);
+  }
+
+  /* WebKit scrollbar for Chrome, Safari, Edge */
+  .harmonygame-popup::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .harmonygame-popup::-webkit-scrollbar-track {
+    background: #e0e0e0;
+  }
+
+  .harmonygame-popup::-webkit-scrollbar-thumb {
+    background-color: #4d4d4d;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+}
+

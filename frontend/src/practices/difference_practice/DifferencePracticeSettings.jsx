@@ -101,12 +101,10 @@ const DifferencePracticeSettings = () => {
               <input
   id="rounds-input"
   type="number"
-  min="1"
-  max="20"
   value={rounds}
   onChange={(e) => {
     const val = Number(e.target.value);
-    setRounds(Math.min(20, Math.max(1, val))); // clamp between 1 and 20
+    setRounds(val); // no clamping
   }}
   className="difference_practice_settings-rounds-input"
 />
@@ -117,12 +115,10 @@ const DifferencePracticeSettings = () => {
               <input
   id="sequence-length-input"
   type="number"
-  min="2"
-  max="8"
   value={sequenceLength}
   onChange={(e) => {
     const val = Number(e.target.value);
-    setSequenceLength(Math.min(8, Math.max(2, val))); // clamp between 2 and 8
+    setSequenceLength(val); // no clamping
   }}
   className="difference_practice_settings-rounds-input"
 />

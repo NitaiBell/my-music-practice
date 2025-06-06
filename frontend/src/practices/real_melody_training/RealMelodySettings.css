@@ -222,3 +222,45 @@
     transform: scale(1.05);
   }
   
+
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .real-melody-floating-setup-message {
+      display: none;
+    }
+  }
+
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .real-melody-navbar {
+      padding: 8px 10px;
+      font-size: 1rem;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  
+    .real-melody-controls {
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  
+    .real-melody-rounds-group {
+      padding: 6px 10px;
+      gap: 6px;
+    }
+  
+    .real-melody-rounds-label,
+    .real-melody-rounds-input {
+      font-size: 1rem;
+    }
+  
+    .real-melody-beginner-toggle {
+      font-size: 1rem;
+      padding: 10px 18px;
+    }
+  
+    .real-melody-start-btn {
+      font-size: 1rem;
+      padding: 10px 20px;
+    }
+  }
+  

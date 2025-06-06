@@ -251,3 +251,80 @@
     box-shadow: 0 0 6px #99e06c;
   }
   
+
+  @media only screen and (max-width: 1000px) and (orientation: landscape) {
+    .harmony_dictation_settings-navbar {
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 1rem;
+      padding: 10px;
+    }
+  
+    .harmony_dictation_settings-dropbtn {
+      font-size: 1rem;
+      padding: 10px 18px;
+      border-radius: 10px;
+    }
+  
+    .harmony_dictation_settings-dropdown-content label {
+      font-size: 0.95rem;
+    }
+  
+    .harmony_dictation_settings-controls {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  
+    .harmony_dictation_settings-start-btn {
+      font-size: 1rem;
+      padding: 10px 18px;
+      border-radius: 10px;
+      animation: none;
+    }
+  
+    .harmony_dictation_settings-summary {
+      font-size: 1rem;
+      padding: 8px 16px;
+    }
+  
+    .harmony_dictation_settings-chord-buttons {
+      gap: 10px;
+      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      max-height: 25vh;
+    }
+  
+    .harmony_dictation_settings-chord-btn {
+      font-size: 1.6rem;
+      border-radius: 8px;
+    }
+  
+    .harmony_dictation_settings-keyboard-wrapper {
+      height: 30vh;
+      padding-bottom: 10px;
+    }
+  
+    .harmony_dictation_settings-floating-message {
+      display: none; /* 👈 hide floating message on mobile landscape */
+    }
+  
+    .rounds-group {
+      padding: 6px 10px;
+      gap: 8px;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+  
+    .rounds-label {
+      font-size: 1rem;
+    }
+  
+    .harmony_dictation_settings-rounds-input {
+      width: 60px;
+      font-size: 1rem;
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+  }
+  
+  

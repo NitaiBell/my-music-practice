@@ -287,3 +287,110 @@
   background-color: #1a2714;
   transform: scale(1.02);
 }
+
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .harmony-container-settings {
+    padding: 4px;
+  }
+
+  .harmony-content-wrapper {
+    overflow-y: auto;
+  }
+
+  .harmony-navbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+  }
+
+  .harmony-scale-chord-wrapper {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .harmony-dropdown {
+    flex: 1 1 auto;
+    min-width: 90px;
+  }
+
+  .harmony-dropbtn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .harmony-dropdown-content {
+    font-size: 0.9rem;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin; /* Firefox */
+  }
+
+  .harmony-dropdown-content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .harmony-dropdown-content::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 8px;
+  }
+
+  .harmony-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .rounds-group {
+    flex: 1;
+    min-width: 120px;
+    justify-content: space-between;
+    padding: 6px 8px;
+  }
+
+  .harmony-special-toggle {
+    flex: 1;
+    justify-content: space-between;
+    min-width: 140px;
+    font-size: 0.9rem;
+  }
+
+  .harmony-start-btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  .harmony-summary {
+    font-size: 0.95rem;
+    padding: 6px 12px;
+  }
+
+  .harmony-chord-buttons {
+    margin-top: 8px;
+    max-height: 30vh;
+    padding: 6px;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+
+  .harmony-keyboard-wrapper {
+    padding-bottom: 4px;
+  }
+
+  .harmony-floating-setup-message {
+    display: none; /* ✅ Hide message in mobile landscape */
+  }
+}
+
+
+

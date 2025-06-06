@@ -349,3 +349,114 @@
     padding-bottom: 50vh; /* match the new height */
   }
 }
+
+
+@media (max-width: 768px) {
+  .degree-notice-container {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  .degree-notice-navbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 12px;
+    gap: 10px;
+  }
+
+  .degree-notice-logo {
+    font-size: 1.6rem;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .degree-notice-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .degree-notice-stat {
+    flex: 1 1 42%;
+    padding: 10px;
+    font-size: 1rem;
+    min-width: 100px;
+  }
+
+  .degree-notice-question-area {
+    padding: 20px 12px 12px;
+    box-sizing: border-box;
+  }
+
+  .degree-notice-question-center {
+    padding: 20px 0;
+    gap: 10px;
+  }
+
+  .degree-notice-box-label {
+    font-size: 2rem;
+    padding: 12px 20px;
+  }
+
+  .degree-notice-box-question {
+    font-size: 2.2rem;
+    padding: 12px 20px;
+  }
+
+  .degree-notice-options {
+    flex-direction: column;
+    position: static;
+    height: auto;
+    width: 100%;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .degree-notice-option-btn {
+    width: 100%;
+    font-size: 1.4rem;
+    padding: 14px;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .degree-notice-restart-btn,
+  .degree-notice-mute-btn {
+    width: 48%;
+    font-size: 1rem;
+    padding: 10px;
+    margin: 0;
+    align-self: center;
+  }
+
+  .degree-notice-feedback-message {
+    font-size: 1.2rem;
+    padding: 12px;
+    margin: 16px auto;
+    width: 90%;
+  }
+
+  .degree-notice-popup {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .degree-notice-popup-buttons {
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 1rem;
+  }
+
+  .degree-notice-popup-buttons button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
+

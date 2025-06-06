@@ -205,3 +205,215 @@ body {
   0%, 100% { transform: scale(1); background: #f0f8e0; }
   50% { transform: scale(1.02); background: #e3f5d3; }
 }
+
+
+/* Redesigned DegreeNoticeSettings.css */
+
+:root {
+  --main-bg: linear-gradient(to bottom right, #7eef8b, #0f1c0e);
+  --card-bg: rgba(50, 72, 42, 0.85);
+  --highlight: #B3D885;
+  --accent: #27391C;
+  --text-light: #F1EFEC;
+  --text-dark: #1a2714;
+  --btn-grad: linear-gradient(135deg, #38b27a, #1F7D53);
+  --font-main: 'Segoe UI', sans-serif;
+}
+
+body {
+  font-family: var(--font-main);
+}
+
+.degree_notice_settings-container {
+  min-height: 100vh;
+  background: var(--main-bg);
+  padding: 32px 24px;
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.degree_notice_settings-navbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.degree_notice_settings-dropdown {
+  position: relative;
+}
+
+.degree_notice_settings-dropbtn {
+  background: var(--btn-grad);
+  color: var(--text-light);
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: bold;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.degree_notice_settings-dropbtn:hover {
+  transform: scale(1.05);
+}
+
+.degree_notice_settings-dropdown-content {
+  position: absolute;
+  top: 110%;
+  background: #fdfdfd;
+  color: var(--text-dark);
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  display: none;
+  flex-direction: column;
+  z-index: 5;
+  min-width: 180px;
+}
+
+.degree_notice_settings-dropdown:hover .degree_notice_settings-dropdown-content {
+  display: flex;
+}
+
+.degree_notice_settings-dropdown-content label {
+  font-size: 1rem;
+  margin: 6px 0;
+}
+
+.degree_notice_settings-rounds-group {
+  background: var(--accent);
+  border: 2px solid var(--text-light);
+  padding: 10px 16px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.degree_notice_settings-rounds-input {
+  padding: 6px 10px;
+  background: #1a2714;
+  color: var(--text-light);
+  border-radius: 8px;
+  font-size: 1rem;
+  border: none;
+  width: 80px;
+  text-align: center;
+}
+
+.degree_notice_settings-start-btn {
+  background: linear-gradient(270deg, #38b27a, #2a9d8f, #3fbc7a, #1F7D53);
+  background-size: 800% 800%;
+  color: #fff;
+  padding: 14px 28px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  animation: animateStartButton 6s ease infinite;
+}
+
+.degree_notice_settings-start-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes animateStartButton {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulseGradient {
+  0%, 100% { background-position: left; }
+  50% { background-position: right; }
+}
+
+.degree_notice_settings-instructions {
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--highlight);
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 800px;
+  font-size: 1.05rem;
+  color: #e0f0d0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.degree_notice_settings-bottom-section {
+  width: 100%;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.degree_notice_settings-summary {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #d4f7c5;
+}
+
+.degree_notice_settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 960px;
+}
+
+.degree_notice_settings-scale-box {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.degree_notice_settings-scale-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.degree_notice_settings-degree-badge {
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin: 4px;
+  color: var(--text-light);
+  display: inline-block;
+}
+
+.degree_notice_settings-message {
+  background: #f0f8e0;
+  border: 2px solid #b1d784;
+  color: #2e4917;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 12px 18px;
+  text-align: center;
+  margin-top: 24px;
+  animation: pulseMessage 4s infinite ease-in-out;
+}
+
+@keyframes pulseMessage {
+  0%, 100% { transform: scale(1); background: #f0f8e0; }
+  50% { transform: scale(1.02); background: #e3f5d3; }
+}
+
+
+

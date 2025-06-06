@@ -296,3 +296,63 @@
   background-color: #e0e0e0; /* No hover effect */
   color: #555;
 }
+
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .learn_piano_chords-navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+  }
+
+  .learn_piano_chords-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .learn_piano_chords-scale-chord-wrapper {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .learn_piano_chords-chord-buttons {
+    height: auto;
+    gap: 6px;
+    padding: 6px;
+    margin-bottom: 4px; /* ⬅️ Tighter space between buttons and keyboard */
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  }
+
+  .learn_piano_chords-chord-btn {
+    font-size: 1.2rem;
+    padding: 6px 8px;
+  }
+
+  .learn_piano_chords-start-btn {
+    font-size: 1rem;
+    padding: 10px 14px;
+  }
+
+  .learn_piano_chords-floating-setup-message {
+    top: 60px;
+    font-size: 1rem;
+    padding: 8px 12px;
+    max-width: 90vw;
+  }
+
+  .learn_piano_chords-summary {
+    font-size: 1rem;
+    padding: 8px 12px;
+  }
+
+  .learn_piano_chords-keyboard-wrapper {
+    padding-bottom: 2px;
+    margin-top: 0; /* 🔧 Ensure no extra gap above keyboard */
+  }
+}
+
+
