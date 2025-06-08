@@ -1,84 +1,85 @@
-import React from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import './Keyboard.css';
 
-const whiteNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const blackNotesMap = {
-  C: 'Cs',
-  D: 'Ds',
-  F: 'Fs',
-  G: 'Gs',
-  A: 'As',
-};
+const white = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+const blacks = { C: 'Cs', D: 'Ds', F: 'Fs', G: 'Gs', A: 'As' };
 
-// Manual black key positions relative to white keys (for top-down accuracy)
-const blackNotePositions = {
-  C: 1,
-  D: 2,
-  F: 4,
-  G: 5,
-  A: 6,
-};
+const enharmonic = n => ({
+  Db: 'Cs', Eb: 'Ds', Gb: 'Fs', Ab: 'Gs', Bb: 'As',
+  'C#': 'Cs', 'D#': 'Ds', 'F#': 'Fs', 'G#': 'Gs', 'A#': 'As'
+}[n] || n);
 
-const playNote = (note) => {
-  const audio = new Audio(`/clean_cut_notes/${note}.wav`);
-  audio.play();
-};
+const Keyboard = forwardRef(({ octaves = [3, 4, 5], onKeyClick }, ref) => {
+  const [flash, setFlash] = useState([]);
+  const [blue, setBlue] = useState([]);
 
-const Octave = ({ number }) => {
-    const blackNotePositions = {
-      C: 1,
-      D: 2,
-      F: 4,
-      G: 5,
-      A: 6,
-    };
-  
-    return (
-      <div className="octave">
-        {/* White keys */}
-        <div className="white-keys">
-          {whiteNotes.map((whiteNote) => (
-            <div
-              key={`${whiteNote}${number}`}
-              className="white-key"
-              onClick={() => playNote(`${whiteNote}${number}`)}
-            >
-              <div className="label">{`${whiteNote}${number}`}</div>
-            </div>
-          ))}
-        </div>
-  
-        {/* Black keys */}
-        <div className="black-keys">
-          {Object.entries(blackNotePositions).map(([whiteNote, pos]) => {
-            const blackNote = blackNotesMap[whiteNote];
-            return (
-              <div
-                key={`${blackNote}${number}`}
-                className="black-key"
-                style={{
-                  left: `calc(${pos} * var(--white-key-width) - var(--black-key-width) / 2 - 2px)`,
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  playNote(`${blackNote}${number}`);
-                }}
-              />
-            );
-          })}
-        </div>
-      </div>
-    );
+  useImperativeHandle(ref, () => ({
+    playNote: (note, flashIt = true) => {
+      const url = `/clean_cut_notes/${encodeURIComponent(enharmonic(note))}.wav`;
+      new Audio(url).play();
+      if (flashIt) {
+        setFlash([]); // Reset first
+        requestAnimationFrame(() => {
+          setFlash([note]);
+          setTimeout(() => setFlash([]), 450);
+        });
+      }
+    },
+    setFlashBlue: (notes) => {
+      setBlue(notes);
+      setTimeout(() => setBlue([]), 500);
+    }
+  }));
+
+  const clicked = note => {
+    ref.current?.playNote(note);
+    onKeyClick?.(note);
   };
-  
 
-const Keyboard = () => {
-  const octaves = [];
-  for (let i = 2; i <= 4; i++) {
-    octaves.push(<Octave key={i} number={i} />);
-  }
+  const cls = (note) => {
+    const classes = [];
+    if (flash.includes(note)) classes.push('keyboard-flash');
+    if (blue.includes(note)) classes.push('keyboard-blue');
+    return classes.join(' ');
+  };
 
-  return <div className="keyboard">{octaves}</div>;
-};
+  return (
+    <div className="keyboard-container">
+      {octaves.sort().map(oct => (
+        <div className="keyboard-octave" key={oct}>
+          <div className="keyboard-white-keys">
+            {white.map(w => {
+              const n = `${w}${oct}`;
+              return (
+                <div
+                  key={n}
+                  className={`keyboard-white-key ${cls(n)}`}
+                  onClick={() => clicked(n)}
+                >
+                  <div className="flash-overlay" />
+                  <span className="keyboard-label">{n}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="keyboard-black-keys">
+            {Object.entries(blacks).map(([w, b]) => {
+              const n = `${b}${oct}`;
+              return (
+                <div
+                  key={n}
+                  className={`keyboard-black-key keyboard-${b} ${cls(n)}`}
+                  onClick={() => clicked(n)}
+                >
+                  <div className="flash-overlay" />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+});
 
 export default Keyboard;

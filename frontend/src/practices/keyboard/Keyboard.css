@@ -1,1 +1,148 @@
-
+/* ──────────────────  LAYOUT  ────────────────── */
+.keyboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    height: 30vh;
+    padding: 14px;
+    overflow-x: hidden;
+    background: transparent;
+  }
+  
+  .keyboard-octave {
+    display: flex;
+    flex: 1;
+    position: relative;
+  }
+  
+  .keyboard-white-keys {
+    display: flex;
+    flex: 1;
+    z-index: 1;
+  }
+  
+  .keyboard-black-keys {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: clamp(140px, 24vh, 242px);
+    z-index: 2;
+  }
+  
+  /* ───────────  WHITE KEYS  ─────────── */
+  .keyboard-white-key {
+    flex: 1 1 0;
+    min-width: 40px;
+    max-width: 90px;
+    height: clamp(200px, 32vh, 360px);
+    background: linear-gradient(to bottom, #F1EFEC, #D4C9BE);
+    border: 1px solid #bbb;
+    border-bottom-width: 3px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font: 700 1.3rem/1 'Segoe UI', sans-serif;
+    color: #18230F;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: inset 0 -3px 4px rgba(0, 0, 0, .08);
+    transition: background .15s ease;
+  }
+  .keyboard-white-key:hover {
+    background: linear-gradient(to bottom, #C3F7D5, #AAF4C5);
+    box-shadow: inset 0 -4px 6px rgba(0, 128, 0, .25);
+  }
+  
+  /* ───────────  BLACK KEYS  ─────────── */
+  .keyboard-black-key {
+    position: absolute;
+    transform: translateX(-50%);
+    width: clamp(25px, 4vw, 50px);
+    height: clamp(140px, 24vh, 242px);
+    background: linear-gradient(to bottom, #181A17, #0f1610);
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .55);
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .keyboard-black-key:hover {
+    background: linear-gradient(to bottom, #1F7D53, #255F38);
+    transform: translateX(-50%) scaleY(1.02) translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .7);
+  }
+  .keyboard-black-key:active {
+    background: #1F7D53;
+    transform: translateX(-50%) scaleY(.98) translateY(1px);
+  }
+  
+  /* precise black-key positions */
+  .keyboard-Cs { left: 12.85%; }
+  .keyboard-Ds { left: 27.1%; }
+  .keyboard-Fs { left: 56.6%; }
+  .keyboard-Gs { left: 70.85%; }
+  .keyboard-As { left: 85.15%; }
+  
+  /* ───────────  NOTE LABEL  ─────────── */
+  .keyboard-label {
+    padding: 6px;
+    pointer-events: none;
+    z-index: 10;
+  }
+  
+  /* ───────────  FLASH EFFECTS  ─────────── */
+  .flash-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+  }
+  
+  /* GREEN: note pressed */
+  .keyboard-white-key.keyboard-flash .flash-overlay,
+  .keyboard-black-key.keyboard-flash .flash-overlay {
+    background: rgba(50, 255, 100, 0.7);
+    box-shadow: 0 0 18px 6px rgba(50, 255, 100, 0.6);
+    animation: keyFlash 0.6s ease-out;
+    opacity: 1;
+    border: 2px solid rgba(50, 255, 100, 0.8);
+  }
+  
+  /* BLUE: tonic */
+  .keyboard-white-key.keyboard-blue .flash-overlay,
+  .keyboard-black-key.keyboard-blue .flash-overlay {
+    background: rgba(0, 160, 255, 0.65);
+    box-shadow: 0 0 18px 6px rgba(0, 160, 255, 0.5);
+    animation: keyFlash 0.65s ease-out;
+    opacity: 1;
+    border: 2px solid rgba(0, 160, 255, 0.8);
+  }
+  
+  /* FLASH ANIMATION */
+  @keyframes keyFlash {
+    0% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.04);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+  
+  /* ───────────  RESPONSIVE BLACK-KEY SIZE  ─────────── */
+  @media (max-width: 1600px) {
+    .keyboard-black-key {
+      width: clamp(20px, 3.5vw, 40px);
+      height: clamp(120px, 20vh, 220px);
+    }
+  }
+  

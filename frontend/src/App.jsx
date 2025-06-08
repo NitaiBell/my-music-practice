@@ -27,7 +27,7 @@ import ArticlePage from './pages/articles/ArticlePage.jsx';
 
 // Simple Practices
 import PlayNote from './practices/playnote/PlayNote.jsx';
-import Keyboard from './practices/keyboard/Keyboard.jsx';
+import KeyboardDemo from './practices/keyboard/KeyboardDemo';
 import MusicalStaff from './practices/MusicalStaff/MusicalStaff.jsx';
 import SingNote from './practices/sing_note/SingNote.jsx';
 
@@ -79,7 +79,7 @@ export default function App() {
 
         {/* Simple Practices */}
         <Route path="/play" element={<PlayNote />} />
-        <Route path="/keyboard" element={<Keyboard />} />
+        <Route path="/keyboard" element={<KeyboardDemo />} />
         <Route path="/staff" element={<MusicalStaff />} />
         <Route path="/sing-note" element={<SingNote />} />
 

@@ -188,7 +188,7 @@ export const extraChordsByScale = Object.fromEntries(
 // Final note map (same as your provided version)
 export const chordNoteMap = {
   // Triads
-  'C': ['C3', 'E3', 'G3'], 'C#': ['Cs3', 'E3', 'Gs3'], 'D': ['D3', 'Fs3', 'A3'], 'D#': ['Ds3', 'G3', 'As3'],
+  'C': ['C3', 'E3', 'G3'], 'C#': ['Cs3', 'F3', 'Gs3'], 'D': ['D3', 'Fs3', 'A3'], 'D#': ['Ds3', 'G3', 'As3'],
   'E': ['E3', 'Gs3', 'B3'], 'F': ['F3', 'A3', 'C4'], 'F#': ['Fs3', 'As3', 'Cs4'], 'G': ['G3', 'B3', 'D4'],
   'G#': ['Gs3', 'B3', 'Ds4'], 'A': ['A3', 'Cs4', 'E4'], 'A#': ['As3', 'D4', 'F4'], 'B': ['B3', 'Ds4', 'Fs4'],
   'Bb': ['As3', 'D4', 'F4'], 'Eb': ['Ds3', 'G3', 'As3'], 'Ab': ['Gs3', 'C4', 'Ds4'], 'Db': ['Cs3', 'F3', 'Gs3'],

@@ -19,6 +19,7 @@ export default function Navbar() {
       <div className={`navbar-links-group ${isMenuOpen ? 'open' : ''}`}>
         <div className="navbar-links">
           <a href="/">Home</a>
+          <a href="/keyboard">keyboard</a>
           <a href="/practices-showcase">Practices</a>
           <a href="/course/1">Courses</a>
           <a href="/articles">Articles</a>
