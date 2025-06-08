@@ -223,4 +223,89 @@ export const melodies = {
     ],
     chords: ['C', 'F', 'G'],
   },
+
+  melodyWithCandG1: {
+    tempo: 120,
+    timeSignature: [3, 4],
+    notes: [
+      // Phrase 1: "Happy birthday to you"
+      { note: "C4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "D4", duration: 2 },
+      { note: "B3", duration: 1 },
+
+      { note: "C4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "G4", duration: 3 },
+    ],
+    chords: ['C', 'G'],
+  },
+
+
+  melodyWithCandG2: {
+    tempo: 120,
+    timeSignature: [3, 4],
+    notes: [
+      // Phrase 1: "Happy birthday to you"
+      { note: "G4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+
+      { note: "G4", duration: 2 },
+      { note: "B4", duration: 1 },
+
+      { note: "G4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "D4", duration: 3 },
+    ],
+    chords: ['C', 'G'],
+
+
+
+    
+  },
+
+
+  melodyWithCandG3: {
+    tempo: 120,
+    timeSignature: [3, 4],
+    notes: [
+      // Phrase 1: "Happy birthday to you"
+      { note: "B4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "C5", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "A4", duration: 1 },
+
+
+      { note: "B4", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+    ],
+    chords: ['C', 'G'],
+
+
+
+    
+  },
+  
+
+
+
+  
+
+
+  
+
+
 };
