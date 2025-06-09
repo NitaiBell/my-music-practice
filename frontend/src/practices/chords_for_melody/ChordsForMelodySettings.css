@@ -160,3 +160,30 @@ chords_ads_left {
   background: linear-gradient(to right, #43A047, #4CAF50);
   transform: scale(1.05);
 }
+
+
+/* Random melodies – soft turquoise tone */
+.chords_for_melody_settings_item.random {
+  background: linear-gradient(to right, #6ed3cf, #3fb8af);
+  border-left: 6px solid #1d6f6f;
+}
+
+/* Round melodies – warm orange tone */
+.chords_for_melody_settings_item.round {
+  background: linear-gradient(to right, #f9a825, #f57c00);
+  border-left: 6px solid #e65100;
+}
+
+/* Base item styles (already in use, but you can enhance) */
+.chords_for_melody_settings_item {
+  border-radius: 12px;
+  padding: 18px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chords_for_melody_settings_item:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+}

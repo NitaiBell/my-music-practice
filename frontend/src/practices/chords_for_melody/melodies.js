@@ -773,6 +773,244 @@ export const melodies = {
     chords: ['C', 'F', 'G'],
     suggestedChords: ["G", "G", "F", "C", "F", "G", "C", "C"]
   },
+
+
+
+
+  melodyWithC_G_F_15: {
+    name: "Random Waltz (C & G & F 3/4, 8 bars)",
+    description: "Simple melody using chords C,G,F in 3/4 time.",
+    tempo: 112,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "A4", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "C5", duration: 1 },
+
+      { note: "B4", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "D5", duration: 1 },
+
+      { note: "C5", duration: 3 },
+
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "D4", duration: 1 },
+
+      { note: "C4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "C4", duration: 2 },
+    ],
+    chords: ['C', 'F', 'G'],
+    suggestedChords: ["C", "F", "G", "C", "F", "G", "C", "C"]
+  },
+
+
+  melodyWithC_G_F_16: {
+    name: "Random Path (C & G & F 3/4, 8 bars)",
+    description: "Simple melody using chords C,G,F in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "C5", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "B4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "F4", duration: 1 },
+
+      { note: "C5", duration: 3 },
+
+      { note: "B4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "D4", duration: 1 },
+
+      { note: "C4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "C4", duration: 1 },
+
+      { note: "C4", duration: 2 },
+    ],
+    chords: ['C', 'F', 'G'],
+    suggestedChords: ["F", "G", "F", "C", "G", "F", "C", "C"]
+  },
+
+
+  melodyWithC_G_F_17: {
+    name: "Random Lake (C & G & F 3/4, 8 bars)",
+    description: "Simple melody using chords C,G,F in 3/4 time.",
+    tempo: 118,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "G4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "C4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "A4", duration: 1 },
+
+      { note: "G4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+
+      { note: "A4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "F4", duration: 1 },
+
+      { note: "E4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "C4", duration: 1 },
+
+      { note: "G4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+    ],
+    chords: ['C', 'F', 'G'],
+    suggestedChords: ["C", "F", "G", "C", "F", "C", "G", "C"]
+  },
+
+
+
+
+  melodyWithC_G_F_18: {
+    name: "Random Hills (C & G & F 3/4, 8 bars)",
+    description: "Simple melody using chords C,G,F in 3/4 time.",
+    tempo: 116,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "C4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "C5", duration: 1 },
+
+      { note: "B4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+
+      { note: "F4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "F4", duration: 1 },
+
+      { note: "D4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "D4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+    ],
+    chords: ['C', 'F', 'G'],
+    suggestedChords: ["C", "F", "G", "C", "F", "G", "G", "C"]
+  },
+
+
+  melodyWithC_G_F_19: {
+    name: "Random Valley (C & G & F 3/4, 8 bars)",
+    description: "Simple melody using chords C,G,F in 3/4 time.",
+    tempo: 114,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "E4", duration: 1 },
+      { note: "D4", duration: 1 },
+      { note: "C4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+
+      { note: "G4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+
+      { note: "D4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "D4", duration: 1 },
+
+      { note: "C4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "C4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+    ],
+    chords: ['C', 'F', 'G'],
+    suggestedChords: ["C", "F", "G", "C", "G", "F", "C", "C"]
+  },
+
+
+  melodyWithC_G_F_20: {
+    name: "Random Flower (C & G & F 3/4, 8 bars)",
+    description: "Simple melody using chords C,G,F in 3/4 time.",
+    tempo: 117,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "B4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+
+      { note: "E4", duration: 1 },
+      { note: "F4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "C4", duration: 3 },
+
+      { note: "C5", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "A4", duration: 1 },
+
+      { note: "F4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "D4", duration: 1 },
+
+      { note: "C4", duration: 1 },
+      { note: "E4", duration: 1 },
+      { note: "G4", duration: 1 },
+
+      { note: "C4", duration: 2 },
+    ],
+    chords: ['C', 'F', 'G'],
+    suggestedChords: ["G", "F", "C", "C", "F", "G", "C", "C"]
+  },
   
 
 

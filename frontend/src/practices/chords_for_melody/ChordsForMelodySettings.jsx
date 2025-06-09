@@ -1,5 +1,3 @@
-// src/practices/chords_for_melody/ChordsForMelodySettings.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { melodies } from './melodies';
@@ -36,16 +34,23 @@ const ChordsForMelodySettings = () => {
 
   return (
     <div className="chords_for_melody_settings_fullscreen">
-      <div className="chords_ads_side chords_ads_left">Ad</div>
-
       <div className="chords_for_melody_settings_container">
         <h1 className="chords_for_melody_settings_title">Choose a Melody to Practice</h1>
 
         <div className="chords_for_melody_settings_list">
           {melodyKeys.map((melodyKey) => {
             const { name, description } = melodies[melodyKey];
+            const nameClass = name.startsWith("Random")
+              ? "random"
+              : name.startsWith("Round")
+              ? "round"
+              : "";
+
             return (
-              <div key={melodyKey} className="chords_for_melody_settings_item">
+              <div
+                key={melodyKey}
+                className={`chords_for_melody_settings_item ${nameClass}`}
+              >
                 <div className="chords_for_melody_settings_text_column">
                   <label className="chords_for_melody_settings_label">
                     <input
@@ -86,8 +91,6 @@ const ChordsForMelodySettings = () => {
           })}
         </div>
       </div>
-
-      <div className="chords_ads_side chords_ads_right">Ad</div>
     </div>
   );
 };

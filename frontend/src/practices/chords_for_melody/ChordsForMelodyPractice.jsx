@@ -22,6 +22,7 @@ const ChordsForMelodyPractice = () => {
   const navigate = useNavigate();
   const selectedMelodyName = state?.selectedMelody;
   const keyboardRef = useRef();
+  const [selectedChord, setSelectedChord] = useState(null);
 
   const melodyData = melodies[selectedMelodyName] || {};
   const {
@@ -46,16 +47,15 @@ const ChordsForMelodyPractice = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [slots, setSlots] = useState(() =>
-    Array.from({ length: totalBars }, (_, i) => ({
+    Array.from({ length: totalBars }, () => ({
       parts: [
         {
-          chord: suggestedChords[i] || '',
+          chord: '',
           duration: BAR_DURATION,
         },
       ],
     }))
   );
-
   const [showSuggested, setShowSuggested] = useState(false);
 
   const intervalRef = useRef(null);
@@ -77,7 +77,7 @@ const ChordsForMelodyPractice = () => {
     const normalized = normalizeNoteName(noteName);
     const audio = new Audio(`/clean_cut_notes/${normalized}.wav`);
     audio.volume = 1.0;
-    audio.play().catch((error) => console.error(`Error playing note ${normalized}:`, error));
+    audio.play().catch(console.error);
   };
 
   const playChord = (chordName) => {
@@ -87,7 +87,7 @@ const ChordsForMelodyPractice = () => {
       const normalized = normalizeNoteName(note);
       const audio = new Audio(`/clean_cut_notes/${normalized}.wav`);
       audio.volume = 0.7;
-      audio.play().catch((error) => console.error(`Error playing chord note ${normalized}:`, error));
+      audio.play().catch(console.error);
     });
     keyboardRef.current?.setFlashRight(notes);
   };
@@ -101,9 +101,7 @@ const ChordsForMelodyPractice = () => {
       const msDuration = noteObj.duration * beatDurationMs;
       if (elapsed + msDuration > startTime) {
         const delay = Math.max(0, elapsed - startTime);
-        const timeout = setTimeout(() => {
-          playNote(noteObj.note || noteObj.harmonynote);
-        }, delay);
+        const timeout = setTimeout(() => playNote(noteObj.note || noteObj.harmonynote), delay);
         melodyTimeoutsRef.current.push(timeout);
       }
       elapsed += msDuration;
@@ -138,29 +136,19 @@ const ChordsForMelodyPractice = () => {
   const stopMelodyPlayback = () => {
     melodyTimeoutsRef.current.forEach(clearTimeout);
     chordTimeoutsRef.current.forEach(clearTimeout);
-    melodyTimeoutsRef.current = [];
-    chordTimeoutsRef.current = [];
     clearInterval(intervalRef.current);
   };
 
-  const handlePlayPause = () => {
-    setIsPlaying((prev) => !prev);
-  };
-
+  const handlePlayPause = () => setIsPlaying((prev) => !prev);
   const handleDrop = (slotIndex, partIndex, chord) => {
     const updatedSlots = [...slots];
     updatedSlots[slotIndex].parts[partIndex].chord = chord;
     setSlots(updatedSlots);
+    setSelectedChord(null);
   };
 
-  const handleDragStart = (e, chord) => {
-    e.dataTransfer.setData('chord', chord);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
+  const handleDragStart = (e, chord) => e.dataTransfer.setData('chord', chord);
+  const handleDragOver = (e) => e.preventDefault();
   const handleSlotDrop = (e, slotIndex, partIndex) => {
     e.preventDefault();
     const chord = e.dataTransfer.getData('chord');
@@ -170,7 +158,7 @@ const ChordsForMelodyPractice = () => {
   const handleCutSlot = (slotIndex) => {
     const updatedSlots = [...slots];
     const slot = updatedSlots[slotIndex];
-    if (slot.parts.length === 1 && slot.parts[0].duration === BAR_DURATION) {
+    if (slot.parts.length === 1) {
       slot.parts = [
         { chord: '', duration: BAR_DURATION / 2 },
         { chord: '', duration: BAR_DURATION / 2 },
@@ -182,11 +170,7 @@ const ChordsForMelodyPractice = () => {
   const handleMergeSlot = (slotIndex) => {
     const updatedSlots = [...slots];
     const slot = updatedSlots[slotIndex];
-    if (
-      slot.parts.length === 2 &&
-      slot.parts[0].duration === BAR_DURATION / 2 &&
-      slot.parts[1].duration === BAR_DURATION / 2
-    ) {
+    if (slot.parts.length === 2) {
       slot.parts = [{ chord: '', duration: BAR_DURATION }];
       setSlots(updatedSlots);
     }
@@ -217,7 +201,7 @@ const ChordsForMelodyPractice = () => {
 
   if (!selectedMelodyName) {
     return (
-      <div className="chords_for_melody_practice_container" style={{ border: '1px solid #000', padding: '10px' }}>
+      <div className="chords_for_melody_practice_container">
         <h2>No melody selected. Please go back to settings.</h2>
         <button onClick={() => navigate('/chords-for-melody/settings')}>
           Back to Settings
@@ -234,12 +218,8 @@ const ChordsForMelodyPractice = () => {
         <div className="chords_for_melody_practice_info">
           <strong>{name}</strong> | Tempo: {tempo} BPM | Time: {beatsPerBar}/4
         </div>
-        <button className="chords_for_melody_practice_play_pause" onClick={handlePlayPause}>
-          {isPlaying ? '⏸️ Pause' : '▶️ Play'}
-        </button>
-        <button className="chords_for_melody_practice_suggested_button" onClick={() => setShowSuggested((s) => !s)}>
-          🎯 Suggested
-        </button>
+        <button onClick={handlePlayPause}>{isPlaying ? '⏸️ Pause' : '▶️ Play'}</button>
+        <button onClick={() => setShowSuggested((s) => !s)}>🎯 Suggested</button>
       </div>
 
       {showSuggested && (
@@ -265,36 +245,38 @@ const ChordsForMelodyPractice = () => {
                   className={`chords_for_melody_practice_slot ${part.duration === BAR_DURATION / 2 ? 'half' : ''} ${isActive ? 'active' : ''}`}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleSlotDrop(e, slotIndex, partIndex)}
+                  onClick={() => {
+                    if (selectedChord) handleDrop(slotIndex, partIndex, selectedChord);
+                  }}
                 >
                   {part.chord || ''}
                 </div>
               );
             })}
             {slot.parts.length === 1 ? (
-              <button className="chords_for_melody_practice_cut_button" onClick={() => handleCutSlot(slotIndex)}>
-                ✂️
-              </button>
+              <button onClick={() => handleCutSlot(slotIndex)}>✂️</button>
             ) : (
-              <button className="chords_for_melody_practice_merge_button" onClick={() => handleMergeSlot(slotIndex)}>
-                🔗
-              </button>
+              <button onClick={() => handleMergeSlot(slotIndex)}>🔗</button>
             )}
           </div>
         ))}
       </div>
 
       <div className="chords_for_melody_practice_chord_line">
-        {chords.map((chord, idx) => (
-          <div
-            key={idx}
-            className="chords_for_melody_practice_chord"
-            draggable
-            onClick={() => playChord(chord)}
-            onDragStart={(e) => handleDragStart(e, chord)}
-          >
-            {chord}
-          </div>
-        ))}
+      {chords.map((chord, idx) => (
+  <div
+    key={idx}
+    className={`chords_for_melody_practice_chord ${selectedChord === chord ? 'selected' : ''}`}
+    draggable
+    onClick={() => {
+      setSelectedChord(chord);
+      playChord(chord); // 🔊 Play chord when clicked
+    }}
+    onDragStart={(e) => handleDragStart(e, chord)}
+  >
+    {chord}
+  </div>
+))}
       </div>
 
       <div className="chords_for_melody_practice_bottom">
