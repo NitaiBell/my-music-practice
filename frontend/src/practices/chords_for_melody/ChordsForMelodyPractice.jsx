@@ -9,12 +9,12 @@ const chordNoteMap = {
   C: ['C3', 'E3', 'G3'],
   Dm: ['D3', 'F3', 'A3'],
   Em: ['E3', 'G3', 'B3'],
-  F: ['F3', 'A3', 'C4'], // Adjusted C3 to C4 for consistency
-  G: ['G3', 'B3', 'D4'], // Adjusted D3 to D4 for consistency
-  Am: ['A3', 'C4', 'E4'], // Adjusted C3, E3 to C4, E4 for consistency
-  Bdim: ['B3', 'D4', 'F4'], // Adjusted D3, F3 to D4, F4 for consistency
-  D: ['D3', 'F#3', 'A3'], // Added for playfulMelody
-  E: ['E3', 'G#3', 'B3'], // Added for sadInThree
+  F: ['F3', 'A3', 'C4'],
+  G: ['G3', 'B3', 'D4'],
+  Am: ['A3', 'C4', 'E4'],
+  Bdim: ['B3', 'D4', 'F4'],
+  D: ['D3', 'F#3', 'A3'],
+  E: ['E3', 'G#3', 'B3'],
 };
 
 const ChordsForMelodyPractice = () => {
@@ -24,7 +24,14 @@ const ChordsForMelodyPractice = () => {
   const keyboardRef = useRef();
 
   const melodyData = melodies[selectedMelodyName] || {};
-  const { notes = [], tempo = 90, timeSignature = [4, 4], chords = ['C', 'F', 'G'] } = melodyData;
+  const {
+    name = '',
+    notes = [],
+    tempo = 90,
+    timeSignature = [4, 4],
+    chords = ['C', 'F', 'G'],
+    suggestedChords = [],
+  } = melodyData;
 
   const beatsPerBar = timeSignature?.[0] || 4;
   const beatDurationMs = 60000 / tempo;
@@ -39,10 +46,17 @@ const ChordsForMelodyPractice = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [slots, setSlots] = useState(() =>
-    Array.from({ length: totalBars }, () => ({
-      parts: [{ chord: '', duration: BAR_DURATION }],
+    Array.from({ length: totalBars }, (_, i) => ({
+      parts: [
+        {
+          chord: suggestedChords[i] || '',
+          duration: BAR_DURATION,
+        },
+      ],
     }))
   );
+
+  const [showSuggested, setShowSuggested] = useState(false);
 
   const intervalRef = useRef(null);
   const melodyTimeoutsRef = useRef([]);
@@ -50,7 +64,7 @@ const ChordsForMelodyPractice = () => {
 
   useEffect(() => {
     if (isPlaying) {
-      startMelodyPlayback();
+      startMelodyPlayback(currentTime);
     } else {
       stopMelodyPlayback();
     }
@@ -78,29 +92,33 @@ const ChordsForMelodyPractice = () => {
     keyboardRef.current?.setFlashRight(notes);
   };
 
-  const startMelodyPlayback = () => {
+  const startMelodyPlayback = (startTime = 0) => {
     let elapsed = 0;
     melodyTimeoutsRef.current = [];
     chordTimeoutsRef.current = [];
 
     notes.forEach((noteObj) => {
       const msDuration = noteObj.duration * beatDurationMs;
-      const timeout = setTimeout(() => {
-        playNote(noteObj.note || noteObj.harmonynote);
-      }, elapsed);
-      melodyTimeoutsRef.current.push(timeout);
+      if (elapsed + msDuration > startTime) {
+        const delay = Math.max(0, elapsed - startTime);
+        const timeout = setTimeout(() => {
+          playNote(noteObj.note || noteObj.harmonynote);
+        }, delay);
+        melodyTimeoutsRef.current.push(timeout);
+      }
       elapsed += msDuration;
     });
 
     let chordTime = 0;
     slots.forEach((slot) => {
       slot.parts.forEach((part) => {
-        const timeout = setTimeout(() => {
-          if (part.chord) {
-            playChord(part.chord);
-          }
-        }, chordTime);
-        chordTimeoutsRef.current.push(timeout);
+        if (chordTime + part.duration > startTime) {
+          const delay = Math.max(0, chordTime - startTime);
+          const timeout = setTimeout(() => {
+            if (part.chord) playChord(part.chord);
+          }, delay);
+          chordTimeoutsRef.current.push(timeout);
+        }
         chordTime += part.duration;
       });
     });
@@ -193,12 +211,13 @@ const ChordsForMelodyPractice = () => {
     const clickX = e.clientX - rect.left;
     const width = rect.width;
     const percentage = clickX / width;
+    stopMelodyPlayback();
     setCurrentTime(percentage * totalDuration);
   };
 
   if (!selectedMelodyName) {
     return (
-      <div className="chords_for_melody_practice_containerغه:1px solid #000; padding:10px;">
+      <div className="chords_for_melody_practice_container" style={{ border: '1px solid #000', padding: '10px' }}>
         <h2>No melody selected. Please go back to settings.</h2>
         <button onClick={() => navigate('/chords-for-melody/settings')}>
           Back to Settings
@@ -212,25 +231,25 @@ const ChordsForMelodyPractice = () => {
   return (
     <div className="chords_for_melody_practice_container">
       <div className="chords_for_melody_practice_controls">
-        <button
-          className="chords_for_melody_practice_play_pause"
-          onClick={handlePlayPause}
-        >
+        <div className="chords_for_melody_practice_info">
+          <strong>{name}</strong> | Tempo: {tempo} BPM | Time: {beatsPerBar}/4
+        </div>
+        <button className="chords_for_melody_practice_play_pause" onClick={handlePlayPause}>
           {isPlaying ? '⏸️ Pause' : '▶️ Play'}
         </button>
-        <div className="chords_for_melody_practice_tempo">
-          Tempo: {tempo} BPM | Time Signature: {beatsPerBar}/4
-        </div>
+        <button className="chords_for_melody_practice_suggested_button" onClick={() => setShowSuggested((s) => !s)}>
+          🎯 Suggested
+        </button>
       </div>
 
-      <div
-        className="chords_for_melody_practice_progress_bar"
-        onClick={handleProgressClick}
-      >
-        <div
-          className="chords_for_melody_practice_progress_fill"
-          style={{ width: `${(currentTime / totalDuration) * 100}%` }}
-        >
+      {showSuggested && (
+        <div className="chords_for_melody_practice_suggested">
+          Suggested: {suggestedChords.join(' | ')}
+        </div>
+      )}
+
+      <div className="chords_for_melody_practice_progress_bar" onClick={handleProgressClick}>
+        <div className="chords_for_melody_practice_progress_fill" style={{ width: `${(currentTime / totalDuration) * 100}%` }}>
           <div className="chords_for_melody_practice_progress_dot"></div>
         </div>
       </div>
@@ -239,15 +258,11 @@ const ChordsForMelodyPractice = () => {
         {slots.map((slot, slotIndex) => (
           <div key={slotIndex} className="chords_for_melody_practice_slot_group">
             {slot.parts.map((part, partIndex) => {
-              const isActive =
-                activeSlot?.slotIndex === slotIndex &&
-                activeSlot?.partIndex === partIndex;
+              const isActive = activeSlot?.slotIndex === slotIndex && activeSlot?.partIndex === partIndex;
               return (
                 <div
                   key={partIndex}
-                  className={`chords_for_melody_practice_slot ${
-                    part.duration === BAR_DURATION / 2 ? 'half' : ''
-                  } ${isActive ? 'active' : ''}`}
+                  className={`chords_for_melody_practice_slot ${part.duration === BAR_DURATION / 2 ? 'half' : ''} ${isActive ? 'active' : ''}`}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleSlotDrop(e, slotIndex, partIndex)}
                 >
@@ -256,17 +271,11 @@ const ChordsForMelodyPractice = () => {
               );
             })}
             {slot.parts.length === 1 ? (
-              <button
-                className="chords_for_melody_practice_cut_button"
-                onClick={() => handleCutSlot(slotIndex)}
-              >
+              <button className="chords_for_melody_practice_cut_button" onClick={() => handleCutSlot(slotIndex)}>
                 ✂️
               </button>
             ) : (
-              <button
-                className="chords_for_melody_practice_merge_button"
-                onClick={() => handleMergeSlot(slotIndex)}
-              >
+              <button className="chords_for_melody_practice_merge_button" onClick={() => handleMergeSlot(slotIndex)}>
                 🔗
               </button>
             )}

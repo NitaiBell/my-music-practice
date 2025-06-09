@@ -15,6 +15,18 @@
 .chords_for_melody_practice_controls {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.chords_for_melody_practice_info {
+  font-size: 20px;
+  font-weight: bold;
+  background: #27391C;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .chords_for_melody_practice_play_pause {
@@ -31,6 +43,23 @@
 
 .chords_for_melody_practice_play_pause:hover {
   background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.05);
+}
+
+.chords_for_melody_practice_suggested_button {
+  font-size: 18px;
+  padding: 12px 24px;
+  background: #6A994E;
+  color: #F1EFEC;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.chords_for_melody_practice_suggested_button:hover {
+  background: #588741;
   transform: scale(1.05);
 }
 
@@ -162,21 +191,6 @@
   font-size: 20px;
   color: #F1EFEC;
   text-align: center;
-}
-
-
-/* Tempo and Time Signature */
-.chords_for_melody_practice_tempo {
-  margin-left: 20px;
-  padding: 12px 20px;
-  background: #27391C;
-  color: #F1EFEC;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .chords_for_melody_practice_bottom {
