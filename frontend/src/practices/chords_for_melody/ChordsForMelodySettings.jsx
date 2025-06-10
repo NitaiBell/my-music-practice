@@ -41,10 +41,12 @@ const ChordsForMelodySettings = () => {
           {melodyKeys.map((melodyKey) => {
             const { name, description } = melodies[melodyKey];
             const nameClass = name.startsWith("Random")
-              ? "random"
-              : name.startsWith("Round")
-              ? "round"
-              : "";
+            ? "random"
+            : name.startsWith("Round")
+            ? "round"
+            : name.startsWith("Peaceful")
+            ? "peaceful"
+            : "";
 
             return (
               <div

@@ -187,3 +187,9 @@ chords_ads_left {
   transform: scale(1.01);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
 }
+
+
+.chords_for_melody_settings_item.peaceful {
+  background: linear-gradient(to right, #b3cde0, #6497b1);
+  border-left: 6px solid #005b96;
+}
