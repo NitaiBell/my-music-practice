@@ -1568,6 +1568,125 @@ export const melodies = {
 
 
 
+  melodyCGFADm_1: {
+    name: "Solo Drift (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      // Bar 1 – C
+      { note: "C5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      // Bar 2 – G
+      { note: "B4", duration: 1 },
+      { note: "D5", duration: 1 },
+      { note: "G5", duration: 1 },
+  
+      // Bar 3 – F
+      { note: "A4", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      // Bar 4 – Am
+      { note: "A4", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "E5", duration: 1 },
+  
+      // Bar 5 – Dm
+      { note: "D5", duration: 2 },
+      { note: "F5", duration: 1 },
+  
+      // Bar 6 – G
+      { note: "G4", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "D5", duration: 1 },
+  
+      // Bar 7 – Am
+      { note: "A4", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      // Bar 8 – C
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['C', 'G', 'F', 'Am', 'Dm', 'G', 'Am', 'C']
+  },
+
+
+
+  melodyCGFADm_2: {
+    name: "Solo Keyboard (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "C5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "F5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "D5", duration: 2 },
+      { note: "F5", duration: 1 },
+  
+      { note: "G5", duration: 1 },
+      { note: "F5", duration: 1 },
+      { note: "E5", duration: 1 },
+  
+      { note: "F5", duration: 2 },
+      { note: "G5", duration: 1 },
+  
+      { note: "G5", duration: 1 },
+      { note: "A5", duration: 1 },
+      { note: "B5", duration: 1 },
+  
+      { note: "A5", duration: 2 },
+      { note: "F5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['C', 'F', 'Dm', 'G', 'F', 'G', 'F', 'C']
+  },
+
+  melodyCGFADm_3: {
+    name: "Solo Badge (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      { note: "B4", duration: 2 },
+      { note: "G4", duration: 1 },
+  
+      { note: "D5", duration: 6 },
+
+  
+      { note: "C5", duration: 2 },
+      { note: "F5", duration: 1 },
+  
+      { note: "E5", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      { note: "D5", duration: 2 },
+      { note: "B4", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['Am', 'G', 'Dm', 'Dm', 'F', 'C', 'G', 'C']
+  }
+
+
+
+
+  
+  
+
+
+
 
 
 
