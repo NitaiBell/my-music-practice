@@ -193,3 +193,21 @@ chords_ads_left {
   background: linear-gradient(to right, #b3cde0, #6497b1);
   border-left: 6px solid #005b96;
 }
+
+
+.chords_for_melody_settings_item.peaceful {
+  background: linear-gradient(to right, #b3cde0, #6497b1);
+  border-left: 6px solid #005b96;
+}
+
+/* SOLO – Rose Gradient */
+.chords_for_melody_settings_item.solo {
+  background: linear-gradient(to right, #f8bbd0, #f48fb1);
+  border-left: 6px solid #c2185b;
+}
+
+/* FULL – Nature Green Gradient */
+.chords_for_melody_settings_item.full {
+  background: linear-gradient(to right, #c8e6c9, #81c784);
+  border-left: 6px solid #388e3c;
+}

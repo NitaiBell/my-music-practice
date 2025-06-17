@@ -15,6 +15,7 @@ const chordNoteMap = {
   Bdim: ['B3', 'D4', 'F4'],
   D: ['D3', 'F#3', 'A3'],
   E: ['E3', 'G#3', 'B3'],
+  Bb: ['A#3', 'D3', 'F3'],
 };
 
 const ChordsForMelodyPractice = () => {

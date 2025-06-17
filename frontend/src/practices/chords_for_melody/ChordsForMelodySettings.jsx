@@ -46,7 +46,12 @@ const ChordsForMelodySettings = () => {
             ? "round"
             : name.startsWith("Peaceful")
             ? "peaceful"
+            : name.startsWith("Solo")
+            ? "solo"
+            : name.startsWith("Full")
+            ? "full"
             : "";
+          
 
             return (
               <div

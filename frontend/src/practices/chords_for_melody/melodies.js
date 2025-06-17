@@ -1677,7 +1677,837 @@ export const melodies = {
     ],
     chords: ['C', 'G', 'F', 'Am', 'Dm'],
     suggestedChords: ['Am', 'G', 'Dm', 'Dm', 'F', 'C', 'G', 'C']
-  }
+  },
+
+
+  melodyCGFADm_4: {
+    name: "Solo Button (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 1.5 },
+      { note: "B4", duration: 0.5 },
+      { note: "C5", duration: 1 },
+
+  
+      { note: "D5", duration: 2 },
+      { note: "B4", duration: 1 },
+  
+      { note: "A4", duration: 1.5 },
+      { note: "B4", duration: 0.5 },
+      { note: "C5", duration: 1 },
+
+      { note: "B4", duration: 2 },
+      { note: "A4", duration: 0.5 },
+      { note: "G4", duration: 0.5 },
+
+
+
+  
+      { note: "F4", duration: 2 },
+      { note: "G4", duration: 1 },
+  
+      { note: "A4", duration: 1 },
+      { note: "G4", duration: 1 },
+      { note: "A4", duration: 1 },
+
+  
+      { note: "B4", duration: 2 },
+      { note: "G4", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['Am', 'Dm', 'Am', 'G', 'F', 'Dm', 'G', 'C']
+  },
+
+
+  
+  melodyCGFADm_5: {
+    name: "Solo Emotion (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "E5", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      { note: "E5", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      { note: "F5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "F5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "E5", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      { note: "A4", duration: 2 },
+      { note: "G4", duration: 1 },
+  
+      { note: "F4", duration: 6 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['Am', 'Am', 'Dm', 'Dm', 'Am', 'Am', 'F', 'F']
+  },
+
+
+  melodyCGFADm_6: {
+    name: "Solo New Yorker (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 2 },
+      { note: "B4", duration: 0.5 },
+      { note: "C5", duration: 0.5 },
+  
+      { note: "D5", duration: 2 },
+      { note: "B4", duration: 0.5 },
+      { note: "A4", duration: 0.5 },
+  
+      { note: "G4", duration: 2 },
+      { note: "A4", duration: 0.5 },
+      { note: "B4", duration: 0.5 },
+  
+      { note: "C5", duration: 2 },
+      { note: "B4", duration: 0.5 },
+      { note: "A4", duration: 0.5 },
+
+  
+      { note: "F4", duration: 2 },
+      { note: "E4", duration: 1 },
+  
+      { note: "D4", duration: 2 },
+      { note: "E4", duration: 1 },
+  
+      { note: "A4", duration: 3 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['Am', 'Dm', 'G', 'C', 'F', 'Dm', 'Am', 'Am']
+  },
+
+
+  melodyCGFADm_7: {
+    name: "Solo Cake (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 2 },
+      { note: "G4", duration: 0.5 },
+      { note: "A4", duration: 0.5 },
+  
+      { note: "G4", duration: 3 },
+
+  
+      { note: "A4", duration: 2 },
+      { note: "G4", duration: 0.5 },
+      { note: "F4", duration: 0.5 },
+  
+      { note: "E4", duration: 3 },
+
+
+  
+      { note: "C5", duration: 2 },
+      { note: "A4", duration: 1 },
+  
+      { note: "G4", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 6 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['Am', 'G', 'Dm', 'Am', 'F', 'G', 'C', 'C']
+  },
+
+
+  melodyCGFADm_8: {
+    name: "Solo Snake (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A5", duration: 1.5 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 1 },
+  
+      { note: "E5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "A4", duration: 1 },
+
+      { note: "A5", duration: 1.5 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 1 },
+  
+      { note: "E5", duration: 3 },
+
+
+  
+      { note: "D5", duration: 1 },
+      { note: "E5", duration: 1 },
+      { note: "F5", duration: 1 },
+
+  
+      { note: "D5", duration: 1 },
+      { note: "E5", duration: 1 },
+      { note: "F5", duration: 1 },
+
+   
+  
+      { note: "A5", duration: 6 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['Dm', 'Am', 'Dm', 'Am', 'Dm', 'Dm', 'Am', 'Am']
+  },
+
+
+
+  melodyCGFADm_9: {
+    name: "Solo Smile (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "G5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "G5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "D5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "F5", duration: 3 },
+  
+      { note: "G5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "G5", duration: 2 },
+      { note: "E5", duration: 1 },
+
+      { note: "D5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 3 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['C', 'C', 'Dm', 'F', 'C', 'C', 'G', 'C']
+  },
+
+
+  melodyCGFADm_10: {
+    name: "Solo Dance (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "E5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "E5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+      { note: "B4", duration: 1 },
+  
+      { note: "A4", duration: 2 },
+      { note: "G4", duration: 1 },
+  
+      { note: "F5", duration: 2 },
+      { note: "G5", duration: 1 },
+  
+      { note: "A5", duration: 2 },
+      { note: "E5", duration: 1 },
+
+      { note: "G5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 3 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['C', 'Am', 'F', 'F', 'Dm', 'G', 'G', 'C']
+  },
+
+
+  melodyCGFADm_11: {
+    name: "Solo Happy (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 140,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "D5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      { note: "B4", duration: 2 },
+      { note: "B4", duration: 1 },
+  
+      { note: "A4", duration: 2 },
+      { note: "C5", duration: 1 },
+  
+      { note: "D5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+      { note: "C5", duration: 1 },
+
+      { note: "F5", duration: 2 },
+      { note: "F5", duration: 1 },
+  
+      { note: "E5", duration: 3 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['Dm', 'Am', 'G', 'Am', 'Dm', 'Am', 'G', 'C']
+  },
+
+  melodyCGFADm_12: {
+    name: "Solo Space (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 140,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "G5", duration: 2 },
+      { note: "E5", duration: 0.5 },
+      { note: "F5", duration: 0.5 },
+
+      { note: "G5", duration: 3 },
+  
+      { note: "E5", duration: 2 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+
+      { note: "D5", duration: 3 },
+  
+      { note: "F5", duration: 2 },
+      { note: "A5", duration: 1 },
+  
+      { note: "G5", duration: 2 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+
+      { note: "C5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['C', 'G', 'Am', 'Dm', 'F', 'G', 'C', 'C']
+  },
+
+
+  melodyCGFADm_13: {
+    name: "Solo Spaceship (C G F Am Dm 3/4, 8 bars)",
+    description: "Gentle melody using chords C, G, F, Am, and Dm in 3/4 time.",
+    tempo: 140,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "C5", duration: 2 },
+      { note: "D5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+
+      { note: "G5", duration: 3 },
+  
+      { note: "A5", duration: 2 },
+      { note: "C6", duration: 0.5 },
+      { note: "B5", duration: 0.5 },
+
+      { note: "A5", duration: 3 },
+  
+      { note: "F5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "D5", duration: 2 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+
+      { note: "G5", duration: 2 },
+      { note: "G5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ['C', 'G', 'Am', 'Dm', 'F', 'Dm', 'G', 'C']
+  },
+
+
+  melodyCGFADm_14: {
+    name: "Solo rising (C G F Am Dm 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am and Dm in 3/4 time.",
+    tempo: 120,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "C5", duration: 2 },
+      { note: "D5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+
+      { note: "G5", duration: 3 },
+  
+      { note: "A5", duration: 2 },
+      { note: "C6", duration: 0.5 },
+      { note: "B5", duration: 0.5 },
+
+      { note: "A5", duration: 3 },
+  
+      { note: "F5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "D5", duration: 2 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+
+      { note: "G5", duration: 2 },
+      { note: "G5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm'],
+    suggestedChords: ["C", "G", "Am", "F", "C", "Dm", "G", "C"]
+  },
+
+
+
+  melodyCGFADmEmE_1: {
+    name: "Full Moon (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 120,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A5", duration: 2 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 0.5 },
+
+      { note: "E5", duration: 3 },
+  
+      { note: "G5", duration: 2 },
+      { note: "E5", duration: 0.5 },
+      { note: "G5", duration: 0.5 },
+
+      { note: "A5", duration: 3 },
+  
+      { note: "F5", duration: 2 },
+      { note: "E5", duration: 1 },
+  
+      { note: "D5", duration: 2 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+
+      { note: "D5", duration: 2 },
+      { note: "D5", duration: 1 },
+  
+      { note: "C5", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E','Bb'],
+    suggestedChords: ["Dm", "Am", "Em", "Am", "F", "Dm", "G", "C"]
+  },
+
+
+  melodyCGFADmEmE_2: {
+    name: "Full Sun (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 120,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 2 },
+      { note: "B4", duration: 0.5 },
+      { note: "C5", duration: 0.5 },
+
+      { note: "D5", duration: 3 },
+  
+      { note: "E5", duration: 2 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 0.5 },
+
+      { note: "E5", duration: 3 },
+  
+      { note: "D5", duration: 1.5 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+
+  
+      { note: "C5", duration: 2 },
+      { note: "D5", duration: 0.5 },
+      { note: "C5", duration: 0.5 },
+
+      { note: "B4", duration: 2 },
+      { note: "C5", duration: 0.5 },
+      { note: "B4", duration: 0.5 },
+
+  
+      { note: "A4", duration: 2 },
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["Am", "G", "C", "Em", "Dm", "Am", "Em", "C"]
+  },
+
+  melodyCGFADmEmE_3: {
+    name: "Full Basket (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 120,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "C4", duration: 2 },
+      { note: "D4", duration: 0.5 },
+      { note: "E4", duration: 0.5 },
+
+      { note: "G4", duration: 2 },
+      { note: "C5", duration: 0.5 },
+      { note: "B4", duration: 0.5 },
+  
+      { note: "A4", duration: 2 },
+      { note: "C5", duration: 0.5 },
+      { note: "B4", duration: 0.5 },
+
+      { note: "A4", duration: 2 },
+      { note: "G4", duration: 0.5 },
+      { note: "A4", duration: 0.5 },
+
+      { note: "B4", duration: 2 },
+      { note: "B4", duration: 1 },
+
+      { note: "A4", duration: 2 },
+      { note: "A4", duration: 1 },
+
+
+  
+      { note: "G4", duration: 2 },
+      { note: "G4", duration: 1 },
+
+      { note: "C5", duration: 3 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["C", "G", "Am", "F", "Em", "Dm", "G", "C"]
+  },
+
+
+  melodyCGFADmEmE_4: {
+    name: "Full Football (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 2 },
+      { note: "Gs4", duration: 0.5 },
+      { note: "A4", duration: 0.5 },
+
+      { note: "B4", duration: 2 },
+      { note: "E4", duration: 1 },
+      
+      
+      { note: "C5", duration: 1.5 },
+      { note: "B4", duration: 0.5 },
+      { note: "A4", duration: 1 },
+
+      { note: "D5", duration: 2 },
+      { note: "C5", duration: 0.5 },
+      { note: "B4", duration: 0.5 },
+
+      { note: "G5", duration: 2 },
+      { note: "C5", duration: 1 },
+
+      { note: "A5", duration: 1.5 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 1 },
+
+
+  
+      { note: "G5", duration: 2 },
+      { note: "G4", duration: 1 },
+
+      { note: "A4", duration: 2 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["Am", "Em", "Am", "Dm", "C", "F", "G", "Am"]
+  },
+
+
+  melodyCGFADmEmE_5: {
+    name: "Full Color (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A5", duration: 2 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 0.5 },
+
+      { note: "A5", duration: 2 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 0.5 },
+      
+      
+      { note: "E5", duration: 2 },
+      { note: "F5", duration: 1 },
+
+      { note: "G5", duration: 3 },
+
+
+      { note: "F5", duration: 2 },
+      { note: "E5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+
+      { note: "G5", duration: 3 },
+
+
+
+  
+      { note: "E5", duration: 2 },
+      { note: "B5", duration: 1 },
+
+      { note: "A5", duration: 2 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["F", "Dm", "Am", "Em", "Dm", "G", "E", "Am"]
+  },
+
+
+  melodyCGFADmEmE_6: {
+    name: "Full Cat (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "B4", duration: 2 },
+      { note: "B4", duration: 1 },
+
+      { note: "C5", duration: 2 },
+      { note: "C5", duration: 1 },
+      
+      
+      { note: "B4", duration: 2 },
+      { note: "B4", duration: 1 },
+
+      { note: "C5", duration: 2 },
+      { note: "C5", duration: 1 },
+
+
+      { note: "F5", duration: 2 },
+      { note: "F5", duration: 1 },
+
+      { note: "F5", duration: 2 },
+      { note: "E5", duration: 1 },
+
+
+
+  
+      { note: "D5", duration: 2 },
+      { note: "D5", duration: 1 },
+
+      { note: "C5", duration: 2 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["G", "C", "E", "Am", "F", "Dm", "G", "C"]
+  },
+
+
+  melodyCGFADmEmE_7: {
+    name: "Full Ship (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "A4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "E5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+
+
+      { note: "C5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "E5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+      
+      
+      { note: "B4", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "E5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+
+      { note: "A4", duration: 3 },
+    
+
+
+      { note: "A4", duration: 1 },
+      { note: "A4", duration: 1 },
+      { note: "E5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+
+
+      { note: "C5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "E5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+
+
+
+  
+      { note: "D5", duration: 1 },
+      { note: "D5", duration: 1 },
+      { note: "C5", duration: 0.5 },
+      { note: "B4", duration: 0.5 },
+
+      { note: "A4", duration: 2 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["Am", "F", "Em", "Am", "F", "C", "G", "Am"]
+  },
+
+
+
+  melodyCGFADmEmE_8: {
+    name: "Full Gossip (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "D5", duration: 1.5 },
+      { note: "C5", duration: 0.5 },
+      { note: "B4", duration: 1 },
+
+
+      { note: "A4", duration: 3 },
+
+      
+      
+      { note: "E5", duration: 1.5 },
+      { note: "C5", duration: 0.5 },
+      { note: "B4", duration: 1 },
+
+
+      { note: "A4", duration: 3 },
+    
+
+
+      { note: "B4", duration: 1 },
+      { note: "B4", duration: 1 },
+      { note: "C5", duration: 0.5 },
+      { note: "D5", duration: 0.5 },
+
+
+      { note: "C5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "C5", duration: 1 },
+
+      { note: "F5", duration: 1 },
+      { note: "E5", duration: 1 },
+      { note: "D5", duration: 1 },
+
+      { note: "A4", duration: 2 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["Dm", "Am", "Em", "Am", "G", "C", "Dm", "Am"]
+  },
+
+
+  melodyCGFADmEmE_9: {
+    name: "Full Happiness (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "E5", duration: 1.5 },
+      { note: "D5", duration: 0.5 },
+      { note: "C5", duration: 1 },
+
+
+      { note: "B4", duration: 3 },
+
+      
+      
+      { note: "G5", duration: 1.5 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 1 },
+
+
+      { note: "G5", duration: 3 },
+    
+
+
+      { note: "A5", duration: 1.5 },
+      { note: "G5", duration: 0.5 },
+      { note: "F5", duration: 1 },
+
+
+      { note: "G5", duration: 1.5 },
+      { note: "A5", duration: 0.5 },
+      { note: "G5", duration: 1 },
+
+      { note: "D5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "D5", duration: 1 },
+
+      { note: "C5", duration: 2 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["C", "G", "C", "Em", "F", "C", "G", "C"]
+  },
+
+
+
+  melodyCGFADmEmE_10: {
+    name: "Full Pepper (C G F Am Dm Em E 3/4, 8 bars)",
+    description: "Simple melody using chords C, G, F, Am, Dm and Em in 3/4 time.",
+    tempo: 110,
+    timeSignature: [3, 4],
+    notes: [
+      { note: "G5", duration: 1.5 },
+      { note: "F5", duration: 0.5 },
+      { note: "E5", duration: 1 },
+
+
+      { note: "D5", duration: 3 },
+
+      
+      
+      { note: "E5", duration: 1.5 },
+      { note: "D5", duration: 0.5 },
+      { note: "C5", duration: 1 },
+
+
+      { note: "B4", duration: 3 },
+    
+
+
+      { note: "A4", duration: 1.5 },
+      { note: "C5", duration: 0.5 },
+      { note: "E5", duration: 1 },
+
+
+      { note: "D5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "D5", duration: 1 },
+
+      { note: "D5", duration: 1 },
+      { note: "C5", duration: 1 },
+      { note: "B4", duration: 1 },
+
+      { note: "A4", duration: 2 },
+
+  
+    ],
+    chords: ['C', 'G', 'F', 'Am', 'Dm','Em','E', 'Bb'],
+    suggestedChords: ["C", "G", "Am", "Em", "Am", "Dm", "E", "Am"]
+  },
 
 
 
