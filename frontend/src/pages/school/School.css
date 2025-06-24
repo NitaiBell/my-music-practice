@@ -1,0 +1,180 @@
+.school-wrapper {
+    min-height: 100vh;
+    background-color: #bbf5b5;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .school-content {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .school-section {
+    margin-bottom: 2rem;
+  }
+  
+  .school-section label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .school-section input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 60%;
+    max-width: 300px;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .school-section button {
+    padding: 0.5rem 1rem;
+    background-color: #199600;
+    color: white;
+    border: none;
+    margin-left: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .school-section button:hover {
+    background-color: #004600;
+  }
+  
+  .school-message {
+    margin-top: 1rem;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  .school-student-list {
+    margin-top: 2rem;
+  }
+  
+  .school-student-list h3 {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+  }
+  
+  .school-empty {
+    color: #999;
+    font-style: italic;
+  }
+  
+  .school-student-button {
+    display: block;
+    margin: 0.5rem auto;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    background-color: #07490b;
+    border: 2px solid #0e4102;
+    color: #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 70%;
+    max-width: 300px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  
+  .school-student-button:hover {
+    background-color: #229605;
+    color: white;
+  }
+
+
+
+  .school-explanation {
+    background-color: #f6fff0;
+    border: 1px solid #a3dca1;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1.5rem 0 2.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+
+  .school-fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+  }
+  
+  .school-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+
+  .school-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #bbf5b5;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .school-fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+  }
+  
+  .school-scroll-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .school-inner-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .school-content {
+    flex-grow: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+
+  .school-linked-message {
+    background: linear-gradient(to right, #39e9da, #f0fff4);
+    border: 1px solid #c6f6d5;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 2rem;
+    color: #22543d;
+    font-size: 1.05rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 128, 0, 0.05);
+  }
+  
+  .school-linked-message ul {
+    margin: 0.6rem 0 0;
+    padding-left: 1.2rem;
+    list-style-type: disc;
+  }
+  
+  .school-linked-message li {
+    margin-bottom: 0.3rem;
+    line-height: 1.5;
+  }
+  

@@ -1,6 +1,6 @@
-// backend/initDb.js
 import { pool } from './db.js';
 
+// Create 'users' table
 export const createUsersTableIfNotExists = async () => {
   try {
     await pool.query(`
@@ -19,6 +19,7 @@ export const createUsersTableIfNotExists = async () => {
   }
 };
 
+// Create 'user_practice_log' table
 export const createPracticeLogTableIfNotExists = async () => {
   try {
     await pool.query(`
@@ -42,5 +43,23 @@ export const createPracticeLogTableIfNotExists = async () => {
     console.log("✅ 'user_practice_log' table ready.");
   } catch (err) {
     console.error("❌ Error creating 'user_practice_log' table:", err.message);
+  }
+};
+
+// Create 'teacher_student_links' table
+export const createTeacherStudentTableIfNotExists = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS teacher_student_links (
+        id SERIAL PRIMARY KEY,
+        teacher_email TEXT NOT NULL,
+        student_email TEXT NOT NULL,
+        confirmed BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("✅ 'teacher_student_links' table ready.");
+  } catch (err) {
+    console.error("❌ Error creating 'teacher_student_links' table:", err.message);
   }
 };

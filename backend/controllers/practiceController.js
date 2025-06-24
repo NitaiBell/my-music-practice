@@ -1,9 +1,9 @@
 import { pool } from '../db.js';
 
-// Save a practice result
+// POST /api/practice/save
 export const savePractice = async (req, res) => {
   const data = req.body;
-  console.log('📥 Incoming practice log:', data); // ✅ Log input
+  console.log('📥 Incoming practice log:', data);
 
   const {
     gmail,
@@ -51,7 +51,7 @@ export const savePractice = async (req, res) => {
   }
 };
 
-// Fetch last and highest rank scores
+// GET /api/practice/stats
 export const getPracticeStats = async (req, res) => {
   const { gmail, practiceName } = req.query;
 
@@ -94,6 +94,7 @@ export const getPracticeStats = async (req, res) => {
   }
 };
 
+// GET /api/practice/log?gmail=...&practiceName=...
 export const getPracticeLog = async (req, res) => {
   const { gmail, practiceName } = req.query;
 
@@ -102,7 +103,7 @@ export const getPracticeLog = async (req, res) => {
       `SELECT * FROM user_practice_log
        WHERE gmail = $1 AND practice_name = $2
        ORDER BY date DESC
-       LIMIT 120`, // optional limit
+       LIMIT 120`,
       [gmail, practiceName]
     );
 
@@ -110,5 +111,28 @@ export const getPracticeLog = async (req, res) => {
   } catch (err) {
     console.error('❌ Failed to fetch full log:', err.message);
     res.status(500).json({ error: 'Failed to get practice log' });
+  }
+};
+
+// ✅ NEW: GET /api/practice/log/all?gmail=...
+export const getAllLogsForStudent = async (req, res) => {
+  const { gmail } = req.query;
+
+  if (!gmail) {
+    return res.status(400).json({ error: 'Missing gmail parameter' });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM user_practice_log
+       WHERE gmail = $1
+       ORDER BY date DESC
+       LIMIT 200`,
+      [gmail]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('❌ Failed to fetch all logs:', err.message);
+    res.status(500).json({ error: 'Failed to get logs' });
   }
 };

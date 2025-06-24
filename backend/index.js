@@ -3,8 +3,13 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import practiceRoutes from './routes/practiceRoutes.js';
+import teacherStudentRoutes from './routes/teacherStudentRoutes.js'; // ✅ New import
 import { pool } from './db.js';
-import { createUsersTableIfNotExists, createPracticeLogTableIfNotExists } from './initDb.js';
+import {
+  createUsersTableIfNotExists,
+  createPracticeLogTableIfNotExists,
+  createTeacherStudentTableIfNotExists, // ✅ New import
+} from './initDb.js';
 
 dotenv.config();
 
@@ -29,11 +34,13 @@ app.get('/', async (req, res) => {
 // ✅ Routes
 app.use('/api/users', userRoutes);
 app.use('/api/practice', practiceRoutes);
+app.use('/api/teacher-student', teacherStudentRoutes); // ✅ New route
 
 // ✅ Start server after ensuring tables exist
 Promise.all([
   createUsersTableIfNotExists(),
   createPracticeLogTableIfNotExists(),
+  createTeacherStudentTableIfNotExists(), // ✅ Run this on startup
 ]).then(() => {
   app.listen(port, () => {
     console.log(`✅ Server running on port ${port}`);

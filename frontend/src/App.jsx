@@ -1,9 +1,8 @@
-// src/App.jsx
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useAuth } from './context/AuthContext.jsx';
 
-// Pages
+// Main Pages
 import Home from './pages/Home.jsx';
 import NitaiPractices from './pages/NitaiPractices.jsx';
 import CoursePage from './pages/course/CoursePage.jsx';
@@ -13,9 +12,6 @@ import PracticesShowcase from './pages/practices/PracticesShowcase.jsx';
 import PracticeLog from './pages/practicelog/PracticeLog.jsx';
 import About from './pages/about/About.jsx';
 import InstructionPractice from './pages/practices/InstructionPractice.jsx';
-
-
-
 
 // Auth Pages
 import SignIn from './pages/auth/SignIn.jsx';
@@ -49,7 +45,13 @@ import MelodicDictationContainer from './practices/melodic_dictation/MelodicDict
 import HarmonicDictationContainer from './practices/harmonic_dictation/HarmonicDictationContainer.jsx';
 import ListOfValidProgressions from './practices/harmonic_dictation/ListOfValidProgressions.jsx';
 
+// School Pages
+import School from './pages/school/School.jsx';
+import StudentLog from './pages/school/StudentLog.jsx';
+
 export default function App() {
+  const { currentUser } = useAuth();
+
   return (
     <Router>
       <Routes>
@@ -61,17 +63,14 @@ export default function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/practices-showcase" element={<PracticesShowcase />} />
         <Route path="/instructions/:practiceKey" element={<InstructionPractice />} />
-
         <Route path="/practice-log/:practiceName" element={<PracticeLog />} />
-
 
         {/* Auth Pages */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
 
-
+        {/* About */}
         <Route path="/about" element={<About />} />
-
 
         {/* Articles */}
         <Route path="/articles" element={<ArticlesList />} />
@@ -100,6 +99,10 @@ export default function App() {
         <Route path="/melodic-dictation/*" element={<MelodicDictationContainer />} />
         <Route path="/harmonic/*" element={<HarmonicDictationContainer />} />
         <Route path="/harmonic/progressions" element={<ListOfValidProgressions />} />
+
+        {/* School System */}
+        <Route path="/school" element={<School currentUser={currentUser} />} />
+        <Route path="/school/log/:studentEmail" element={<StudentLog currentUser={currentUser} />} />
       </Routes>
     </Router>
   );

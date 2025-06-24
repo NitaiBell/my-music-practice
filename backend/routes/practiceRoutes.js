@@ -1,7 +1,10 @@
 import express from 'express';
-import { savePractice } from '../controllers/practiceController.js';
-import { getPracticeStats } from '../controllers/practiceController.js';
-import { getPracticeLog } from '../controllers/practiceController.js';
+import {
+  savePractice,
+  getPracticeStats,
+  getPracticeLog,
+  getAllLogsForStudent, // ✅ new import
+} from '../controllers/practiceController.js';
 
 const router = express.Router();
 
@@ -11,11 +14,16 @@ router.get('/test', (req, res) => {
   res.json({ message: 'Test route works' });
 });
 
+// ✅ Save a new practice result
 router.post('/save', savePractice);
+
+// ✅ Get stats for a specific practice
 router.get('/stats', getPracticeStats);
-router.get('/log', getPracticeLog); // ✅ Add this line
 
+// ✅ Get logs for a specific practice
+router.get('/log', getPracticeLog);
 
-
+// ✅ Get all logs for a user (for teacher viewing a student)
+router.get('/log/all', getAllLogsForStudent);
 
 export default router;

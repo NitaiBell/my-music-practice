@@ -2,7 +2,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(to bottom right, #f0fff4, #e6ffe6);
+    background-color: #97f2c6;
   }
   
   .instruction-practice-content {
