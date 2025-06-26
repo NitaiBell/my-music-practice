@@ -149,3 +149,16 @@
     justify-content: flex-start;
   }
   
+
+  .practice-log-subtitle {
+    margin-top: -10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #065f46; /* dark green */
+    opacity: 0.85;
+  }
+  .practice-log-subtitle strong {
+    color: #166534;
+  }
+  

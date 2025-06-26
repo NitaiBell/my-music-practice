@@ -1,9 +1,12 @@
-.about-wrapper {
+/* src/pages/about/About.css */
+
+.light-page {
+  background-color: #a4e7b1;
+  color: #111827;
   min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
-  background: #f0fdf4;
-  font-family: 'Segoe UI', sans-serif;
 }
 
 .about-content {
@@ -14,11 +17,10 @@
   color: #065f46;
   line-height: 1.8;
 }
-  
-  .about-content h1 {
-    font-size: 2.8rem;
-    margin-bottom: 24px;
-    text-align: center;
-    text-shadow: 0 1px 0 white;
-  }
-  
+
+.about-content h1 {
+  font-size: 2.8rem;
+  margin-bottom: 24px;
+  text-align: center;
+  text-shadow: 0 1px 0 white;
+}

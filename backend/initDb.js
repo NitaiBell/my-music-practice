@@ -37,6 +37,7 @@ export const createPracticeLogTableIfNotExists = async () => {
         try_score INT,
         speed_score INT,
         avg_time_per_answer REAL,
+        session_time REAL, -- ✅ Add this line
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);

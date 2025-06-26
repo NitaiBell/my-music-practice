@@ -4,6 +4,8 @@ import './UserProfile.css';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // ✅ added
+
 
 const profileOptions = [
   { name: 'Mozart', file: 'mozart profile.png' },
@@ -113,19 +115,18 @@ const chordsForMelodyPractice = {
   background: 'linear-gradient(to bottom right, #dbeafe, #3b82f6)',
 };
 
-const mainPracticeLinks = practiceLinks.filter(
-  (p) => p.name !== 'Chords for Melody'
-);
+const mainPracticeLinks = practiceLinks.filter(p => p.name !== 'Chords for Melody');
 
 export default function UserProfile() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { currentUser, setCurrentUser } = useAuth(); // ✅ use context
+  const user = currentUser;
   const username = user?.name || 'Guest';
+  const gmail = user?.email || '';
   const [selectedImage, setSelectedImage] = useState(user?.image_url || '/profiles/mozart profile.png');
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [practiceStats, setPracticeStats] = useState({});
-  const gmail = user?.email || '';
 
   useEffect(() => {
     if (!gmail) return;
@@ -154,6 +155,7 @@ export default function UserProfile() {
       });
       const updated = await res.json();
       localStorage.setItem('user', JSON.stringify(updated));
+      setCurrentUser(updated); // ✅ update context too
     } catch (err) {
       console.error('Failed to update image:', err);
     }
@@ -229,8 +231,12 @@ export default function UserProfile() {
       </div>
 
       <div className="user-profile-content">
-        <h2 className="user-profile-welcome">Welcome {username}</h2>
-
+      <h2 className="user-profile-welcome">Welcome {username}</h2>
+{!user?.email && (
+  <p className="user-profile-guest-warning">
+    To save your progress and view your practice logs, please <a href="/signin">sign in</a> or <a href="/signup">create an account</a>.
+  </p>
+)}
         <section id="practices" className="user-profile-section">
           <h3>My Practices</h3>
           <div className="user-profile-practice-list">

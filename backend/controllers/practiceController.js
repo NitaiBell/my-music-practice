@@ -18,6 +18,7 @@ export const savePractice = async (req, res) => {
     tryScore,
     speedScore,
     avgTimePerAnswer,
+    sessionTime, // ✅ New field
     date,
   } = data;
 
@@ -25,8 +26,10 @@ export const savePractice = async (req, res) => {
     await pool.query(
       `INSERT INTO user_practice_log (
         gmail, practice_name, correct, wrong, tries, level, rank, max_rank,
-        right_score, try_score, speed_score, avg_time_per_answer, date
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+        right_score, try_score, speed_score, avg_time_per_answer,
+        session_time, -- ✅ New column
+        date
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
       [
         gmail,
         practiceName,
@@ -40,6 +43,7 @@ export const savePractice = async (req, res) => {
         tryScore,
         speedScore,
         avgTimePerAnswer,
+        sessionTime, // ✅ New value
         date,
       ]
     );
@@ -114,7 +118,7 @@ export const getPracticeLog = async (req, res) => {
   }
 };
 
-// ✅ NEW: GET /api/practice/log/all?gmail=...
+// GET /api/practice/log/all?gmail=...
 export const getAllLogsForStudent = async (req, res) => {
   const { gmail } = req.query;
 

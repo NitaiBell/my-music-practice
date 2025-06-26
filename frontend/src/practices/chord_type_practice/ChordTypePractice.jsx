@@ -212,6 +212,8 @@ const ChordTypePractice = () => {
               tryScore   : rank.tryScore,
               speedScore : rank.speedScore,
               avgTimePerAnswer : rank.avgTimePerAnswer,
+              sessionTime: totalTimeSec, // ✅ <-- This is the missing piece
+
             });
           }
         }

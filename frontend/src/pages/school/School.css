@@ -177,4 +177,49 @@
     margin-bottom: 0.3rem;
     line-height: 1.5;
   }
+
+
+  .school-not-logged-in {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #bbf5b5;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .school-not-logged-in h2 {
+    font-size: 2rem;
+    color: #1a4d1a;
+    margin-bottom: 1rem;
+  }
+  
+  .school-not-logged-in p {
+    background-color: #f0fff4;
+    border: 1px solid #a3dca1;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    color: #22543d;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 100, 0, 0.05);
+  }
+  
+
+
+  
+  .school-not-logged-in-message {
+    background-color: #f0fff4;
+    border: 1px solid #a3dca1;
+    border-radius: 10px;
+    padding: 1.2rem 1.6rem;
+    font-size: 1.15rem;
+    color: #22543d;
+    max-width: 500px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 10px rgba(0, 100, 0, 0.05);
+  }
   

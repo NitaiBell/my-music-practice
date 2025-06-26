@@ -426,3 +426,23 @@
     font-size: 1.5rem;
   }
 }
+
+
+.user-profile-guest-warning {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 0.8rem 1rem;
+  margin: 0 auto 2rem;
+  max-width: 600px;
+  text-align: center;
+  font-size: 1.05rem;
+  border-radius: 8px;
+}
+
+.user-profile-guest-warning a {
+  color: #9a3412;
+  font-weight: 600;
+  text-decoration: underline;
+}
+

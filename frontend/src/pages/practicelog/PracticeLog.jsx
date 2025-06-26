@@ -1,17 +1,20 @@
+// src/pages/practicelog/PracticeLog.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { useAuth } from '../../context/AuthContext';
 import './PracticeLog.css';
 
 export default function PracticeLog() {
   const { practiceName } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const gmail = currentUser?.email || '';
   const [logEntries, setLogEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState('date'); // default sort
-  const user = JSON.parse(localStorage.getItem('user'));
-  const gmail = user?.email || '';
+  const [sortBy, setSortBy] = useState('date');
 
   const getPracticePath = (name) => {
     const map = {
@@ -54,6 +57,19 @@ export default function PracticeLog() {
     fetchLog();
   }, [gmail, practiceName]);
 
+  const formatSessionTime = (seconds) => {
+    if (seconds == null) return '--';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const estimateTime = (avg, tries) => {
+    if (!avg || !tries) return '--';
+    const totalSeconds = Math.round(avg * tries);
+    return formatSessionTime(totalSeconds);
+  };
+
   const sortedEntries = logEntries.slice().sort((a, b) => {
     if (sortBy === 'date') {
       return new Date(b.date) - new Date(a.date);
@@ -88,7 +104,6 @@ export default function PracticeLog() {
             </a>
           </div>
 
-          {/* 🔽 Sort Options */}
           <div className="log-sort-controls">
             <label htmlFor="sort-select">Sort by:</label>
             <select
@@ -97,14 +112,13 @@ export default function PracticeLog() {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
-              <option value="date">📅 Date (Newest)</option>
+              <option value="date">🗕 Date (Newest)</option>
               <option value="rank">🏆 Rank (Highest)</option>
               <option value="avgTime">⚡ Avg Time (Fastest)</option>
               <option value="correct">✅ Correct (Most)</option>
             </select>
           </div>
 
-          {/* 📜 Log Entries */}
           {loading ? (
             <p className="loading-text">Loading...</p>
           ) : sortedEntries.length === 0 ? (
@@ -123,7 +137,16 @@ export default function PracticeLog() {
                     <div className="log-entry-row">🔁 Tries: <strong>{entry.tries}</strong></div>
                     <div className="log-entry-row">🎯 Level: <strong>{entry.level}</strong></div>
                     <div className="log-entry-row">🏆 Rank: <strong>{entry.rank}</strong> / {entry.max_rank}</div>
-                    <div className="log-entry-row">⚡ Avg Time: <strong>{entry.avg_time_per_answer?.toFixed(2)}s</strong></div>
+                    <div className="log-entry-row">
+                      ⚡ Avg Time: <strong>{entry.avg_time_per_answer?.toFixed(2)}s</strong>
+                    </div>
+                    <div className="log-entry-row">
+                      🕒 Session Time: <strong>
+                        {entry.session_time != null
+                          ? formatSessionTime(entry.session_time)
+                          : estimateTime(entry.avg_time_per_answer, entry.tries)}
+                      </strong>
+                    </div>
                   </div>
                 </li>
               ))}

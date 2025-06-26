@@ -210,6 +210,8 @@ export default function DegreeNotice() {
                 tryScore: rank.tryScore,
                 speedScore: rank.speedScore,
                 avgTimePerAnswer: rank.avgTimePerAnswer,
+                sessionTime: totalTimeSec, // ✅ Add this line
+
               });
             }
           }

@@ -37,7 +37,6 @@ export default function KeyboardDemo() {
   const [arpeggio, setArpeggio] = useState(false);
   const [melodyKey, setMelodyKey] = useState(melodyOptions[0][0]);
 
-  /* ── PLAY SCALE ── */
   const playScale = () => {
     const notes = SCALES[scale].map(norm);
     let octave = 4;
@@ -57,15 +56,15 @@ export default function KeyboardDemo() {
     });
   };
 
-  /* ── PLAY CHORD ── */
   const playChord = () => {
     const notes = chordNoteMap[chord] || [];
+    const delayPerNote = PACE_MS[scalePace];
     if (arpeggio) {
       notes.forEach((n, i) => {
         setTimeout(() => {
           kbRef.current?.setFlashBlue([n]);
           kbRef.current?.playNote(n);
-        }, i * 600);
+        }, i * delayPerNote);
       });
     } else {
       kbRef.current?.setFlashBlue(notes);
@@ -73,7 +72,6 @@ export default function KeyboardDemo() {
     }
   };
 
-  /* ── PLAY MELODY ── */
   const playMelody = () => {
     const melody = melodies[melodyKey];
     const delayPerBeat = 60000 / melody.tempo;
@@ -88,38 +86,84 @@ export default function KeyboardDemo() {
     });
   };
 
+  const playMelodyWithChords = (isArpeggio) => {
+    const melody = melodies[melodyKey];
+    const delayPerBeat = 60000 / melody.tempo;
+    const [beatsPerBar] = melody.timeSignature;
+    const chordSchedule = melody.suggestedChords || [];
+    const melodyNotes = melody.notes;
+
+    let totalDelay = 0;
+    let barIndex = 0;
+    let beatsInBar = 0;
+
+    melodyNotes.forEach(({ note, duration }) => {
+      const isNewBar = beatsInBar === 0 && barIndex < chordSchedule.length;
+      const chord = chordSchedule[barIndex];
+      const chordNotes = chordNoteMap[chord] || [];
+
+      // Play chord at start of bar (no flash)
+      if (isNewBar) {
+        if (isArpeggio) {
+          chordNotes.forEach((n, i) => {
+            setTimeout(() => {
+              kbRef.current?.playNote(n, false); // disable flash
+            }, totalDelay + i * delayPerBeat);
+          });
+        } else {
+          setTimeout(() => {
+            chordNotes.forEach(n => kbRef.current?.playNote(n, false)); // disable flash
+          }, totalDelay);
+        }
+      }
+
+      // Flash melody note
+      setTimeout(() => {
+        if (isArpeggio) {
+          kbRef.current?.setFlashBlue([note]); // always flash in arpeggio
+        } else {
+          const normNote = note.replace(/[0-9]/g, '');
+          const isInChord = chordNotes.some(cn => cn.startsWith(normNote));
+          if (!isInChord) kbRef.current?.setFlashBlue([note]);
+        }
+        kbRef.current?.playNote(note); // melody always plays
+      }, totalDelay);
+
+      totalDelay += delayPerBeat * duration;
+      beatsInBar += duration;
+      if (beatsInBar >= beatsPerBar) {
+        beatsInBar = 0;
+        barIndex += 1;
+      }
+    });
+  };
+
   return (
     <div className="keyboard-demo-container">
       <nav className="keyboard-demo-navbar">
         <div className="keyboard-demo-logo">🎹 Keyboard Demo</div>
 
         <div className="keyboard-demo-controls">
-          {/* Scale controls */}
+          {/* Scale */}
           <div className="keyboard-demo-group">
             <label className="keyboard-demo-label">Scale:</label>
             <select value={scale} onChange={e => setScale(e.target.value)} className="keyboard-demo-dropdown">
-              {Object.keys(SCALES).map(s => (
-                <option key={s}>{s}</option>
-              ))}
+              {Object.keys(SCALES).map(s => <option key={s}>{s}</option>)}
             </select>
 
             <label className="keyboard-demo-label">Pace:</label>
             <select value={scalePace} onChange={e => setScalePace(e.target.value)} className="keyboard-demo-dropdown">
-              {Object.keys(PACE_MS).map(p => (
-                <option key={p}>{p}</option>
-              ))}
+              {Object.keys(PACE_MS).map(p => <option key={p}>{p}</option>)}
             </select>
 
             <button className="keyboard-demo-btn" onClick={playScale}>▶️ Play Scale</button>
           </div>
 
-          {/* Chord controls */}
+          {/* Chord */}
           <div className="keyboard-demo-group">
             <label className="keyboard-demo-label">Chord:</label>
             <select value={chord} onChange={e => setChord(e.target.value)} className="keyboard-demo-dropdown">
-              {CHORDS.map(c => (
-                <option key={c}>{c}</option>
-              ))}
+              {CHORDS.map(c => <option key={c}>{c}</option>)}
             </select>
 
             <label className="keyboard-demo-label">Mode:</label>
@@ -131,7 +175,7 @@ export default function KeyboardDemo() {
             <button className="keyboard-demo-btn" onClick={playChord}>🎵 Play Chord</button>
           </div>
 
-          {/* Melody controls */}
+          {/* Melody */}
           <div className="keyboard-demo-group">
             <label className="keyboard-demo-label">Melody:</label>
             <select value={melodyKey} onChange={e => setMelodyKey(e.target.value)} className="keyboard-demo-dropdown">
@@ -141,12 +185,14 @@ export default function KeyboardDemo() {
             </select>
 
             <button className="keyboard-demo-btn" onClick={playMelody}>🎶 Play Melody</button>
+            <button className="keyboard-demo-btn" onClick={() => playMelodyWithChords(false)}>🎼 Block + Melody</button>
+            <button className="keyboard-demo-btn" onClick={() => playMelodyWithChords(true)}>🎼 Arpeggio + Melody</button>
           </div>
         </div>
       </nav>
 
       <div className="keyboard-demo-keyboard-area">
-        <Keyboard ref={kbRef} octaves={[3, 4, 5,6]} />
+        <Keyboard ref={kbRef} octaves={[3, 4, 5, 6]} />
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ const DifferencePractice = () => {
   const keyboardRef = useRef();
   const startAnswerTimeRef = useRef(null);
   const totalAnswerTimeRef = useRef(0);
+  const sessionStartTimeRef = useRef(null); // ✅ Track session start time
 
   const {
     selectedScale = 'C',
@@ -96,6 +97,7 @@ const DifferencePractice = () => {
   };
 
   const startGame = () => {
+    sessionStartTimeRef.current = performance.now(); // ✅ Start session timer
     setCurrentRound(0);
     setCorrectCount(0);
     setWrongCount(0);
@@ -192,10 +194,10 @@ const DifferencePractice = () => {
               tryScore: result.tryScore,
               speedScore: result.speedScore,
               avgTimePerAnswer: result.avgTimePerAnswer,
+              sessionTime: Math.round((performance.now() - sessionStartTimeRef.current) / 10) / 100,
             });
           }
         }
-
       } else {
         await new Promise((resolve) => setTimeout(resolve, 800));
         setCurrentRound((r) => r + 1);
@@ -289,6 +291,7 @@ const DifferencePractice = () => {
               <li>⚡ Speed: <strong>{rankData.speedScore}</strong> / 10</li>
             </ul>
             <p><strong>Avg Time per Answer:</strong> {rankData.avgTimePerAnswer}s</p>
+            
 
             <div className="differencegame-popup-buttons">
               <button onClick={startGame}>🔁 Restart</button>
