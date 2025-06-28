@@ -1,13 +1,14 @@
 // pages/auth/SignIn.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Navbar'; // ✅ import navbar
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer'; // ✅ Import Footer
 import './SignIn.css';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // ✅ added for redirection
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +24,7 @@ export default function SignIn() {
 
       if (res.ok) {
         localStorage.setItem('user', JSON.stringify(data));
-        navigate('/profile'); // ✅ redirect to profile
+        navigate('/profile');
       } else {
         alert(data.error || 'Login failed.');
       }
@@ -35,32 +36,39 @@ export default function SignIn() {
 
   return (
     <div className="light-page">
-      <Navbar /> {/* ✅ navbar at the top */}
+      <Navbar />
 
-      <div className="auth-container">
-        <h2>Sign In</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button type="submit">Sign In</button>
-        </form>
+      <div style={{ flexGrow: 1 }}>
+        <div className="auth-container">
+          <h2>Sign In</h2>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button type="submit">Sign In</button>
+          </form>
 
-        <p className="auth-link-text">
-          Not signed up yet? <Link to="/signup" className="auth-link">Click here</Link>
-        </p>
+          <p className="auth-link-text">
+            Not signed up yet?{' '}
+            <Link to="/signup" className="auth-link">
+              Click here
+            </Link>
+          </p>
+        </div>
       </div>
+
+      <Footer /> {/* ✅ Stick to bottom */}
     </div>
   );
 }

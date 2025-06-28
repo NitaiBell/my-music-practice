@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './IntervalPractice.css';
 import IntervalPracticeKeyboardView from "./IntervalPracticeKeyboardView";
-import { calculateIntervalPracticeRank } from './calculateIntervalPracticeRank'; // ✅ import rank function
+import { calculateIntervalPracticeRank } from './calculateIntervalPracticeRank';
 import { logPracticeResult } from "../../../utils/logPracticeResult";
-
 
 export default function IntervalPractice() {
   const { state } = useLocation();
@@ -12,7 +11,8 @@ export default function IntervalPractice() {
   const keyboardRef = useRef();
   const answerTimeStartRef = useRef(null);
   const totalAnswerTimeRef = useRef(0);
-  const [rankData, setRankData] = useState(null); // ✅ track rank result
+  const gameStartTimeRef = useRef(null); // ⏱️ track session time
+  const [rankData, setRankData] = useState(null);
 
   const {
     selectedIntervals = [],
@@ -121,6 +121,8 @@ export default function IntervalPractice() {
     setShowPopup(false);
     setRankData(null);
     totalAnswerTimeRef.current = 0;
+    gameStartTimeRef.current = Date.now(); // ⏱️ mark game start time
+
     const newPair = generateIntervalPair();
     setIntervalPair(newPair);
     setHighlightNote(newPair[0]);
@@ -138,35 +140,35 @@ export default function IntervalPractice() {
     }
   };
 
-
   const handleAnswer = (note) => {
     if (!isPlaying || intervalPair.length !== 2) return;
-  
+
     keyboardRef.current.playNote(note);
     const updatedAnswers = [...answeredNotes, note];
     setAnsweredNotes(updatedAnswers);
-  
+
     if (updatedAnswers.length === 2) {
       const elapsed = Date.now() - (answerTimeStartRef.current || Date.now());
       totalAnswerTimeRef.current += elapsed / 1000;
-  
+
       const newTries = triesCount + 1;
       setTriesCount(newTries);
-  
+
       const correct = intervalPair.every((n) => updatedAnswers.includes(n));
-  
+
       if (correct) {
         keyboardRef.current.setFlashRight(intervalPair);
-  
+
         let newCorrect = correctCount;
         if (!hasFailedThisRound) {
           newCorrect += 1;
           setCorrectCount(newCorrect);
         }
-  
+
         setStatusMessage('✅ Correct!');
-  
+
         if (currentRound + 1 >= rounds) {
+          const sessionTime = (Date.now() - gameStartTimeRef.current) / 1000;
           const rank = calculateIntervalPracticeRank({
             selectedNotes: baseNotes,
             selectedIntervals,
@@ -175,16 +177,15 @@ export default function IntervalPractice() {
             rounds,
             totalAnswerTimeSec: totalAnswerTimeRef.current,
           });
-  
+
           setRankData(rank);
           setShowPopup(true);
           setIsPlaying(false);
           setHighlightNote('');
-  
-          // ✅ LOG TO BACKEND ON GAME OVER
+
           const storedUser = JSON.parse(localStorage.getItem('user'));
-const gmail = storedUser?.email || null; // or use context if preferred
-          console.log("📡 Game over, logging with email:", gmail); // Debug log
+          const gmail = storedUser?.email || null;
+
           if (gmail && rounds >= 5) {
             logPracticeResult({
               gmail,
@@ -199,6 +200,7 @@ const gmail = storedUser?.email || null; // or use context if preferred
               tryScore: rank.tryScore,
               speedScore: rank.speedScore,
               avgTimePerAnswer: rank.avgTimePerAnswer,
+              sessionTime: sessionTime, // ⏱️ send session time
             });
           }
         } else {
@@ -225,6 +227,7 @@ const gmail = storedUser?.email || null; // or use context if preferred
       }
     }
   };
+
 
   
   return (

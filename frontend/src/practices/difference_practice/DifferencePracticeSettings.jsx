@@ -59,77 +59,87 @@ const DifferencePracticeSettings = () => {
   return (
     <div className="difference_practice_settings-container">
       <div className="difference_practice_settings-content-wrapper">
-        <nav className="difference_practice_settings-navbar">
-          <div className="difference_practice_settings-dropdown-group">
-            <div className="difference_practice_settings-dropdown">
-              <button className="difference_practice_settings-dropbtn">🎼 Scale</button>
-              <div className="difference_practice_settings-dropdown-content">
-                {Object.keys(notesByScale).map((scale) => (
-                  <label key={scale}>
-                    <input
-                      type="radio"
-                      name="scale"
-                      checked={selectedScale === scale}
-                      onChange={() => handleScaleChange(scale)}
-                    />
-                    {scale} Major
-                  </label>
-                ))}
-              </div>
-            </div>
+<nav className="difference_practice_settings-navbar">
+  <div className="difference_practice_settings-dropdown-group">
+    <div className="difference_practice_settings-dropdown">
+      <button className="difference_practice_settings-dropbtn">🎼 Scale</button>
+      <div className="difference_practice_settings-dropdown-content">
+        {Object.keys(notesByScale).map((scale) => (
+          <label key={scale}>
+            <input
+              type="radio"
+              name="scale"
+              checked={selectedScale === scale}
+              onChange={() => handleScaleChange(scale)}
+            />
+            {scale} Major
+          </label>
+        ))}
+      </div>
+    </div>
 
-            <div className="difference_practice_settings-dropdown">
-              <button className="difference_practice_settings-dropbtn">🎵 Notes</button>
-              <div className="difference_practice_settings-dropdown-content">
-                {notesByScale[selectedScale].map((note) => (
-                  <label key={note}>
-                    <input
-                      type="checkbox"
-                      checked={selectedNotes.includes(note)}
-                      onChange={() => toggleNote(note)}
-                    />
-                    {note}
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
+    <div className="difference_practice_settings-dropdown">
+      <button className="difference_practice_settings-dropbtn">🎵 Notes</button>
+      <div className="difference_practice_settings-dropdown-content">
+        {notesByScale[selectedScale].map((note) => (
+          <label key={note}>
+            <input
+              type="checkbox"
+              checked={selectedNotes.includes(note)}
+              onChange={() => toggleNote(note)}
+            />
+            {note}
+          </label>
+        ))}
+      </div>
+    </div>
 
-          <div className="difference_practice_settings-controls">
-            <div className="rounds-group">
-              <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
-              <input
-  id="rounds-input"
-  type="number"
-  value={rounds}
-  onChange={(e) => {
-    const val = Number(e.target.value);
-    setRounds(val); // no clamping
-  }}
-  className="difference_practice_settings-rounds-input"
-/>
-            </div>
+    {/* 📘 Instructions Button */}
+    <a
+      href="/instructions/difference"
+      className="difference_practice_settings-instruction-link"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      📘 Instructions
+    </a>
+  </div>
 
-            <div className="rounds-group">
-              <label htmlFor="sequence-length-input" className="rounds-label">Notes in Sequence:</label>
-              <input
-  id="sequence-length-input"
-  type="number"
-  value={sequenceLength}
-  onChange={(e) => {
-    const val = Number(e.target.value);
-    setSequenceLength(val); // no clamping
-  }}
-  className="difference_practice_settings-rounds-input"
-/>
+  <div className="difference_practice_settings-controls">
+    <div className="rounds-group">
+      <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
+      <input
+        id="rounds-input"
+        type="number"
+        value={rounds}
+        onChange={(e) => {
+          const val = Number(e.target.value);
+          setRounds(val);
+        }}
+        className="difference_practice_settings-rounds-input"
+      />
+    </div>
 
-            </div>
+    <div className="rounds-group">
+      <label htmlFor="sequence-length-input" className="rounds-label">Notes in Sequence:</label>
+      <input
+        id="sequence-length-input"
+        type="number"
+        value={sequenceLength}
+        onChange={(e) => {
+          const val = Number(e.target.value);
+          setSequenceLength(val);
+        }}
+        className="difference_practice_settings-rounds-input"
+      />
+    </div>
 
-            <button className="difference_practice_settings-start-btn" onClick={startPractice}>
-              Start Practice
-            </button>
-          </div>
-        </nav>
+    <button className="difference_practice_settings-start-btn" onClick={startPractice}>
+      Start Practice
+    </button>
+  </div>
+</nav>
+
 
         <div className="difference_practice_settings-floating-message">
           🎯 Choose your scale and notes, set how long the sequence should be, and click "Start Practice"!

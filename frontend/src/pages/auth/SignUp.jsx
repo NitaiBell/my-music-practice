@@ -2,29 +2,29 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer'; // ✅ import Footer
 import './SignUp.css';
 
 export default function SignUp() {
-  const [name, setName] = useState('');       // ✅ Name state
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [imageUrl, setImageUrl] = useState('/profiles/mozart-profile.png'); // default image
-
+  const [imageUrl, setImageUrl] = useState('/profiles/mozart-profile.png');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (password !== confirm) {
       alert("Passwords don't match");
       return;
     }
-  
+
     if (password.length < 8) {
       alert("Password must be at least 8 characters long.");
       return;
     }
-  
+
     try {
       const response = await fetch('http://localhost:5000/api/users/signup', {
         method: 'POST',
@@ -36,9 +36,9 @@ export default function SignUp() {
           imageUrl,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         console.log('Signed up user:', data);
         localStorage.setItem('user', JSON.stringify(data));
@@ -56,48 +56,55 @@ export default function SignUp() {
     <div className="light-page">
       <Navbar />
 
-      <div className="auth-container">
-        <h2>Sign Up</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+      <div style={{ flexGrow: 1 }}>
+        <div className="auth-container">
+          <h2>Sign Up</h2>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-            required
-          />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              required
+            />
 
-          <button type="submit">Sign Up</button>
-        </form>
+            <button type="submit">Sign Up</button>
+          </form>
 
-        <p className="auth-link-text">
-          Already have an account? <Link to="/signin" className="auth-link">Sign in here</Link>
-        </p>
+          <p className="auth-link-text">
+            Already have an account?{' '}
+            <Link to="/signin" className="auth-link">
+              Sign in here
+            </Link>
+          </p>
+        </div>
       </div>
+
+      <Footer /> {/* ✅ sticks to bottom */}
     </div>
   );
 }

@@ -1,164 +1,227 @@
 /* === Wrapper and Layout === */
 .practice-log-wrapper {
-    min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #97f2c6;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .practice-log-fixed-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-  }
-  
-  .practice-log-scroll-container {
-    flex: 1;
-    overflow-y: auto;
-  }
-  
-  /* === Main Content Area === */
-  .practice-log-content {
-    padding: 80px 40px 100px;
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #97f2c6;
-    box-sizing: border-box;
-    color: #333;
-  }
-  
-  .practice-log-title {
-    font-size: 2.6rem;
-    font-weight: 700;
-    color: #14532d;
-    text-align: center;
-    margin-bottom: 30px;
-    text-shadow: 0 1px 0 white;
-  }
-  
-  /* === Top Button Row === */
-  .log-actions-top {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-bottom: 36px;
-  }
-  
-  .log-button {
-    background: #10b981;
-    color: white;
-    border: none;
-    padding: 12px 22px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.25s ease, transform 0.2s ease;
-  }
-  
-  .log-button:hover {
-    background: #0f766e;
-    transform: translateY(-1px);
-  }
-  
-  /* === Entry List and Cards === */
-  .log-entry-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .log-entry {
-    background: #ffffff;
-    padding: 22px 24px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease;
-  }
-  
-  .log-entry:hover {
-    transform: translateY(-4px);
-  }
-  
-  /* === Entry Header === */
-  .log-entry-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1rem;
-    color: #2563eb;
-    margin-bottom: 10px;
-  }
-  
-  .entry-number {
-    font-weight: 700;
-  }
-  
-  .entry-date {
-    font-style: italic;
-    color: #475569;
-  }
-  
-  /* === Entry Body === */
-  .log-entry-body {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #1e293b;
-  }
-  
-  .log-entry-row {
-    margin: 6px 0;
-  }
-  
-  .loading-text,
-  .empty-text {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #334155;
-    margin-top: 40px;
-  }
-  
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #97f2c6;
+  display: flex;
+  flex-direction: column;
+}
 
-  .log-sort-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-    font-size: 1rem;
-  }
-  
-  .log-sort-select {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-  }
-  
+.practice-log-fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
 
-  .log-filter-controls {
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: flex-start;
-  }
-  
+.practice-log-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+}
 
-  .practice-log-subtitle {
-    margin-top: -10px;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    text-align: center;
-    color: #065f46; /* dark green */
-    opacity: 0.85;
-  }
-  .practice-log-subtitle strong {
-    color: #166534;
-  }
-  
+/* === Main Content Area === */
+.practice-log-content {
+  padding: 80px 40px 100px;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #97f2c6;
+  box-sizing: border-box;
+  color: #333;
+}
+
+.practice-log-title {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #14532d;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 0 1px 0 white;
+}
+
+/* === Top Button Row === */
+.log-actions-top {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.log-button {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.log-button:hover {
+  background: #0f766e;
+  transform: translateY(-1px);
+}
+
+/* === Entry List and Cards === */
+.log-entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.log-entry {
+  background: #ffffff;
+  padding: 22px 24px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+}
+
+.log-entry:hover {
+  transform: translateY(-4px);
+}
+
+/* === Entry Header === */
+.log-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  color: #2563eb;
+  margin-bottom: 10px;
+}
+
+.entry-number {
+  font-weight: 700;
+}
+
+.entry-date {
+  font-style: italic;
+  color: #475569;
+}
+
+/* === Entry Body === */
+.log-entry-body {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #1e293b;
+}
+
+.log-entry-row {
+  margin: 6px 0;
+}
+
+/* === States === */
+.loading-text,
+.empty-text {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #334155;
+  margin-top: 40px;
+}
+
+/* === Sorting === */
+.log-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  font-size: 1rem;
+}
+
+.log-sort-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* === Filters === */
+.log-filter-controls {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* === Subtitle === */
+.practice-log-subtitle {
+  margin-top: -10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  text-align: center;
+  color: #065f46; /* dark green */
+  opacity: 0.85;
+}
+
+.practice-log-subtitle strong {
+  color: #166534;
+}
+
+
+/* Initially collapsed (no background or border) */
+.log-summary-box {
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  margin-top: 24px;
+  transition: all 0.3s ease;
+}
+
+/* When open, show full styling */
+.log-summary-box.open {
+  background: #f0fdf4;
+  border: 1px solid #c6f6d5;
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Space between summary box and first log entry */
+.log-entry-list {
+  margin-top: 20px;
+}
+
+.log-summary-box h3 {
+  font-size: 1.4rem;
+  color: #047857;
+  margin-bottom: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.log-summary-box h3::before {
+  content: '⏱️';
+  font-size: 1.2rem;
+}
+
+.log-summary-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.log-summary-box li {
+  margin-bottom: 8px;
+  padding-left: 12px;
+  position: relative;
+  font-size: 1rem;
+  color: #065f46;
+}
+
+.log-summary-box li::before {
+  content: '•';
+  color: #10b981;
+  font-size: 1.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+}

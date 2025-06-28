@@ -11,11 +11,13 @@
     font-family: 'Segoe UI', sans-serif;
   }
   
-  .light-page {
-    background-color: #a4e7b1;
-    color: #111827;
-    min-height: 100vh;
-  }
+.light-page {
+  background-color: #a4e7b1;
+  color: #111827;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
   
   .auth-container h2 {
     text-align: center;

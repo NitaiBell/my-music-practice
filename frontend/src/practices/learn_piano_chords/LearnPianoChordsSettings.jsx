@@ -41,12 +41,7 @@ const LearnPianoChordsSettings = () => {
 
   const startPractice = () => {
     navigate('/learn-piano-chords/play', {
-      state: {
-        selectedScale,
-        selectedChords,
-        rounds,
-        freestyleMode,
-      },
+      state: { selectedScale, selectedChords, rounds, freestyleMode },
     });
   };
 
@@ -77,8 +72,8 @@ const LearnPianoChordsSettings = () => {
   const rows = numButtons > 12 ? 2 : 1;
   const columns = Math.ceil(numButtons / rows || 1);
   const diatonicChords = chordsByScale[selectedScale] || [];
-const uniqueValidChords = selectedChords.filter((c) => diatonicChords.includes(c));
-const level = freestyleMode ? 8 : Math.max(2, Math.min(7, uniqueValidChords.length));
+  const uniqueValidChords = selectedChords.filter((c) => diatonicChords.includes(c));
+  const level = freestyleMode ? 8 : Math.max(2, Math.min(7, uniqueValidChords.length));
 
   return (
     <div className="learn_piano_chords-container-settings">
@@ -117,6 +112,17 @@ const level = freestyleMode ? 8 : Math.max(2, Math.min(7, uniqueValidChords.leng
                   </label>
                 ))}
               </div>
+            </div>
+
+            <div className="learn_piano_chords-dropdown">
+              <a
+                href="/instructions/learn-piano-chords"
+                className="learn_piano_chords-dropbtn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                📘 Instructions
+              </a>
             </div>
           </div>
 
@@ -159,11 +165,11 @@ const level = freestyleMode ? 8 : Math.max(2, Math.min(7, uniqueValidChords.leng
 
         {!freestyleMode && (
           <div className="learn_piano_chords-summary">
-          <p>
-            <strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong> | Level: <strong>{level}</strong>
-          </p>
-          <p>Chords: <strong>{selectedChords.join(', ')}</strong></p>
-        </div>
+            <p>
+              <strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong> | Level: <strong>{level}</strong>
+            </p>
+            <p>Chords: <strong>{selectedChords.join(', ')}</strong></p>
+          </div>
         )}
 
         <div

@@ -356,3 +356,13 @@
 }
 
 
+
+
+.learn_piano_chords-dropbtn {
+  text-decoration: none; /* Prevent underlining */
+}
+
+.learn_piano_chords-dropdown a {
+  text-decoration: none; /* Ensure all links inside dropdowns don't get underlined */
+  color: inherit;        /* Optional: keeps the text color consistent */
+}

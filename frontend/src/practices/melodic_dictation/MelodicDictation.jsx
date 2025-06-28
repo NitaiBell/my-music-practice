@@ -1,5 +1,3 @@
-// src/practices/melodic_dictation/MelodicDictation.jsx
-
 import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './MelodicDictation.css';
@@ -14,6 +12,7 @@ export default function MelodicDictation() {
   const keyboardRef = useRef();
   const totalAnswerTimeRef = useRef(0);
   const answerTimeStartRef = useRef(null);
+  const sessionStartTimeRef = useRef(null); // ✅ Track session start
 
   const {
     selectedScale = 'C',
@@ -72,6 +71,7 @@ export default function MelodicDictation() {
   };
 
   const startGame = () => {
+    sessionStartTimeRef.current = performance.now(); // ✅ Start session time
     setShowPopup(false);
     setTriesCount(0);
     setCorrectCount(0);
@@ -137,6 +137,7 @@ export default function MelodicDictation() {
                 tryScore: rank.tryScore,
                 speedScore: rank.speedScore,
                 avgTimePerAnswer: rank.avgTimePerAnswer,
+                sessionTime: Math.round((performance.now() - sessionStartTimeRef.current) / 10) / 100, // ✅
                 date: new Date().toISOString(),
               });
             }
@@ -255,7 +256,6 @@ export default function MelodicDictation() {
               <button onClick={startGame}>🔁 Restart</button>
               <button onClick={() => navigate('/melodic-dictation')}>⚙️ Settings</button>
               <button onClick={() => navigate('/profile')}>Back to Profile</button>
-
             </div>
           </div>
         </div>

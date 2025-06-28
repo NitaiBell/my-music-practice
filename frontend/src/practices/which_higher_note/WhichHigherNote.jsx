@@ -34,6 +34,7 @@ export default function WhichHigherNote() {
   const [rank, setRank] = useState(100);
   const totalTimeRef = useRef(0);
   const answerStartRef = useRef(null);
+  const sessionStartTimeRef = useRef(null); // ✅ Track session start time
 
   const getRandomNotePair = () => {
     let first, second, idx1, idx2;
@@ -84,14 +85,13 @@ export default function WhichHigherNote() {
       if (next >= rounds) {
         setIsPlaying(false);
 
-        // ✅ Log to backend
         const user = JSON.parse(localStorage.getItem('user'));
         const gmail = user?.email || null;
 
         const avgTimePerAnswer = +(totalTimeRef.current / Math.max(1, triesCount)).toFixed(2);
         const rightScore = Math.round((correctCount / rounds) * 75);
         const tryScore = Math.round((rounds / Math.max(1, triesCount)) * 15);
-        const speedScore = 0; // not implemented
+        const speedScore = 0;
 
         if (gmail) {
           logPracticeResult({
@@ -107,6 +107,7 @@ export default function WhichHigherNote() {
             tryScore,
             speedScore,
             avgTimePerAnswer,
+            sessionTime: Math.round((performance.now() - sessionStartTimeRef.current) / 10) / 100, // ✅
             date: new Date().toISOString(),
           });
         }
@@ -128,6 +129,7 @@ export default function WhichHigherNote() {
     setIsPlaying(true);
     setRank(100);
     totalTimeRef.current = 0;
+    sessionStartTimeRef.current = performance.now(); // ✅ Start session timer
     setTimeout(startRound, 500);
   };
 

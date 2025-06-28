@@ -17,6 +17,9 @@ const StudentLog = () => {
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('date');
   const [selectedPractice, setSelectedPractice] = useState('All');
+  const [selectedTimeRange, setSelectedTimeRange] = useState('all');
+  const [showSummary, setShowSummary] = useState(false);
+
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -36,6 +39,7 @@ const StudentLog = () => {
     if (studentEmail) fetchLogs();
   }, [studentEmail]);
 
+  const now = new Date();
   const practiceTypes = ['All', ...new Set(logs.map((log) => log.practice_name))];
 
   const filteredLogs =
@@ -43,7 +47,18 @@ const StudentLog = () => {
       ? logs
       : logs.filter((log) => log.practice_name === selectedPractice);
 
-  const sortedLogs = filteredLogs.slice().sort((a, b) => {
+  const timeFilteredLogs =
+    selectedTimeRange === 'all'
+      ? filteredLogs
+      : filteredLogs.filter((log) => {
+          const logDate = new Date(log.date);
+          const daysAgo = parseInt(selectedTimeRange, 10);
+          const cutoff = new Date(now);
+          cutoff.setDate(now.getDate() - daysAgo);
+          return logDate >= cutoff;
+        });
+
+  const sortedLogs = timeFilteredLogs.slice().sort((a, b) => {
     if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
     if (sortBy === 'rank') return b.rank - a.rank;
     if (sortBy === 'avgTime')
@@ -63,6 +78,25 @@ const StudentLog = () => {
     if (!avg || !tries) return '--';
     const totalSeconds = Math.round(avg * tries);
     return formatSessionTime(totalSeconds);
+  };
+
+  const computeTotalTime = (days) => {
+    const cutoff = new Date(now);
+    cutoff.setDate(now.getDate() - days);
+    const logsInRange = logs.filter(log => new Date(log.date) >= cutoff);
+    const totalSeconds = logsInRange.reduce((sum, log) => {
+      const session = log.session_time || (log.avg_time_per_answer * log.tries) || 0;
+      return sum + session;
+    }, 0);
+    return formatSessionTime(totalSeconds);
+  };
+
+  const totalTimeStats = {
+    'Last Day': computeTotalTime(1),
+    'Last 7 Days': computeTotalTime(7),
+    'Last 14 Days': computeTotalTime(14),
+    'Last 30 Days': computeTotalTime(30),
+    'This Year': computeTotalTime(365),
   };
 
   return (
@@ -121,6 +155,42 @@ const StudentLog = () => {
               </select>
             </div>
 
+            <div className="log-filter-controls">
+              <label htmlFor="time-filter">Time:</label>
+              <select
+                id="time-filter"
+                className="log-sort-select"
+                value={selectedTimeRange}
+                onChange={(e) => setSelectedTimeRange(e.target.value)}
+              >
+                <option value="all">All Time</option>
+                <option value="1">Last Day</option>
+                <option value="7">Last 7 Days</option>
+                <option value="14">Last 14 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="365">This Year</option>
+              </select>
+            </div>
+
+            {/* ✅ New: Total Session Time Summary */}
+{/* ✅ Collapsible Total Session Time Summary */}
+<div className="log-summary-box">
+  <button
+    className="log-button"
+    style={{ marginBottom: '10px' }}
+    onClick={() => setShowSummary(prev => !prev)}
+  >
+    {showSummary ? 'Hide' : 'Show'} ⏱️ Total Practice Time
+  </button>
+  {showSummary && (
+    <ul style={{ paddingLeft: '20px' }}>
+      {Object.entries(totalTimeStats).map(([label, time]) => (
+        <li key={label}><strong>{label}:</strong> {time}</li>
+      ))}
+    </ul>
+  )}
+</div>
+
             {loading ? (
               <p className="loading-text">Loading...</p>
             ) : sortedLogs.length === 0 ? (
@@ -169,7 +239,6 @@ const StudentLog = () => {
               </ul>
             )}
           </div>
-
           <Footer />
         </div>
       </div>

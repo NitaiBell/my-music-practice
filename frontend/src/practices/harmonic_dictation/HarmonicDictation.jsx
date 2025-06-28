@@ -194,6 +194,8 @@ export default function HarmonicDictation() {
   const startAnswerTimeRef = useRef(null);
   const totalAnswerTimeRef = useRef(0);
   const hasLoggedRef = useRef(false);
+  const sessionStartTimeRef = useRef(null); // ✅ Track session start
+
 
   const { selectedScale = 'C', selectedChords = [], rounds = 10 } = state || {};
   const tonic = normalizeChord(selectedScale.replace(/m$/, ''));
@@ -235,6 +237,7 @@ export default function HarmonicDictation() {
     }
     const picked = Array.from({ length: rounds }, () => playable[Math.floor(Math.random() * playable.length)]);
 
+    sessionStartTimeRef.current = performance.now(); // ✅ Start session time
     setProgressions(picked);
     setCurrentRound(0);
     setCurrentStep(0);
@@ -474,6 +477,7 @@ export default function HarmonicDictation() {
             tryScore,
             speedScore,
             avgTimePerAnswer,
+              sessionTime: Math.round((performance.now() - sessionStartTimeRef.current) / 10) / 100, // ✅ Add session time
             date: new Date().toISOString(),
           });
           hasLoggedRef.current = true;

@@ -27,6 +27,7 @@ export default function LearnPiano() {
   const keyboardRef = useRef();
   const answerTimeStartRef = useRef(null);
   const totalAnswerTimeRef = useRef(0);
+  const sessionStartTimeRef = useRef(null);
 
   const {
     selectedScale = 'C',
@@ -67,6 +68,7 @@ export default function LearnPiano() {
     setHasFailedThisRound(false);
     setRankData(null);
     totalAnswerTimeRef.current = 0;
+    sessionStartTimeRef.current = Date.now();
     generateNewSequence(0);
     answerTimeStartRef.current = Date.now();
   };
@@ -150,6 +152,7 @@ export default function LearnPiano() {
             tryScore: rank.tryScore,
             speedScore: rank.speedScore,
             avgTimePerAnswer: rank.avgTimePerAnswer,
+            sessionTime: ((Date.now() - sessionStartTimeRef.current) / 1000).toFixed(2),
           });
         }
 

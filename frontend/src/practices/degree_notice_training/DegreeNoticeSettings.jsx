@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './DegreeNoticeSettings.css';
 
 const allScales = ['C', 'G', 'D', 'A', 'E', 'B', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb'];
@@ -158,6 +158,10 @@ export default function DegreeNoticeSettings() {
             </label>
           </div>
         </div>
+
+        <Link to="/instructions/degree-notice" className="degree_notice_settings-instruction-link">
+          📘 Instructions
+        </Link>
 
         <div className="degree_notice_settings-rounds-group">
           <label className="degree_notice_settings-rounds-label">Rounds:</label>

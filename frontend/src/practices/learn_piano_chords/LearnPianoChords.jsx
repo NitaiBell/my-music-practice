@@ -35,6 +35,7 @@ const LearnPianoChords = () => {
   const totalAnswerTimeRef = useRef(0);
   const answerTimeStartRef = useRef(null);
   const hasLoggedRef = useRef(false);
+  const sessionStartTimeRef = useRef(null); // ⬆️ Added
 
   const {
     selectedScale = 'C',
@@ -89,6 +90,7 @@ const LearnPianoChords = () => {
     setRankData(null);
     totalAnswerTimeRef.current = 0;
     answerTimeStartRef.current = Date.now();
+    sessionStartTimeRef.current = Date.now(); // ⬆️ Start tracking session
     hasLoggedRef.current = false;
     setTimeout(() => showNextChord(generated[0]), 300);
   };
@@ -164,6 +166,8 @@ const LearnPianoChords = () => {
             tryScore: rank.tryScore,
             speedScore: rank.speedScore,
             avgTimePerAnswer: rank.avgTimePerAnswer,
+            sessionTime: ((Date.now() - sessionStartTimeRef.current) / 1000).toFixed(2), // ⬅️ add this
+
           });
           hasLoggedRef.current = true;
         }

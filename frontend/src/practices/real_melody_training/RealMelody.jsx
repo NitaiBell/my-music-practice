@@ -1,4 +1,4 @@
-// RealMelody.jsx (Updated with Backend Logging)
+// RealMelody.jsx (Updated with Backend Logging and Session Time)
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './RealMelody.css';
@@ -51,6 +51,7 @@ export default function RealMelody() {
   const answerStartRef = useRef(null);
   const totalAnswerTimeRef = useRef(0);
   const hasLoggedRef = useRef(false);
+  const sessionStartTimeRef = useRef(null); // ✅ Track session start time
 
   const {
     selectedScale = 'C',
@@ -96,6 +97,7 @@ export default function RealMelody() {
     setWrongCount(0);
     setTriesCount(0);
     totalAnswerTimeRef.current = 0;
+    sessionStartTimeRef.current = performance.now(); // ✅ Start session timer
     hasLoggedRef.current = false;
     setIsPlaying(true);
     setStatusMessage('');
@@ -149,7 +151,7 @@ export default function RealMelody() {
       if (currentIndex + 1 >= sequence.length) {
         const rank = calculateRealMelodyRank({
           selectedNotes,
-          correctCount: correctCount + 1,
+          correctCount: correctCount + (!hasFailedThisRound ? 1 : 0),
           triesCount: triesCount + 1,
           rounds,
           totalAnswerTimeSec: totalAnswerTimeRef.current,
@@ -166,8 +168,8 @@ export default function RealMelody() {
             logPracticeResult({
               gmail,
               practiceName: PRACTICE_NAMES.REAL_MELODY,
-              correct: correctCount + 1,
-              wrong: wrongCount,
+              correct: correctCount + (!hasFailedThisRound ? 1 : 0),
+              wrong: wrongCount + (hasFailedThisRound ? 1 : 0),
               tries: triesCount + 1,
               level: rank.level,
               rank: rank.score,
@@ -176,6 +178,7 @@ export default function RealMelody() {
               tryScore: rank.tryScore,
               speedScore: rank.speedScore,
               avgTimePerAnswer: rank.avgTimePerAnswer,
+              sessionTime: Math.round((performance.now() - sessionStartTimeRef.current) / 10) / 100, // ✅
             });
           }
           hasLoggedRef.current = true;

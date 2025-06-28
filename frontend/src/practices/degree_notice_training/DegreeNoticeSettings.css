@@ -417,3 +417,20 @@ body {
 
 
 
+.degree_notice_settings-instruction-link {
+  background: var(--btn-grad);
+  color: var(--text-light);
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s ease;
+}
+
+.degree_notice_settings-instruction-link:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #45c38b, #1d6c47);
+}

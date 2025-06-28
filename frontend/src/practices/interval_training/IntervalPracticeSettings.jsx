@@ -21,8 +21,6 @@ const displayNoteName = (note) => {
   return map[note] || note;
 };
 
-
-
 export default function IntervalPracticeSettings() {
   const [selectedIntervals, setSelectedIntervals] = useState(INTERVALS);
   const [baseNotes, setBaseNotes] = useState(BASE_NOTES);
@@ -31,7 +29,6 @@ export default function IntervalPracticeSettings() {
   const keyboardRef = useRef();
   const navigate = useNavigate();
   const level = Math.max(3, Math.min(25, baseNotes.length + selectedIntervals.length));
-
 
   const toggleInterval = (interval) => {
     setSelectedIntervals((prev) =>
@@ -55,7 +52,7 @@ export default function IntervalPracticeSettings() {
         selectedIntervals,
         baseNotes,
         rounds,
-        octaves: [3, 4], // Fixed value sent even though there's no dropdown
+        octaves: [3, 4],
         direction,
       },
     });
@@ -127,24 +124,36 @@ export default function IntervalPracticeSettings() {
                 </label>
               </div>
             </div>
+
+            {/* 📘 Instructions Styled as Dropdown */}
+            <div className="interval_training_settings-dropdown">
+              <a
+                href="/instructions/interval-practice"
+                className="interval_training_settings-dropbtn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                📘 Instructions
+              </a>
+            </div>
           </div>
 
           <div className="interval_training_settings-right-controls">
-  <div className="interval_training_settings-rounds-group">
-    <label>Rounds:</label>
-    <input
-      type="number"
-      min="1"
-      max="50"
-      value={rounds}
-      onChange={(e) => setRounds(Number(e.target.value))}
-    />
-  </div>
+            <div className="interval_training_settings-rounds-group">
+              <label>Rounds:</label>
+              <input
+                type="number"
+                min="1"
+                max="50"
+                value={rounds}
+                onChange={(e) => setRounds(Number(e.target.value))}
+              />
+            </div>
 
-  <button className="interval_training_settings-start-btn" onClick={startPractice}>
-    Start Practice
-  </button>
-</div>
+            <button className="interval_training_settings-start-btn" onClick={startPractice}>
+              Start Practice
+            </button>
+          </div>
         </nav>
 
         <div className="interval_training_settings-floating-message">
@@ -152,13 +161,13 @@ export default function IntervalPracticeSettings() {
         </div>
 
         <div className="interval_training_settings-summary">
-  <p><strong>{rounds}</strong> rounds</p>
-  <p>Intervals: <strong>{selectedIntervals.join(', ')}</strong></p>
-  <p>First Notes: <strong>{baseNotes.map(displayNoteName).join(', ')}</strong></p>
-  <p>Direction: <strong>{direction}</strong></p>
-  <p>Octaves: <strong>3, 4</strong> (fixed)</p>
-  <p>Level: <strong>{level}</strong></p>
-</div>
+          <p><strong>{rounds}</strong> rounds</p>
+          <p>Intervals: <strong>{selectedIntervals.join(', ')}</strong></p>
+          <p>First Notes: <strong>{baseNotes.map(displayNoteName).join(', ')}</strong></p>
+          <p>Direction: <strong>{direction}</strong></p>
+          <p>Octaves: <strong>3, 4</strong> (fixed)</p>
+          <p>Level: <strong>{level}</strong></p>
+        </div>
       </div>
 
       <div className="interval_training_settings-keyboard-wrapper">

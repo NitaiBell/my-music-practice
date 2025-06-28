@@ -1,26 +1,86 @@
 .instruction-practice-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #97f2c6;
-  }
-  
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #a4e7b1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.instruction-practice-content {
+  flex-grow: 1;
+  padding: 60px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 1.15rem;
+  transition: all 0.3s ease;
+}
+
+.instruction-practice-content h1 {
+  font-size: 2.2rem;
+  margin-bottom: 24px;
+  color: #065f46;
+  border-bottom: 2px solid #a7f3d0;
+  padding-bottom: 10px;
+}
+
+.instruction-practice-content p {
+  line-height: 1.7;
+  font-size: 1.1rem;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.instruction-practice-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 24px;
+}
+
+.instruction-practice-content li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 10px;
+  color: #047857;
+}
+
+.instruction-practice-content li::before {
+  content: '✔';
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.instruction-practice-content strong {
+  color: #0f766e;
+}
+
+@media (max-width: 600px) {
   .instruction-practice-content {
-    flex-grow: 1;
-    padding: 60px 40px;
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-    font-size: 1.15rem;
+    padding: 40px 20px;
+    font-size: 1rem;
   }
-  
+
   .instruction-practice-content h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
+    font-size: 1.6rem;
   }
-  
-  .instruction-practice-content p {
-    line-height: 1.6;
-    font-size: 1.1rem;
-  }
-  
+}
+
+
+.instruction-start-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #10b981;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.instruction-start-button:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+}

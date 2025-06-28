@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ChordTypeSettings.css';
 import ChordTypeKeyboard from './ChordTypeKeyboard';
+import { Link } from 'react-router-dom'; // Make sure this is at the top of your file
+
 
 const allChordTypes = [
   'Major', 'Minor', 'Maj7', '7', 'Min7', 'Min6', 'Sus4', 'Dim', 'Aug', 'Dim7', 'Maj6', 'Min7b5'
@@ -84,43 +86,51 @@ const ChordTypeSettings = () => {
   return (
     <div className="chord_type_settings-container">
       <div className="chord_type_settings-content-wrapper">
-        <nav className="chord_type_settings-navbar">
-          <div className="chord_type_settings-dropdown-wrapper">
-            <div className="chord_type_settings-dropdown">
-              <button className="chord_type_settings-dropbtn">🎵 Chord Types</button>
-              <div className="chord_type_settings-dropdown-content">
-                {allChordTypes.map((type) => (
-                  <label key={type}>
-                    <input
-                      type="checkbox"
-                      checked={selectedChordTypes.includes(type)}
-                      onChange={() => toggleChordType(type)}
-                    />
-                    {type}
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
+<nav className="chord_type_settings-navbar">
+  <div className="chord_type_settings-dropdown-wrapper">
+    <div className="chord_type_settings-dropdown">
+      <button className="chord_type_settings-dropbtn">🎵 Chord Types</button>
+      <div className="chord_type_settings-dropdown-content">
+        {allChordTypes.map((type) => (
+          <label key={type}>
+            <input
+              type="checkbox"
+              checked={selectedChordTypes.includes(type)}
+              onChange={() => toggleChordType(type)}
+            />
+            {type}
+          </label>
+        ))}
+      </div>
+    </div>
 
-          <div className="chord_type_settings-controls">
-            <div className="rounds-group">
-              <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
-              <input
-                id="rounds-input"
-                type="number"
-                min="1"
-                max="40"
-                value={rounds}
-                onChange={(e) => setRounds(Math.min(40, Number(e.target.value)))}
-                className="chord_type_settings-rounds-input"
-              />
-            </div>
-            <button className="chord_type_settings-start-btn" onClick={startPractice}>
-              Start Practice
-            </button>
-          </div>
-        </nav>
+    {/* 📘 Instructions Button (React Router Link) */}
+    <Link
+      to="/instructions/chord-type"
+      className="chord_type_settings-instruction-link"
+    >
+      📘 Instructions
+    </Link>
+  </div>
+
+  <div className="chord_type_settings-controls">
+    <div className="rounds-group">
+      <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
+      <input
+        id="rounds-input"
+        type="number"
+        min="1"
+        max="40"
+        value={rounds}
+        onChange={(e) => setRounds(Math.min(40, Number(e.target.value)))}
+        className="chord_type_settings-rounds-input"
+      />
+    </div>
+    <button className="chord_type_settings-start-btn" onClick={startPractice}>
+      Start Practice
+    </button>
+  </div>
+</nav>
 
         <div className="chord_type_settings-floating-message">
           🎧 Choose chord types and click "Start Practice"!

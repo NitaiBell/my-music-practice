@@ -394,3 +394,22 @@
 
 
 
+.harmony-instruction-link {
+  background: linear-gradient(to right, #1F7D53, #255F38);
+  color: #F1EFEC;
+  padding: 10px 20px;
+  margin-left: 14px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.harmony-instruction-link:hover {
+  background: linear-gradient(to right, #255F38, #1F7D53);
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
