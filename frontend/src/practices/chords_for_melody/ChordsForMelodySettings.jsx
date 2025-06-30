@@ -37,6 +37,15 @@ const ChordsForMelodySettings = () => {
       <div className="chords_for_melody_settings_container">
         <h1 className="chords_for_melody_settings_title">Choose a Melody to Practice</h1>
 
+        <div className="chords_for_melody_settings_instructions_wrapper">
+  <button
+    className="chords_for_melody_settings_instructions_button"
+    onClick={() => navigate('/instructions/chords-for-melody')}
+  >
+    📘 Instructions
+  </button>
+</div>
+
         <div className="chords_for_melody_settings_list">
           {melodyKeys.map((melodyKey) => {
             const { name, description } = melodies[melodyKey];

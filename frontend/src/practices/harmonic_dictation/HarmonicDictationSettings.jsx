@@ -132,6 +132,15 @@ const level = outChords.length > 0 ? 8 : Math.max(2, Math.min(7, chordCount));
   </div>
 
   <div className="harmony_dictation_settings-dropdown">
+  <button
+    className="harmony_dictation_settings-dropbtn"
+    onClick={() => navigate('/instructions/harmonic')}
+  >
+    📘 Instructions
+  </button>
+</div>
+
+  <div className="harmony_dictation_settings-dropdown">
     <button
       className="harmony_dictation_settings-dropbtn"
       onClick={() => navigate('/harmonic/progressions')}

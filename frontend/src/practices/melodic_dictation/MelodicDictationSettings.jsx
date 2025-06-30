@@ -168,6 +168,8 @@ export default function MelodicDictationSettings() {
               </div>
             </div>
 
+            
+
             <div className="melodic_dictation_settings-dropdown">
               <button className="melodic_dictation_settings-dropbtn">
               🪜 Difficulty: {difficulty === 'normal' ? 'Normal' : difficulty === 'hard' ? 'Hard' : 'Master'}
@@ -243,6 +245,15 @@ export default function MelodicDictationSettings() {
         <div className="melodic_dictation_settings-floating-setup-message">
           🎯 Set your scale, notes, rounds, and sequence — then click “Start Practice”!
         </div>
+
+        <div className="melodic_dictation_settings-instructions-button">
+  <button
+    className="melodic_dictation_settings-dropbtn"
+    onClick={() => navigate('/instructions/melodic-dictation')}
+  >
+    📘 Instructions
+  </button>
+</div>
 
         <div className="melodic_dictation_settings-summary">
           <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>

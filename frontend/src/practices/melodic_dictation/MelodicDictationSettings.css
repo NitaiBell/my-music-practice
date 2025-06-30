@@ -245,3 +245,9 @@
     }
   }
   
+
+  .melodic_dictation_settings-instructions-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }

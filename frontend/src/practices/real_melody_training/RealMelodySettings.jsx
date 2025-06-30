@@ -164,6 +164,15 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
+            <div className="real-melody-dropdown">
+  <button
+    className="real-melody-dropbtn"
+    onClick={() => navigate('/instructions/real-melody')}
+  >
+    📘 Instructions
+  </button>
+</div>
+
             <button
               className={`real-melody-beginner-toggle ${normalMode ? 'on' : 'off'}`}
               title="Normal Mode: Any octave is accepted. Pro Mode: exact octave match required."

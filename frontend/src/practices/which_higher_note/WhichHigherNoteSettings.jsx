@@ -63,6 +63,15 @@ export default function WhichHigherNoteSettings() {
           🎯 Set rounds and octaves, then click “Start Practice”!
         </div>
 
+        <div className="which_higher_settings-dropdown">
+  <button
+    className="which_higher_settings-dropbtn"
+    onClick={() => navigate('/instructions/which-higher-note')}
+  >
+    📘 Instructions
+  </button>
+</div>
+
         <div className="which_higher_settings-summary">
           <p><strong>{rounds}</strong> rounds | Octave: <strong>{octaves[0]}</strong></p>
         </div>

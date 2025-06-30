@@ -18,16 +18,18 @@ export const savePractice = async (req, res) => {
     tryScore,
     speedScore,
     avgTimePerAnswer,
-    sessionTime, // ✅ New field
+    sessionTime: rawSessionTime, // allow any input type
     date,
   } = data;
+
+  const sessionTime = Number(rawSessionTime) || 0; // ✅ ensure it's a number (float or int)
 
   try {
     await pool.query(
       `INSERT INTO user_practice_log (
         gmail, practice_name, correct, wrong, tries, level, rank, max_rank,
         right_score, try_score, speed_score, avg_time_per_answer,
-        session_time, -- ✅ New column
+        session_time,
         date
       ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
       [
@@ -43,7 +45,7 @@ export const savePractice = async (req, res) => {
         tryScore,
         speedScore,
         avgTimePerAnswer,
-        sessionTime, // ✅ New value
+        sessionTime, // ✅ safe value
         date,
       ]
     );

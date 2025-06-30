@@ -15,14 +15,17 @@
   z-index: 999;
 }
 
+/* Content fills available space to allow sticky footer */
 .practice-log-scroll-container {
   flex: 1;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* ✅ Was: space-between */
 }
 
 /* === Main Content Area === */
 .practice-log-content {
-  padding: 80px 40px 100px;
+  padding: 60px 40px 40px;
   max-width: 900px;
   margin: 0 auto;
   background-color: #97f2c6;
@@ -127,6 +130,7 @@
 /* === Sorting === */
 .log-sort-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   margin: 20px 0;
@@ -156,14 +160,13 @@
   margin-bottom: 20px;
   font-size: 1rem;
   text-align: center;
-  color: #065f46; /* dark green */
+  color: #065f46;
   opacity: 0.85;
 }
 
 .practice-log-subtitle strong {
   color: #166534;
 }
-
 
 /* Initially collapsed (no background or border) */
 .log-summary-box {
@@ -183,7 +186,6 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Space between summary box and first log entry */
 .log-entry-list {
   margin-top: 20px;
 }
@@ -224,4 +226,22 @@
   position: absolute;
   left: 0;
   top: 0;
+}
+
+.log-total-session-time {
+  margin-left: 16px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  align-self: center;
+}
+
+/* === Sticky Footer === */
+footer {
+  background: #0f766e;
+  color: white;
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 0.95rem;
+  margin-top: auto;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
 }
