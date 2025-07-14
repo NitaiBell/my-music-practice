@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import LearnPianoKeyboard from './LearnPianoKeyboard';
 import './LearnPianoSettings.css';
 
@@ -40,12 +40,26 @@ const notesByScale = {
 
 const DEFAULT_DEGREES = [0, 2, 4];
 
+function getScaleDegrees(scale, degreeIndices) {
+  return degreeIndices.map((i) => notesByScale[scale][i]);
+}
+
 export default function LearnPianoSettings() {
-  const [selectedScale, setSelectedScale] = useState('C');
-  const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
-  const [rounds, setRounds] = useState(5);
-  const [sequenceLength, setSequenceLength] = useState(8);
-  const [freestyleMode, setFreestyleMode] = useState(false);
+  const location = useLocation();
+
+  const {
+    defaultScale = 'C',
+    defaultNotes = getScaleDegrees('C', DEFAULT_DEGREES),
+    defaultRounds = 5,
+    defaultSequenceLength = 8,
+    defaultFreestyleMode = false,
+  } = location.state || {};
+
+  const [selectedScale, setSelectedScale] = useState(defaultScale);
+  const [selectedNotes, setSelectedNotes] = useState(defaultNotes);
+  const [rounds, setRounds] = useState(defaultRounds);
+  const [sequenceLength, setSequenceLength] = useState(defaultSequenceLength);
+  const [freestyleMode, setFreestyleMode] = useState(defaultFreestyleMode);
   const keyboardRef = useRef();
   const navigate = useNavigate();
 
@@ -53,10 +67,6 @@ export default function LearnPianoSettings() {
   const level = freestyleMode
     ? (sequenceLength >= 10 ? 18 : 17)
     : Math.max(2, Math.min(17, selectedNotes.length + sequenceLength));
-
-  function getScaleDegrees(scale, degreeIndices) {
-    return degreeIndices.map((i) => notesByScale[scale][i]);
-  }
 
   function getSelectedDegreeIndices(scale, selected) {
     return notesByScale[scale]

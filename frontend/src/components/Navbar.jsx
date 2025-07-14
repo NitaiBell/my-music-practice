@@ -21,7 +21,7 @@ export default function Navbar() {
           <a href="/">Home</a>
           <a href="/keyboard">Keyboard</a>
           <a href="/practices-showcase">Practices</a>
-          <a href="/course/1">Courses</a>
+          <a href="/courses">Courses</a> {/* ✅ Updated line */}
           <a href="/articles">Articles</a>
           <a href="/school" className="navbar-school-link">School</a>
           <a href="/about">About</a>

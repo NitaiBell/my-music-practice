@@ -1,0 +1,89 @@
+.all_courses-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #bbf5b5; /* Light green background like School */
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .all_courses-fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+  
+  .all_courses-scroll-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .all_courses-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .all_courses-title {
+    font-size: 32px;
+    color: #1a4d1a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .all_courses-subtitle {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 2rem;
+  }
+  
+  .all_courses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .all_courses-card {
+    background-color: hsl(136, 97%, 71%);
+    border: 1px solid #c6f6d5;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 100, 0, 0.05);
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .all_courses-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 100, 0, 0.12);
+  }
+  
+  .all_courses-card-title {
+    font-size: 24px;
+    color: #2f855a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .all_courses-card-description {
+    font-size: 16px;
+    color: #22543d;
+    margin-bottom: 1rem;
+  }
+  
+  .all_courses-card-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #199600;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .all_courses-card-button:hover {
+    background-color: #004600;
+  }
+  

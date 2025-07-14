@@ -17,3 +17,10 @@ npm install react-router-dom
 
 
 images profiles = https://chatgpt.com/c/682364ce-155c-8013-a30e-0f960a9c0a6c
+
+
+| Lesson   | Practice        | State Sent                                        |
+| -------- | --------------- | ------------------------------------------------- |
+| Lesson 1 | LearnPiano      | `scale: 'C', notes: ['C', 'G'], rounds: 10`       |
+| Lesson 2 | RealMelody      | `scale: 'G', rounds: 12, normalMode: true`        |
+| Lesson 3 | PingPongHarmony | `scale: 'C', chords: ['C', 'F', 'G'], rounds: 15` |

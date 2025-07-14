@@ -1,0 +1,102 @@
+.welcome_keyboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #bbf5b5; /* Light green background like School */
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.welcome_keyboard-fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.welcome_keyboard-scroll-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.welcome_keyboard-inner-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome_keyboard-page {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.welcome_keyboard-title {
+  font-size: 28px;
+  margin-bottom: 12px;
+  color: #1a4d1a;
+}
+
+.welcome_keyboard-description {
+  margin-bottom: 24px;
+  color: #22543d;
+  font-size: 16px;
+  background-color: #f0fff4;
+  border: 1px solid #a3dca1;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  line-height: 1.6;
+  box-shadow: 0 4px 10px rgba(0, 100, 0, 0.05);
+}
+
+.welcome_keyboard-lesson-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.welcome_keyboard-lesson-card {
+  border: 1px solid #c6f6d5;
+  border-radius: 10px;
+  padding: 16px;
+  background-color: #f6fff0;
+  box-shadow: 0 2px 4px rgba(0, 100, 0, 0.06);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.welcome_keyboard-lesson-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 100, 0, 0.12);
+}
+
+.welcome_keyboard-lesson-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: #2f855a;
+}
+
+.welcome_keyboard-lesson-description {
+  margin: 0 0 12px;
+  color: #22543d;
+  font-size: 15px;
+}
+
+.welcome_keyboard-start-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #199600;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.welcome_keyboard-start-btn:hover {
+  background-color: #004600;
+}

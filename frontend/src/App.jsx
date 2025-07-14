@@ -49,6 +49,10 @@ import ListOfValidProgressions from './practices/harmonic_dictation/ListOfValidP
 import School from './pages/school/School.jsx';
 import StudentLog from './pages/school/StudentLog.jsx';
 
+// Courses
+import WelcomeKeyboardCoursePage from './pages/courses/welcome-keyboard/WelcomeKeyboardCoursePage.jsx';
+import AllCoursesPage from './pages/courses/AllCoursesPage/AllCoursesPage.jsx'; // ✅ NEW
+
 export default function App() {
   const { currentUser } = useAuth();
 
@@ -103,6 +107,10 @@ export default function App() {
         {/* School System */}
         <Route path="/school" element={<School currentUser={currentUser} />} />
         <Route path="/school/log/:studentEmail" element={<StudentLog currentUser={currentUser} />} />
+
+        {/* Courses */}
+        <Route path="/courses/welcome-keyboard" element={<WelcomeKeyboardCoursePage />} />
+        <Route path="/courses" element={<AllCoursesPage />} /> {/* ✅ NEW */}
       </Routes>
     </Router>
   );
