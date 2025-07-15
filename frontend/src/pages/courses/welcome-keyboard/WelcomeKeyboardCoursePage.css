@@ -100,3 +100,39 @@
 .welcome_keyboard-start-btn:hover {
   background-color: #004600;
 }
+
+
+.welcome_keyboard-lesson-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .welcome_keyboard-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #199600;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease-in-out, border 0.2s;
+  }
+  
+  .welcome_keyboard-checkbox:checked {
+    background-color: #199600;
+    border-color: #199600;
+  }
+  
+  .welcome_keyboard-checkbox:checked::after {
+    content: '✔';
+    position: absolute;
+    top: 0;
+    left: 3px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  

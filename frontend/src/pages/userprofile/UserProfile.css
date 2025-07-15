@@ -446,3 +446,39 @@
   text-decoration: underline;
 }
 
+
+
+.user-course-card-link {
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 16px 20px;
+  background: linear-gradient(to bottom right, #f7fef9, #d1fae5);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.user-course-card-link:hover {
+  transform: scale(1.015);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 8px;
+}
+
+.user-profile-card-separator {
+  border-top: 1px solid #cbd5e1;
+  margin: 8px 0;
+}
+
+.user-profile-card-description {
+  font-size: 0.9rem;
+  color: #334155;
+  margin-top: 8px;
+}

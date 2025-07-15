@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './DegreeNoticeSettings.css';
 
 const allScales = ['C', 'G', 'D', 'A', 'E', 'B', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb'];
@@ -8,8 +8,7 @@ const allDegrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const displayNote = (note) => {
   const map = {
     'C#': 'C♯', 'D#': 'D♯', 'F#': 'F♯', 'G#': 'G♯', 'A#': 'A♯',
-    'Db': 'D♭', 'Eb': 'E♭', 'Gb': 'G♭', 'Ab': 'A♭', 'Bb': 'B♭',
-    'Cb': 'C♭',
+    'Db': 'D♭', 'Eb': 'E♭', 'Gb': 'G♭', 'Ab': 'A♭', 'Bb': 'B♭', 'Cb': 'C♭',
   };
   return map[note] || note;
 };
@@ -29,26 +28,25 @@ const scaleDegreeNoteMap = {
   Gb: ['Gb', 'Abm', 'Bbm', 'Cb', 'Db', 'Ebm', 'Fdim'],
 };
 
-const degreeIndex = {
-  I: 0,
-  II: 1,
-  III: 2,
-  IV: 3,
-  V: 4,
-  VI: 5,
-  VII: 6,
-};
+const degreeIndex = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6 };
 
 const whooshSound = new Audio('/effects/swing-whoosh.mp3');
 whooshSound.volume = 0.5;
 
 export default function DegreeNoticeSettings() {
   const navigate = useNavigate();
-  const [selectedScales, setSelectedScales] = useState(['C']);
-  const [selectedDegrees, setSelectedDegrees] = useState(['II', 'III', 'IV', 'V', 'VI', 'VII']);
-  const [rounds, setRounds] = useState(10);
-  const [scaleToDegree, setScaleToDegree] = useState(true);
-  const [scaleToNote, setScaleToNote] = useState(false);
+  const location = useLocation();
+  const incoming = location.state;
+
+  const [selectedScales, setSelectedScales] = useState(incoming?.selectedScales || ['C']);
+  const [selectedDegrees, setSelectedDegrees] = useState(incoming?.selectedDegrees || ['II', 'III', 'IV', 'V', 'VI', 'VII']);
+  const [rounds, setRounds] = useState(incoming?.rounds || 10);
+  const [scaleToDegree, setScaleToDegree] = useState(incoming?.questionStyles?.scaleToDegree ?? true);
+  const [scaleToNote, setScaleToNote] = useState(incoming?.questionStyles?.scaleToNote ?? false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const toggleScale = (scale) => {
     setSelectedScales((prev) => {
@@ -93,10 +91,7 @@ export default function DegreeNoticeSettings() {
       state: {
         selectedScales,
         selectedDegrees,
-        questionStyles: {
-          scaleToDegree,
-          scaleToNote,
-        },
+        questionStyles: { scaleToDegree, scaleToNote },
         rounds,
       },
     });

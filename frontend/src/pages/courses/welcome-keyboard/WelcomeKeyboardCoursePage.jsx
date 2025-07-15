@@ -1,12 +1,12 @@
-// src/pages/courses/welcome-keyboard/WelcomeKeyboardCoursePage.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import './WelcomeKeyboardCoursePage.css';
 
 const lessons = [
   {
+    id: 'lesson1',
     title: 'Lesson 1: Just C and G',
     description: 'Start by identifying only two keys: C and G. Get familiar with the spacing between white keys.',
     route: '/learn-piano/settings',
@@ -18,6 +18,7 @@ const lessons = [
     },
   },
   {
+    id: 'lesson2',
     title: 'Lesson 2: Add E to the Mix',
     description: 'Now play C, E, and G — the building blocks of a basic triad on the keyboard.',
     route: '/learn-piano/settings',
@@ -29,6 +30,7 @@ const lessons = [
     },
   },
   {
+    id: 'lesson3',
     title: 'Lesson 3: All White Keys in C',
     description: 'Practice all the white keys in C major: C D E F G A B.',
     route: '/learn-piano/settings',
@@ -42,6 +44,17 @@ const lessons = [
 ];
 
 export default function WelcomeKeyboardCoursePage() {
+  const [completedLessons, setCompletedLessons] = useState(() => {
+    const saved = localStorage.getItem('welcomeKeyboardCompleted');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const markAsCompleted = (lessonId) => {
+    const updated = { ...completedLessons, [lessonId]: true };
+    setCompletedLessons(updated);
+    localStorage.setItem('welcomeKeyboardCompleted', JSON.stringify(updated));
+  };
+
   return (
     <div className="welcome_keyboard-wrapper">
       <div className="welcome_keyboard-fixed-navbar">
@@ -62,12 +75,30 @@ export default function WelcomeKeyboardCoursePage() {
             <div className="welcome_keyboard-lesson-list">
               {lessons.map((lesson, i) => (
                 <div key={i} className="welcome_keyboard-lesson-card">
-                  <h2 className="welcome_keyboard-lesson-title">{lesson.title}</h2>
+                  <div className="welcome_keyboard-lesson-header">
+                    <h2 className="welcome_keyboard-lesson-title">{lesson.title}</h2>
+                    <input
+                      type="checkbox"
+                      checked={!!completedLessons[lesson.id]}
+                      onChange={() =>
+                        setCompletedLessons((prev) => {
+                          const updated = {
+                            ...prev,
+                            [lesson.id]: !prev[lesson.id],
+                          };
+                          localStorage.setItem('welcomeKeyboardCompleted', JSON.stringify(updated));
+                          return updated;
+                        })
+                      }
+                      className="welcome_keyboard-checkbox"
+                    />
+                  </div>
                   <p className="welcome_keyboard-lesson-description">{lesson.description}</p>
                   <Link
                     to={lesson.route}
                     state={lesson.state}
                     className="welcome_keyboard-start-btn"
+                    onClick={() => markAsCompleted(lesson.id)}
                   >
                     ▶️ Start Lesson
                   </Link>

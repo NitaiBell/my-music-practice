@@ -2,16 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
+import courses from '../../../data/courseList';
 import './AllCoursesPage.css';
-
-const courses = [
-  {
-    title: '🎹 Welcome Keyboard',
-    description: 'Start identifying notes and patterns on the piano. Great for absolute beginners.',
-    route: '/courses/welcome-keyboard',
-  },
-  // Add more courses here as needed
-];
 
 const AllCoursesPage = () => {
   return (

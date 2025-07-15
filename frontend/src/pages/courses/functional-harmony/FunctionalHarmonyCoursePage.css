@@ -1,0 +1,132 @@
+.functional_harmony-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #bbf5b5; /* Light green like Welcome Keyboard */
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .functional_harmony-fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+  
+  .functional_harmony-scroll-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .functional_harmony-inner-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .functional_harmony-page {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-grow: 1;
+    text-align: center;
+  }
+  
+  .functional_harmony-title {
+    font-size: 28px;
+    margin-bottom: 12px;
+    color: #1a4d1a;
+  }
+  
+  .functional_harmony-description {
+    margin-bottom: 24px;
+    color: #22543d;
+    font-size: 16px;
+    background-color: #f0fff4;
+    border: 1px solid #a3dca1;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    line-height: 1.6;
+    box-shadow: 0 4px 10px rgba(0, 100, 0, 0.05);
+  }
+  
+  .functional_harmony-lesson-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .functional_harmony-lesson-card {
+    border: 1px solid #c6f6d5;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: #f6fff0;
+    box-shadow: 0 2px 4px rgba(0, 100, 0, 0.06);
+    transition: box-shadow 0.2s ease-in-out;
+  }
+  
+  .functional_harmony-lesson-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 100, 0, 0.12);
+  }
+  
+  .functional_harmony-lesson-title {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: #2f855a;
+  }
+  
+  .functional_harmony-lesson-description {
+    margin: 0 0 12px;
+    color: #22543d;
+    font-size: 15px;
+  }
+  
+  .functional_harmony-start-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #199600;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .functional_harmony-start-btn:hover {
+    background-color: #004600;
+  }
+  
+
+  .functional_harmony-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #199600;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease-in-out, border 0.2s;
+  }
+  
+  .functional_harmony-checkbox:checked {
+    background-color: #199600;
+    border-color: #199600;
+  }
+  
+  .functional_harmony-checkbox:checked::after {
+    content: '✔';
+    position: absolute;
+    top: 0;
+    left: 3px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  

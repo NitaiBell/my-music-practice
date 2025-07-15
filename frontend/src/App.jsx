@@ -50,8 +50,9 @@ import School from './pages/school/School.jsx';
 import StudentLog from './pages/school/StudentLog.jsx';
 
 // Courses
+import AllCoursesPage from './pages/courses/AllCoursesPage/AllCoursesPage.jsx';
 import WelcomeKeyboardCoursePage from './pages/courses/welcome-keyboard/WelcomeKeyboardCoursePage.jsx';
-import AllCoursesPage from './pages/courses/AllCoursesPage/AllCoursesPage.jsx'; // ✅ NEW
+import FunctionalHarmonyCoursePage from './pages/courses/functional-harmony/FunctionalHarmonyCoursePage.jsx'; // ✅ NEW
 
 export default function App() {
   const { currentUser } = useAuth();
@@ -109,8 +110,9 @@ export default function App() {
         <Route path="/school/log/:studentEmail" element={<StudentLog currentUser={currentUser} />} />
 
         {/* Courses */}
+        <Route path="/courses" element={<AllCoursesPage />} />
         <Route path="/courses/welcome-keyboard" element={<WelcomeKeyboardCoursePage />} />
-        <Route path="/courses" element={<AllCoursesPage />} /> {/* ✅ NEW */}
+        <Route path="/courses/functional-harmony" element={<FunctionalHarmonyCoursePage />} /> {/* ✅ NEW */}
       </Routes>
     </Router>
   );

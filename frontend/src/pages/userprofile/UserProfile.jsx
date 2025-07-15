@@ -5,6 +5,8 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; // ✅ added
+import courses from '../../data/courseList';
+import { Link } from 'react-router-dom';
 
 
 const profileOptions = [
@@ -290,15 +292,14 @@ export default function UserProfile() {
         <section id="courses" className="user-profile-section">
           <h3>My Courses</h3>
           <div className="user-profile-cards">
-            <div className="user-profile-card">Introduction to Chords</div>
-            <div className="user-profile-card">Ear Training 101</div>
-            <div className="user-profile-card">Melody Imitation Mastery</div>
-            <div className="user-profile-card">Sight Reading Techniques</div>
-            <div className="user-profile-card">Advanced Harmony</div>
-            <div className="user-profile-card">Piano Finger Independence</div>
-            <div className="user-profile-card">Chord Progression Lab</div>
-            <div className="user-profile-card">Minor Scale Melodies</div>
-          </div>
+  {courses.map((course, i) => (
+    <Link to={course.route} key={i} className="user-profile-card user-course-card-link">
+      <div className="user-profile-card-title">{course.title}</div>
+      <div className="user-profile-card-separator"></div>
+      <p className="user-profile-card-description">{course.description}</p>
+    </Link>
+  ))}
+</div>
         </section>
 
         <section id="articles" className="user-profile-section">
