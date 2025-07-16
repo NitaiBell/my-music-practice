@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
+import { useAuth } from '../../../context/AuthContext';
 import './WelcomeKeyboardCoursePage.css';
 
 const lessons = [
@@ -44,15 +45,66 @@ const lessons = [
 ];
 
 export default function WelcomeKeyboardCoursePage() {
-  const [completedLessons, setCompletedLessons] = useState(() => {
-    const saved = localStorage.getItem('welcomeKeyboardCompleted');
-    return saved ? JSON.parse(saved) : {};
-  });
+  const { currentUser } = useAuth();
+  const [completedLessons, setCompletedLessons] = useState({});
 
-  const markAsCompleted = (lessonId) => {
-    const updated = { ...completedLessons, [lessonId]: true };
-    setCompletedLessons(updated);
-    localStorage.setItem('welcomeKeyboardCompleted', JSON.stringify(updated));
+  // Load lesson progress from backend on mount
+  useEffect(() => {
+    const fetchProgress = async () => {
+      if (!currentUser?.email) return;
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/course-progress/get?email=${currentUser.email}&courseName=welcome_keyboard`
+        );
+        const data = await res.json();
+        setCompletedLessons(data || {});
+      } catch (err) {
+        console.error('❌ Failed to load lesson progress:', err);
+      }
+    };
+    fetchProgress();
+  }, [currentUser]);
+
+  const updateBackend = async (lessonId, isChecked) => {
+    if (!currentUser?.email) return;
+    try {
+      await fetch('http://localhost:5000/api/course-progress/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: currentUser.email,
+          courseName: 'welcome_keyboard',
+          lessonIndex: lessonId,
+          isChecked,
+        }),
+      });
+    } catch (err) {
+      console.error('❌ Failed to update lesson progress:', err);
+    }
+  };
+
+  const handleCheckboxToggle = (lessonId) => {
+    const newStatus = !completedLessons[lessonId];
+    setCompletedLessons((prev) => {
+      const updated = { ...prev };
+      if (newStatus) {
+        updated[lessonId] = true;
+      } else {
+        delete updated[lessonId];
+      }
+      return updated;
+    });
+    updateBackend(lessonId, newStatus);
+  };
+
+  const handleStartLesson = (lessonId) => {
+    if (!completedLessons[lessonId]) {
+      setCompletedLessons((prev) => {
+        const updated = { ...prev, [lessonId]: true };
+        return updated;
+      });
+      updateBackend(lessonId, true);
+    }
   };
 
   return (
@@ -73,23 +125,14 @@ export default function WelcomeKeyboardCoursePage() {
             </p>
 
             <div className="welcome_keyboard-lesson-list">
-              {lessons.map((lesson, i) => (
-                <div key={i} className="welcome_keyboard-lesson-card">
+              {lessons.map((lesson) => (
+                <div key={lesson.id} className="welcome_keyboard-lesson-card">
                   <div className="welcome_keyboard-lesson-header">
                     <h2 className="welcome_keyboard-lesson-title">{lesson.title}</h2>
                     <input
                       type="checkbox"
                       checked={!!completedLessons[lesson.id]}
-                      onChange={() =>
-                        setCompletedLessons((prev) => {
-                          const updated = {
-                            ...prev,
-                            [lesson.id]: !prev[lesson.id],
-                          };
-                          localStorage.setItem('welcomeKeyboardCompleted', JSON.stringify(updated));
-                          return updated;
-                        })
-                      }
+                      onChange={() => handleCheckboxToggle(lesson.id)}
                       className="welcome_keyboard-checkbox"
                     />
                   </div>
@@ -98,7 +141,7 @@ export default function WelcomeKeyboardCoursePage() {
                     to={lesson.route}
                     state={lesson.state}
                     className="welcome_keyboard-start-btn"
-                    onClick={() => markAsCompleted(lesson.id)}
+                    onClick={() => handleStartLesson(lesson.id)}
                   >
                     ▶️ Start Lesson
                   </Link>

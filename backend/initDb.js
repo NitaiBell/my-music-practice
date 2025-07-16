@@ -64,3 +64,22 @@ export const createTeacherStudentTableIfNotExists = async () => {
     console.error("❌ Error creating 'teacher_student_links' table:", err.message);
   }
 };
+
+
+export const createUserCourseProgressTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_course_progress (
+        id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL REFERENCES users(email),
+        course_name TEXT NOT NULL,
+        completed_lessons JSONB DEFAULT '{}',
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("✅ 'user_course_progress' table ready.");
+  } catch (err) {
+    console.error("❌ Error creating 'user_course_progress' table:", err.message);
+  }
+};
+

@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #bbf5b5; /* Light green like Welcome Keyboard */
+    background-color: #bbf5b5;
     font-family: 'Segoe UI', sans-serif;
   }
   
@@ -74,6 +74,12 @@
     box-shadow: 0 4px 8px rgba(0, 100, 0, 0.12);
   }
   
+  .functional_harmony-lesson-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
   .functional_harmony-lesson-title {
     margin: 0 0 8px;
     font-size: 20px;
@@ -101,7 +107,6 @@
     background-color: #004600;
   }
   
-
   .functional_harmony-checkbox {
     appearance: none;
     -webkit-appearance: none;

@@ -4,10 +4,9 @@ import './UserProfile.css';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // ✅ added
+import { useAuth } from '../../context/AuthContext';
 import courses from '../../data/courseList';
 import { Link } from 'react-router-dom';
-
 
 const profileOptions = [
   { name: 'Mozart', file: 'mozart profile.png' },
@@ -32,82 +31,79 @@ const practiceLinks = [
     path: '/chord-type',
     logo: '/practices_logos/chord type practice.png',
     description: 'Identify chord types like maj7, dim, or sus by ear.',
-    background: 'linear-gradient(to bottom right, #e6ffe6, #38b000)', // bright → forest green
+    background: 'linear-gradient(to bottom right, #e6ffe6, #38b000)',
   },
   {
     name: 'Degree Notice Training',
     path: '/degree-notice',
     logo: '/practices_logos/degree notice training.png',
     description: 'Match scale degrees with notes in different keys.',
-    background: 'linear-gradient(to bottom right, #38b000, #d1fae5)', // dark → light mint
+    background: 'linear-gradient(to bottom right, #38b000, #d1fae5)',
   },
   {
     name: 'Difference Practice',
     path: '/difference',
     logo: '/practices_logos/spot the difference.png',
     description: 'Spot the difference between two musical examples.',
-    background: 'linear-gradient(to bottom right, #e6fff7,rgb(19, 197, 158))', // mint → deep green
+    background: 'linear-gradient(to bottom right, #e6fff7,rgb(19, 197, 158))',
   },
   {
     name: 'Harmony Training',
     path: '/harmony',
     logo: '/practices_logos/ping pong harmony.png',
     description: 'Practice functional harmony recognition in real time.',
-    background: 'linear-gradient(to bottom right, rgb(19, 197, 158), #ccfbf1)', // dark → pale green
+    background: 'linear-gradient(to bottom right, rgb(19, 197, 158), #ccfbf1)',
   },
   {
     name: 'Interval Training',
     path: '/interval-practice',
     logo: '/practices_logos/interval trainer.png',
     description: 'Identify musical intervals between two notes.',
-    background: 'linear-gradient(to bottom right, #e0ffe9, #1f7d53)', // bright → jungle green
+    background: 'linear-gradient(to bottom right, #e0ffe9, #1f7d53)',
   },
   {
     name: 'Learn Piano',
     path: '/learn-piano',
     logo: '/practices_logos/piano notes.png',
     description: 'Play back note sequences shown on screen.',
-    background: 'linear-gradient(to bottom right, #1f7d53, #ebfbee)', // dark → soft mint
+    background: 'linear-gradient(to bottom right, #1f7d53, #ebfbee)',
   },
   {
     name: 'Learn Piano Chords',
     path: '/learn-piano-chords',
     logo: '/practices_logos/piano chords.png',
     description: 'Identify chords visually and aurally on the keyboard.',
-    background: 'linear-gradient(to bottom right, #e6ffe6, #3f6212)', // bright → olive green
+    background: 'linear-gradient(to bottom right, #e6ffe6, #3f6212)',
   },
   {
     name: 'Real Melody Training',
     path: '/real-melody',
     logo: '/practices_logos/ping pong melody.png',
     description: 'Play back melodies using buttons or the keyboard.',
-    background: 'linear-gradient(to bottom right, #3f6212, #f0fff4)', // dark → pale green
+    background: 'linear-gradient(to bottom right, #3f6212, #f0fff4)',
   },
   {
     name: 'Which Higher Note',
     path: '/which-higher-note',
     logo: '/practices_logos/which is higher.png',
     description: 'Listen to two notes and choose the higher one.',
-    background: 'linear-gradient(to bottom right, #e6ffe6, #2e7d32)', // bright → green
+    background: 'linear-gradient(to bottom right, #e6ffe6, #2e7d32)',
   },
   {
     name: 'Harmonic Dictation',
     path: '/harmonic',
     logo: '/practices_logos/harmonic dictation.png',
     description: 'Write down chord progressions by ear.',
-    background: 'linear-gradient(to bottom right, #2e7d32, #ecfdf5)', // dark → mint
+    background: 'linear-gradient(to bottom right, #2e7d32, #ecfdf5)',
   },
   {
     name: 'Melodic Dictation',
     path: '/melodic-dictation',
     logo: '/practices_logos/melodic dictation.png',
     description: 'Transcribe melodies played by the system.',
-    background: 'linear-gradient(to bottom right, #e6ffe6, #006400)', // bright → forest green
+    background: 'linear-gradient(to bottom right, #e6ffe6, #006400)',
   },
 ];
-
-
-
 
 const chordsForMelodyPractice = {
   name: 'Chords for Melody',
@@ -121,7 +117,7 @@ const mainPracticeLinks = practiceLinks.filter(p => p.name !== 'Chords for Melod
 
 export default function UserProfile() {
   const navigate = useNavigate();
-  const { currentUser, setCurrentUser } = useAuth(); // ✅ use context
+  const { currentUser, setCurrentUser } = useAuth();
   const user = currentUser;
   const username = user?.name || 'Guest';
   const gmail = user?.email || '';
@@ -132,6 +128,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     if (!gmail) return;
+
     const fetchStats = async () => {
       const allStats = {};
       for (const practice of [...practiceLinks, chordsForMelodyPractice]) {
@@ -145,8 +142,23 @@ export default function UserProfile() {
       }
       setPracticeStats(allStats);
     };
+
+    const fetchCourseProgress = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/course-progress/all?email=${gmail}`);
+        const data = await res.json();
+        setCurrentUser(prev => ({
+          ...prev,
+          course_progress: data,
+        }));
+      } catch (err) {
+        console.error('Failed to fetch course progress:', err);
+      }
+    };
+
     fetchStats();
-  }, [gmail]);
+    fetchCourseProgress();
+  }, [gmail, setCurrentUser]);
 
   const updateImageOnServer = async (newImageUrl) => {
     try {
@@ -157,10 +169,18 @@ export default function UserProfile() {
       });
       const updated = await res.json();
       localStorage.setItem('user', JSON.stringify(updated));
-      setCurrentUser(updated); // ✅ update context too
+      setCurrentUser(updated);
     } catch (err) {
       console.error('Failed to update image:', err);
     }
+  };
+
+  const getCourseProgressText = (courseId, totalLessons) => {
+    const completed = user?.course_progress?.[courseId]
+      ? Object.values(user.course_progress[courseId]).filter(val => val === true).length
+      : 0;
+    const percent = totalLessons > 0 ? Math.round((completed / totalLessons) * 100) : 0;
+    return `${completed}/${totalLessons} lessons — ${percent}% complete`;
   };
 
   const handleSelectImage = (file) => {
@@ -233,16 +253,18 @@ export default function UserProfile() {
       </div>
 
       <div className="user-profile-content">
-      <h2 className="user-profile-welcome">Welcome {username}</h2>
-{!user?.email && (
-  <p className="user-profile-guest-warning">
-    To save your progress and view your practice logs, please <a href="/signin">sign in</a> or <a href="/signup">create an account</a>.
-  </p>
-)}
+        <h2 className="user-profile-welcome">Welcome {username}</h2>
+        {!user?.email && (
+          <p className="user-profile-guest-warning">
+            To save your progress and view your practice logs, please <a href="/signin">sign in</a> or <a href="/signup">create an account</a>.
+          </p>
+        )}
+
+        {/* Practices Section */}
         <section id="practices" className="user-profile-section">
           <h3>My Practices</h3>
           <div className="user-profile-practice-list">
-            {mainPracticeLinks.map((p) => (
+            {mainPracticeLinks.map(p => (
               <div className="user-practice-item" key={p.path}>
                 <div className="practice-logo-wrapper" style={{ background: p.background }}>
                   <img src={p.logo} alt={p.name} className="practice-logo-img" />
@@ -289,19 +311,24 @@ export default function UserProfile() {
           </div>
         </section>
 
+        {/* Courses Section */}
         <section id="courses" className="user-profile-section">
           <h3>My Courses</h3>
           <div className="user-profile-cards">
-  {courses.map((course, i) => (
-    <Link to={course.route} key={i} className="user-profile-card user-course-card-link">
-      <div className="user-profile-card-title">{course.title}</div>
-      <div className="user-profile-card-separator"></div>
-      <p className="user-profile-card-description">{course.description}</p>
-    </Link>
-  ))}
-</div>
+            {courses.map((course, i) => (
+              <Link to={course.route} key={i} className="user-profile-card user-course-card-link">
+                <div className="user-profile-card-title">{course.title}</div>
+                <div className="user-profile-card-separator"></div>
+                <p className="user-profile-card-description">{course.description}</p>
+                <p className="user-profile-course-progress">
+                  ✅ {getCourseProgressText(course.id, course.totalLessons)}
+                </p>
+              </Link>
+            ))}
+          </div>
         </section>
 
+        {/* Articles Section */}
         <section id="articles" className="user-profile-section">
           <h3>My Articles</h3>
           <div className="user-profile-cards">
@@ -316,7 +343,6 @@ export default function UserProfile() {
           </div>
         </section>
       </div>
-
       <Footer />
     </div>
   );

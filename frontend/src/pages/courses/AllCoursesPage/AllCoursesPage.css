@@ -86,4 +86,26 @@
   .all_courses-card-button:hover {
     background-color: #004600;
   }
+
+  .all_courses-card-progress {
+    font-size: 1.05rem;         /* Slightly larger text */
+    margin-top: 14px;           /* More space from description above */
+    margin-bottom: 10px;        /* More space before the button below */
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .progress-none {
+    color: #999; /* light gray */
+  }
+  
+  .progress-incomplete {
+    color: #d48806; /* orange */
+  }
+  
+  .progress-complete {
+    color: #28a745; /* green */
+    font-weight: 600;
+  }
+  
   

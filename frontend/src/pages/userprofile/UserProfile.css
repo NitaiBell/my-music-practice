@@ -482,3 +482,12 @@
   color: #334155;
   margin-top: 8px;
 }
+
+
+.user-profile-course-progress {
+  font-size: 1rem;
+  margin-top: 12px;
+  color: #065f46; /* deep green */
+  font-weight: 600;
+}
+

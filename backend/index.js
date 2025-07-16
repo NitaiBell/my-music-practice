@@ -1,14 +1,18 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+
 import userRoutes from './routes/userRoutes.js';
 import practiceRoutes from './routes/practiceRoutes.js';
-import teacherStudentRoutes from './routes/teacherStudentRoutes.js'; // ✅ New import
+import teacherStudentRoutes from './routes/teacherStudentRoutes.js';
+import courseProgressRoutes from './routes/courseProgressRoutes.js'; // ✅ NEW import
+
 import { pool } from './db.js';
 import {
   createUsersTableIfNotExists,
   createPracticeLogTableIfNotExists,
-  createTeacherStudentTableIfNotExists, // ✅ New import
+  createTeacherStudentTableIfNotExists,
+  createUserCourseProgressTable, // ✅ NEW import
 } from './initDb.js';
 
 dotenv.config();
@@ -31,16 +35,18 @@ app.get('/', async (req, res) => {
   }
 });
 
-// ✅ Routes
+// ✅ API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/practice', practiceRoutes);
-app.use('/api/teacher-student', teacherStudentRoutes); // ✅ New route
+app.use('/api/teacher-student', teacherStudentRoutes);
+app.use('/api/course-progress', courseProgressRoutes); // ✅ NEW route
 
-// ✅ Start server after ensuring tables exist
+// ✅ Start server after ensuring all tables exist
 Promise.all([
   createUsersTableIfNotExists(),
   createPracticeLogTableIfNotExists(),
-  createTeacherStudentTableIfNotExists(), // ✅ Run this on startup
+  createTeacherStudentTableIfNotExists(),
+  createUserCourseProgressTable(), // ✅ NEW table setup
 ]).then(() => {
   app.listen(port, () => {
     console.log(`✅ Server running on port ${port}`);
