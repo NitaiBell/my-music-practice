@@ -1,12 +1,14 @@
-// src/pages/userprofile/UserProfile.jsx
 import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import courses from '../../data/courseList';
-import { Link } from 'react-router-dom';
+import { articles } from '../articles/articlesData';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 
 const profileOptions = [
   { name: 'Mozart', file: 'mozart profile.png' },
@@ -24,6 +26,7 @@ const profileOptions = [
   { name: 'Pirate Mozart', file: 'pirate mozart.png' },
   { name: 'Turtle Mozart', file: 'turtle mozart.png' },
 ];
+
 
 const practiceLinks = [
   {
@@ -125,6 +128,7 @@ export default function UserProfile() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [practiceStats, setPracticeStats] = useState({});
+  const [readArticles, setReadArticles] = useState([]);
 
   useEffect(() => {
     if (!gmail) return;
@@ -156,8 +160,20 @@ export default function UserProfile() {
       }
     };
 
+    const fetchReadArticles = async () => {
+      try {
+const res = await fetch(`${API_BASE_URL}/api/article-reads/read?email=${gmail}`);
+
+        const data = await res.json();
+        setReadArticles(data);
+      } catch (err) {
+        console.error('Failed to fetch read articles:', err);
+      }
+    };
+
     fetchStats();
     fetchCourseProgress();
+    fetchReadArticles();
   }, [gmail, setCurrentUser]);
 
   const updateImageOnServer = async (newImageUrl) => {
@@ -174,6 +190,29 @@ export default function UserProfile() {
       console.error('Failed to update image:', err);
     }
   };
+
+const toggleArticleRead = async (e, slug) => {
+  e.preventDefault(); // 👈 prevent navigation if used inside a <Link>
+  if (!gmail) return;
+
+  const isRead = readArticles.includes(slug);
+  const endpoint = isRead ? 'unmark-read' : 'mark-read';
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/article-reads/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: gmail, articleSlug: slug }),
+    });
+
+    if (!res.ok) throw new Error(`Failed to ${endpoint} article`);
+    setReadArticles(prev =>
+      isRead ? prev.filter(s => s !== slug) : [...prev, slug]
+    );
+  } catch (err) {
+    console.error(`❌ Error toggling article status for ${slug}:`, err);
+  }
+};
 
   const getCourseProgressText = (courseId, totalLessons) => {
     const completed = user?.course_progress?.[courseId]
@@ -212,6 +251,7 @@ export default function UserProfile() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
 
   return (
     <div className="user-profile-container">
@@ -329,17 +369,31 @@ export default function UserProfile() {
         </section>
 
         {/* Articles Section */}
-        <section id="articles" className="user-profile-section">
+<section id="articles" className="user-profile-section">
           <h3>My Articles</h3>
           <div className="user-profile-cards">
-            <div className="user-profile-card">How to Hear a Key</div>
-            <div className="user-profile-card">What Makes a Good Melody?</div>
-            <div className="user-profile-card">Piano or Voice First?</div>
-            <div className="user-profile-card">Building a Practice Routine</div>
-            <div className="user-profile-card">The Art of Listening</div>
-            <div className="user-profile-card">Breaking Down Jazz Harmony</div>
-            <div className="user-profile-card">Writing Catchy Hooks</div>
-            <div className="user-profile-card">When to Use Modal Mixture</div>
+            {articles.map((article) => {
+              const isRead = readArticles.includes(article.slug);
+              return (
+                <div key={article.slug} className="user-profile-card user-article-card">
+<div key={article.slug} className="user-profile-card user-article-card">
+  <Link to={`/articles/${article.slug}`} className="user-profile-article-link">
+    {article.title}
+    {user && (
+      <span
+        className="checkmark"
+        onClick={(e) => toggleArticleRead(e, article.slug)}
+        title={readArticles.includes(article.slug) ? 'Unmark as Read' : 'Mark as Read'}
+        style={{ marginLeft: '10px', cursor: 'pointer' }}
+      >
+        {readArticles.includes(article.slug) ? '✅' : '⬜️'}
+      </span>
+    )}
+  </Link>
+</div>
+                </div>
+              );
+            })}
           </div>
         </section>
       </div>

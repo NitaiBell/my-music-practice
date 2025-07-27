@@ -208,25 +208,33 @@
   /* ─── Card Layout ──────────────────── */
   .user-profile-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 28px;
+    padding: 16px;
   }
   
   .user-profile-card {
-    background: white;
-    padding: 24px;
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    background: linear-gradient(to bottom right, #e6f4ea, #ffffff);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: #1e3a2f;
-    font-size: 1.1rem;
-    font-weight: 500;
-    transition: background 0.2s ease, transform 0.2s ease;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.25s ease;
   }
   
   .user-profile-card:hover {
-    background: #bbf7d0;
-    transform: translateY(-4px);
+    background: linear-gradient(to bottom right, #bbf7d0, #ffffff);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    color: #14532d;
   }
   
 
@@ -490,4 +498,38 @@
   color: #065f46; /* deep green */
   font-weight: 600;
 }
+
+
+.user-profile-card.user-article-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+background: rgba(255, 255, 255, 0.5);
+}
+
+.user-profile-article-link {
+  flex: 1;
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+}
+
+.article-read-toggle {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.article-read-toggle.read {
+  color: green;
+}
+
+
+
 

@@ -83,3 +83,21 @@ export const createUserCourseProgressTable = async () => {
   }
 };
 
+
+export const createUserArticleReadsTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_article_reads (
+        id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL REFERENCES users(email),
+        article_slug TEXT NOT NULL,
+        read_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(email, article_slug)
+      );
+    `);
+    console.log("✅ 'user_article_reads' table ready.");
+  } catch (err) {
+    console.error("❌ Error creating 'user_article_reads' table:", err.message);
+  }
+};
+
