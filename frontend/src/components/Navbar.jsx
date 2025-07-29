@@ -19,7 +19,7 @@ export default function Navbar() {
       <div className={`navbar-links-group ${isMenuOpen ? 'open' : ''}`}>
         <div className="navbar-links">
           <a href="/">Home</a>
-          <a href="/keyboard">Keyboard</a>
+<a href="/keyboard" target="_blank" rel="noopener noreferrer">Keyboard</a>
           <a href="/practices-showcase">Practices</a>
           <a href="/courses">Courses</a> {/* ✅ Updated line */}
           <a href="/articles">Articles</a>

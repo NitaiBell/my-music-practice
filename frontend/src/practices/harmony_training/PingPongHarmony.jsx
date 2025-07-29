@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './PingPongHarmony.css';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
@@ -42,9 +42,39 @@ function weightedPick(weights, chordMap, excludeChord) {
 // [same `progressionRules` object as in your original file, unchanged for brevity]
 
 const progressionRules = {
-  // your full rules here...
-  I: { IV: 0.25, V: 0.2, vi: 0.15, ii: 0.1, V7: 0.1, '♭VII': 0.1, iii: 0.05 },
-  // ...
+  I:       { IV: 0.25, V: 0.2, vi: 0.15, ii: 0.1, V7: 0.1, '♭VII': 0.1, iii: 0.05 }, // C major
+  ii:      { V: 0.35, iii: 0.25, IV: 0.1, 'vii°': 0.1, vi: 0.1, I: 0.05 }, // D minor
+  iii:     { vi: 0.35, IV: 0.25, I: 0.15, V: 0.15 }, // E minor
+  IV:      { I: 0.25, V: 0.2, ii: 0.15, V7: 0.1, vi: 0.1, iii: 0.1 }, // F major
+  V:       { I: 0.4, vi: 0.2, IV: 0.15, V7: 0.1, iii: 0.1 }, // G major
+  vi:      { ii: 0.25, IV: 0.2, V: 0.15, I: 0.1, iii: 0.1, '♭VII': 0.1 }, // A minor
+  'vii°':  { I: 0.5, iii: 0.2, V: 0.15, vi: 0.1 }, // B diminished
+
+  // Secondary dominants
+  'V7/vi': { vi: 0.7, ii: 0.15, IV: 0.1 }, // E7 (secondary dominant of A minor)
+  'V7/ii': { ii: 0.8, V: 0.15 }, // A7 (secondary dominant of D minor)
+  'V7/iii':{ iii: 0.7, vi: 0.2 }, // B7 (secondary dominant of E minor)
+  'V7/IV': { IV: 0.8, I: 0.1, vi: 0.1 }, // C7 (secondary dominant of F major)
+  'V7/V':  { V: 0.8, I: 0.1 }, // D7 (secondary dominant of G major)
+  V7:      { I: 0.9, vi: 0.1 }, // G7
+  'V/iii': { iii: 0.8, vi: 0.2 }, // B major (secondary dominant of E minor, triad)
+  'V/V':   { V: 0.9 }, // D major (secondary dominant of G major, triad)
+
+  // Borrowed / modal mixture & chromatic mediants
+  i:         { iv: 0.3, V: 0.25, '♭VII': 0.2, '♭VI': 0.15, I: 0.1 }, // C minor (borrowed)
+  iv:        { I: 0.4, V: 0.2, '♭VII': 0.15, '♭VI': 0.15 }, // F minor (borrowed)
+  v:         { I: 0.4, IV: 0.25, '♭VII': 0.15, '♭VI': 0.1 }, // G minor (borrowed)
+  '♯III':    { vi: 0.3, ii: 0.25, I: 0.2, IV: 0.15 }, // E major (chromatic)
+  '♭III':    { I: 0.3, vi: 0.25, IV: 0.2, '♭VI': 0.15 }, // E♭ major (borrowed)
+  '♭VI':     { V: 0.25, I: 0.25, IV: 0.2, '♭VII': 0.2 }, // A♭ major (borrowed)
+  '♭VII':    { I: 0.35, IV: 0.25, vi: 0.2, '♭VI': 0.15 }, // B♭ major (borrowed)
+  '♭VII7':   { I: 0.7, vi: 0.2, IV: 0.1 }, // B♭7 (borrowed)
+  chromaticMediant: { I: 0.4, V: 0.3, vi: 0.2 }, // A♭ major or E major (common chromatic mediants)
+
+  // Special colour chords
+  IV7:        { I: 0.6, vi: 0.2 }, // F7
+  neapolitan: { V: 0.5, I: 0.2, vi: 0.2 }, // D♭ major (Neapolitan)
+  'ii/vi':    { vi: 0.6, ii: 0.2 }, // B minor (ii in A minor, relative minor)
 };
 
 // ───── Main Component ─────
@@ -81,7 +111,22 @@ const PingPongHarmony = () => {
   const [flashMap, setFlashMap] = useState({});
   const [statFlash, setStatFlash] = useState('');
   const [msg, setMsg] = useState('');
+  const [sessionDurationSec, setSessionDurationSec] = useState(0);
 
+
+  useEffect(() => {
+  if (!isPlaying) return;
+
+  const interval = setInterval(() => {
+    if (sessionStartTimeRef.current) {
+      setSessionDurationSec(
+        Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
+      );
+    }
+  }, 1000);
+
+  return () => clearInterval(interval); // cleanup
+}, [isPlaying]);
   const playNote = (n) => new Audio(`/clean_cut_notes/${encodeURIComponent(`${n}.wav`)}`).play();
   const playChord = (c) => (chordNoteMap[normalizeChord(c)] || []).forEach(playNote);
   const flashBtn = (c, type) => {
@@ -207,9 +252,7 @@ const PingPongHarmony = () => {
   };
 
   const totalAnswerTimeSec = totalAnswerTimeRef.current / 1000;
-  const sessionDurationSec = sessionStartTimeRef.current
-    ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
-    : 0;
+
 
   const { score, max, level, rightScore, tryScore, speedScore, avgTimePerAnswer } =
     calculatePingPongHarmonyRank({
@@ -315,6 +358,8 @@ const PingPongHarmony = () => {
         tryScore,
         speedScore,
         avgTimePerAnswer,
+        sessionTime: sessionDurationSec,
+
       });
     }
 
