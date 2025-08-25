@@ -14,8 +14,8 @@ const lessons = [
     state: {
       defaultScale: 'C',
       defaultNotes: ['C', 'G'],
-      defaultRounds: 8,
-      defaultSequenceLength: 4,
+      defaultRounds: 6,
+      defaultSequenceLength: 2,
     },
   },
   {
@@ -25,24 +25,61 @@ const lessons = [
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
-      defaultNotes: ['C', 'E', 'G'],
-      defaultRounds: 10,
-      defaultSequenceLength: 5,
+      defaultNotes: ['C', 'G', 'E'],
+      defaultRounds: 8,
+      defaultSequenceLength: 3,
     },
   },
   {
     id: 'lesson3',
-    title: 'Lesson 3: All White Keys in C',
-    description: 'Practice all the white keys in C major: C D E F G A B.',
+    title: 'Lesson 3: Add A',
+    description: 'Add the A note and begin to recognize more combinations and fingerings.',
+    route: '/learn-piano/settings',
+    state: {
+      defaultScale: 'C',
+      defaultNotes: ['C', 'G', 'E', 'A'],
+      defaultRounds: 10,
+      defaultSequenceLength: 4,
+    },
+  },
+  {
+    id: 'lesson4',
+    title: 'Lesson 4: Add D',
+    description: 'Include the D note and explore longer patterns across the keyboard.',
+    route: '/learn-piano/settings',
+    state: {
+      defaultScale: 'C',
+      defaultNotes: ['C', 'G', 'E', 'A', 'D'],
+      defaultRounds: 12,
+      defaultSequenceLength: 5,
+    },
+  },
+  {
+    id: 'lesson5',
+    title: 'Lesson 5: Add F',
+    description: 'Now you’re almost playing the full C major scale—just one more step.',
+    route: '/learn-piano/settings',
+    state: {
+      defaultScale: 'C',
+      defaultNotes: ['C', 'D', 'E', 'F', 'G', 'A'],
+      defaultRounds: 14,
+      defaultSequenceLength: 6,
+    },
+  },
+  {
+    id: 'lesson6',
+    title: 'Lesson 6: All White Keys in C Major',
+    description: 'Practice with all the white keys in C major: C D E F G A B.',
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
       defaultNotes: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
-      defaultRounds: 12,
-      defaultSequenceLength: 6,
+      defaultRounds: 16,
+      defaultSequenceLength: 7,
     },
   },
 ];
+
 
 export default function WelcomeKeyboardCoursePage() {
   const { currentUser } = useAuth();

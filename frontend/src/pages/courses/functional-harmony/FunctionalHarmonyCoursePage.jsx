@@ -9,12 +9,27 @@ import './FunctionalHarmonyCoursePage.css';
 const lessons = [
   {
     id: 'lesson1',
-    title: 'Lesson 1: What is V?',
-    description: 'Learn how G is the V chord in the C major scale and hear how it resolves to C.',
+    title: 'Lesson 1: I and V in C Major',
+    description: 'Begin with the tonic (I) and dominant (V) in C major: the foundation of functional harmony.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
-      selectedDegrees: ['V'],
+      selectedDegrees: ['I', 'V'],
+      questionStyles: {
+        scaleToDegree: true,
+        scaleToNote: false,
+      },
+      rounds: 6,
+    },
+  },
+  {
+    id: 'lesson2',
+    title: 'Lesson 2: Add IV — The Subdominant',
+    description: 'Explore the motion between I, IV, and V in C major. The three core pillars of harmony.',
+    route: '/degree-notice/settings',
+    state: {
+      selectedScales: ['C'],
+      selectedDegrees: ['I', 'IV', 'V'],
       questionStyles: {
         scaleToDegree: true,
         scaleToNote: true,
@@ -23,43 +38,28 @@ const lessons = [
     },
   },
   {
-    id: 'lesson2',
-    title: 'Lesson 2: Secondary Chords in G',
-    description: 'Practice identifying chords like Am as the ii in G major.',
-    route: '/degree-notice/settings',
-    state: {
-      selectedScales: ['G'],
-      selectedDegrees: ['ii', 'V'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: true,
-      },
-      rounds: 10,
-    },
-  },
-  {
     id: 'lesson3',
-    title: 'Lesson 3: Full Functional Set',
-    description: 'Train your ear and mind to recognize I, ii, IV, and V chords across multiple keys.',
+    title: 'Lesson 3: Add VI — The Submediant',
+    description: 'Add the VI chord to your C major palette. Notice how it softens harmonic movement.',
     route: '/degree-notice/settings',
     state: {
-      selectedScales: ['C', 'G', 'D'],
-      selectedDegrees: ['I', 'ii', 'IV', 'V'],
+      selectedScales: ['C'],
+      selectedDegrees: ['I', 'IV', 'V', 'VI'],
       questionStyles: {
         scaleToDegree: true,
         scaleToNote: true,
       },
-      rounds: 12,
+      rounds: 8,
     },
   },
   {
     id: 'lesson4',
-    title: 'Lesson 4: Minor Keys and Their Degrees',
-    description: 'Explore degrees like i, iv, and V in minor scales like A minor and E minor.',
+    title: 'Lesson 4: Add II — The Pre-Dominant',
+    description: 'The II chord leads naturally into V. Now we’re approaching full cadences.',
     route: '/degree-notice/settings',
     state: {
-      selectedScales: ['Am', 'Em'],
-      selectedDegrees: ['i', 'iv', 'V'],
+      selectedScales: ['C'],
+      selectedDegrees: ['I', 'II', 'IV', 'V', 'VI'],
       questionStyles: {
         scaleToDegree: true,
         scaleToNote: true,
@@ -69,35 +69,67 @@ const lessons = [
   },
   {
     id: 'lesson5',
-    title: 'Lesson 5: Mixed Degrees in Major Scales',
-    description: 'Recognize chords like iii and vi alongside I and V in various major keys.',
+    title: 'Lesson 5: Add III — A Colorful Option',
+    description: 'The III chord is less common but adds color. Let’s add it to the mix.',
     route: '/degree-notice/settings',
     state: {
-      selectedScales: ['C', 'D', 'F'],
-      selectedDegrees: ['I', 'iii', 'vi', 'V'],
+      selectedScales: ['C'],
+      selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI'],
       questionStyles: {
         scaleToDegree: true,
+        scaleToNote: true,
+      },
+      rounds: 12,
+    },
+  },
+  {
+    id: 'lesson6',
+    title: 'Lesson 6: Full Set — All 7 Degrees in C Major',
+    description: 'Include the leading tone (VII) and test your ability across the full C major scale.',
+    route: '/degree-notice/settings',
+    state: {
+      selectedScales: ['C'],
+      selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
+      questionStyles: {
+        scaleToDegree: true,
+        scaleToNote: false,
+      },
+      rounds: 14,
+    },
+  },
+  {
+    id: 'lesson7',
+    title: 'Lesson 7: Note-to-Degree Challenge in C',
+    description: 'Flip the game: identify the degree based on the note. Reinforce Roman numeral meaning.',
+    route: '/degree-notice/settings',
+    state: {
+      selectedScales: ['C'],
+      selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
+      questionStyles: {
+        scaleToDegree: false,
         scaleToNote: true,
       },
       rounds: 14,
     },
   },
   {
-    id: 'lesson6',
-    title: 'Lesson 6: Degree to Note Challenge',
-    description: 'Sharpen your accuracy converting Roman numerals to note names across scales.',
+    id: 'lesson8',
+    title: 'Lesson 8: Mixed Challenge in C',
+    description: 'Randomized question types — both degree-to-note and note-to-degree — to solidify fluency.',
     route: '/degree-notice/settings',
     state: {
-      selectedScales: ['C', 'G', 'A'],
-      selectedDegrees: ['I', 'ii', 'iii', 'IV', 'V', 'vi'],
+      selectedScales: ['C'],
+      selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
       questionStyles: {
-        scaleToDegree: false,
+        scaleToDegree: true,
         scaleToNote: true,
       },
       rounds: 16,
     },
   },
 ];
+
+
 
 export default function FunctionalHarmonyCoursePage() {
   const { currentUser } = useAuth();
