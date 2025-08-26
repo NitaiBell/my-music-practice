@@ -9,9 +9,9 @@ export default function About() {
     <div className="light-page">
       <Navbar />
       <div className="about-content">
-        <h1>About MyMusic</h1>
+        <h1>About LikeMozart</h1>
         <p>
-          MyMusic is an interactive platform designed to help musicians improve their skills in ear training, theory, and instrumental practice. Whether you're a beginner or a seasoned musician, our exercises and courses are built to support you.
+          LikeMozart is an interactive platform designed to help musicians improve their skills in ear training, theory, and instrumental practice. Whether you're a beginner or a seasoned musician, our exercises and courses are built to support you.
         </p>
         <p>
           Explore a variety of practice modes, learn at your own pace, and track your progress as you grow musically.

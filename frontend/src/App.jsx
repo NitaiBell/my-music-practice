@@ -53,6 +53,8 @@ import StudentLog from './pages/school/StudentLog.jsx';
 import AllCoursesPage from './pages/courses/AllCoursesPage/AllCoursesPage.jsx';
 import WelcomeKeyboardCoursePage from './pages/courses/welcome-keyboard/WelcomeKeyboardCoursePage.jsx';
 import FunctionalHarmonyCoursePage from './pages/courses/functional-harmony/FunctionalHarmonyCoursePage.jsx'; // ✅ NEW
+import PingPongCoursePage from './pages/courses/ping-pong-melody/PingPongCoursePage.jsx'; // ✅ NEW
+
 
 export default function App() {
   const { currentUser } = useAuth();
@@ -112,7 +114,9 @@ export default function App() {
         {/* Courses */}
         <Route path="/courses" element={<AllCoursesPage />} />
         <Route path="/courses/welcome-keyboard" element={<WelcomeKeyboardCoursePage />} />
-        <Route path="/courses/functional-harmony" element={<FunctionalHarmonyCoursePage />} /> {/* ✅ NEW */}
+        <Route path="/courses/functional-harmony" element={<FunctionalHarmonyCoursePage />} />
+        <Route path="/courses/pingpong-melody" element={<PingPongCoursePage />} />
+
       </Routes>
     </Router>
   );

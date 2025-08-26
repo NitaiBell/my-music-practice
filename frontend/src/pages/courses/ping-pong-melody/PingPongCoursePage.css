@@ -1,0 +1,136 @@
+.pingpong_melody-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #bbf5b5; /* soft green */
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.pingpong_melody-fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.pingpong_melody-scroll-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.pingpong_melody-inner-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.pingpong_melody-page {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.pingpong_melody-title {
+  font-size: 28px;
+  margin-bottom: 12px;
+  color: #1a4d1a;
+}
+
+.pingpong_melody-description {
+  margin-bottom: 24px;
+  color: #22543d;
+  font-size: 16px;
+  background-color: #f0fff4;
+  border: 1px solid #a3dca1;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  line-height: 1.6;
+  box-shadow: 0 4px 10px rgba(0, 100, 0, 0.05);
+}
+
+.pingpong_melody-lesson-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pingpong_melody-lesson-card {
+  border: 1px solid #c6f6d5;
+  border-radius: 10px;
+  padding: 16px;
+  background-color: #f6fff0;
+  box-shadow: 0 2px 4px rgba(0, 100, 0, 0.06);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.pingpong_melody-lesson-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 100, 0, 0.12);
+}
+
+.pingpong_melody-lesson-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pingpong_melody-lesson-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: #2f855a;
+}
+
+.pingpong_melody-lesson-description {
+  margin: 0 0 12px;
+  color: #22543d;
+  font-size: 15px;
+}
+
+.pingpong_melody-start-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #199600;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.pingpong_melody-start-btn:hover {
+  background-color: #004600;
+}
+
+.pingpong_melody-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #199600;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease-in-out, border 0.2s;
+}
+
+.pingpong_melody-checkbox:checked {
+  background-color: #199600;
+  border-color: #199600;
+}
+
+.pingpong_melody-checkbox:checked::after {
+  content: '✔';
+  position: absolute;
+  top: 0;
+  left: 3px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}

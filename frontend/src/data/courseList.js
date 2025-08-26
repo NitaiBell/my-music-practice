@@ -1,12 +1,17 @@
-// src/data/courseList.js
-
 const courses = [
+  {
+    id: 'pingpong_melody',
+    title: '🎯 PingPong Melody Course',
+    description: 'Build your melodic instinct step-by-step using limited notes and rhythmic patterns.',
+    route: '/courses/pingpong-melody',
+    totalLessons: 6, // Adjust as you finalize your levels
+  },
   {
     id: 'welcome_keyboard',
     title: '🎹 Welcome Keyboard',
     description: 'Start identifying notes and patterns on the piano. Great for absolute beginners.',
     route: '/courses/welcome-keyboard',
-    totalLessons: 6, // ✅ Updated from 3 to 6
+    totalLessons: 6,
   },
   {
     id: 'functional_harmony',
@@ -18,4 +23,5 @@ const courses = [
 ];
 
 export default courses;
-  
+
+

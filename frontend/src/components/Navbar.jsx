@@ -7,7 +7,7 @@ export default function Navbar() {
   return (
     <div className="user-profile-navbar">
       <div className="navbar-header">
-        <div className="navbar-logo">MyMusic</div>
+        <div className="navbar-logo">LikeMozart</div>
         <div
           className="navbar-hamburger"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -22,7 +22,6 @@ export default function Navbar() {
 <a href="/keyboard" target="_blank" rel="noopener noreferrer">Keyboard</a>
           <a href="/practices-showcase">Practices</a>
           <a href="/courses">Courses</a> {/* ✅ Updated line */}
-          <a href="/articles">Articles</a>
           <a href="/school" className="navbar-school-link">School</a>
           <a href="/about">About</a>
           <a href="/signin" className="navbar-signin-button">Sign In</a>

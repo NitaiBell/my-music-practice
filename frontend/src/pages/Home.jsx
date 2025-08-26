@@ -8,7 +8,7 @@ const Home = () => {
     <div className="home-wrapper">
       <Navbar />
       <main className="home-centered">
-        <h1 className="home-welcome-text">🎵 Welcome to MyMusic 🎵</h1>
+        <h1 className="home-welcome-text">🎵 Welcome to LikeMozart 🎵</h1>
       </main>
     </div>
   );

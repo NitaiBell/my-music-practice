@@ -1,7 +1,5 @@
-// src/practices/real_melody/RealMelodySettings.jsx
-
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import RealMelodyKeyboardView from './RealMelodyKeyboardView';
 import './RealMelodySettings.css';
 
@@ -45,14 +43,9 @@ const fullChromaticNotes = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A'
 const DEFAULT_DEGREES = [0, 1, 2, 3, 4, 5, 6];
 
 export default function RealMelodySettings() {
-  const [selectedScale, setSelectedScale] = useState('C');
-  const [selectedNotes, setSelectedNotes] = useState(getScaleDegrees('C', DEFAULT_DEGREES));
-  const [outScaleNotes, setOutScaleNotes] = useState([]);
-  const [rounds, setRounds] = useState(30);
-  const [normalMode, setNormalMode] = useState(true);
-  const keyboardRef = useRef();
   const navigate = useNavigate();
-  const tonic = selectedScale;
+  const location = useLocation();
+  const incomingState = location.state || {};
 
   function getScaleDegrees(scale, degreeIndices) {
     return degreeIndices.map((i) => notesByScale[scale][i]);
@@ -63,6 +56,15 @@ export default function RealMelodySettings() {
       .map((note, i) => (selected.includes(note) ? i : null))
       .filter((i) => i !== null);
   }
+
+  const [selectedScale, setSelectedScale] = useState(incomingState.selectedScale || 'C');
+  const [selectedNotes, setSelectedNotes] = useState(incomingState.selectedNotes || getScaleDegrees('C', DEFAULT_DEGREES));
+  const [outScaleNotes, setOutScaleNotes] = useState([]);
+  const [rounds, setRounds] = useState(incomingState.rounds || 30);
+  const [normalMode, setNormalMode] = useState(incomingState.normalMode ?? true);
+
+  const tonic = selectedScale;
+  const keyboardRef = useRef();
 
   const playNote3 = (note) => {
     const normalized = normalizeNote(note);
@@ -114,6 +116,7 @@ export default function RealMelodySettings() {
       <div className="real-melody-content-wrapper">
         <nav className="real-melody-navbar">
           <div className="real-melody-scale-note-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* Scale dropdown */}
             <div className="real-melody-dropdown">
               <button className="real-melody-dropbtn">🎼 Scale</button>
               <div className="real-melody-dropdown-content">
@@ -131,6 +134,7 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
+            {/* Notes dropdown */}
             <div className="real-melody-dropdown">
               <button className="real-melody-dropbtn">🎵 Notes</button>
               <div className="real-melody-dropdown-content">
@@ -148,6 +152,7 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
+            {/* Out-of-scale dropdown */}
             <div className="real-melody-dropdown">
               <button className="real-melody-dropbtn">🧩 Out-of-Scale</button>
               <div className="real-melody-dropdown-content">
@@ -164,15 +169,17 @@ export default function RealMelodySettings() {
               </div>
             </div>
 
+            {/* Instructions button */}
             <div className="real-melody-dropdown">
-  <button
-    className="real-melody-dropbtn"
-    onClick={() => navigate('/instructions/real-melody')}
-  >
-    📘 Instructions
-  </button>
-</div>
+              <button
+                className="real-melody-dropbtn"
+                onClick={() => navigate('/instructions/real-melody')}
+              >
+                📘 Instructions
+              </button>
+            </div>
 
+            {/* Mode toggle */}
             <button
               className={`real-melody-beginner-toggle ${normalMode ? 'on' : 'off'}`}
               title="Normal Mode: Any octave is accepted. Pro Mode: exact octave match required."
@@ -182,6 +189,7 @@ export default function RealMelodySettings() {
             </button>
           </div>
 
+          {/* Controls */}
           <div className="real-melody-controls">
             <div className="real-melody-rounds-group">
               <label htmlFor="rounds-input" className="real-melody-rounds-label">Rounds:</label>

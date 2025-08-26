@@ -261,7 +261,7 @@ const toggleArticleRead = async (e, slug) => {
         <div className="user-profile-subnavbar">
           <button onClick={() => scrollToSection('practices')}>My Practices</button>
           <button onClick={() => scrollToSection('courses')}>My Courses</button>
-          <button onClick={() => scrollToSection('articles')}>My Articles</button>
+<button onClick={() => scrollToSection('chords')}>Chords for Melody</button>
         </div>
         <div className="user-profile-image-wrapper">
           <img src={selectedImage} alt="User Avatar" className="user-profile-image" />
@@ -327,9 +327,9 @@ const toggleArticleRead = async (e, slug) => {
             ))}
           </div>
 
-          <h3 style={{ marginTop: '40px' }}>Chords for Melody</h3>
-          <div className="user-profile-practice-list">
-            <div className="user-practice-item" key={chordsForMelodyPractice.path}>
+<h3 id="chords" style={{ marginTop: '40px' }}>Chords for Melody</h3>
+<div className="user-profile-practice-list">
+  <div className="user-practice-item" key={chordsForMelodyPractice.path}>
               <div className="practice-logo-wrapper" style={{ background: chordsForMelodyPractice.background }}>
                 <img src={chordsForMelodyPractice.logo} alt={chordsForMelodyPractice.name} className="practice-logo-img" />
               </div>
@@ -369,7 +369,7 @@ const toggleArticleRead = async (e, slug) => {
         </section>
 
         {/* Articles Section */}
-<section id="articles" className="user-profile-section">
+{/*<section id="articles" className="user-profile-section">
           <h3>My Articles</h3>
           <div className="user-profile-cards">
             {articles.map((article) => {
@@ -395,7 +395,7 @@ const toggleArticleRead = async (e, slug) => {
               );
             })}
           </div>
-        </section>
+        </section>*/}
       </div>
       <Footer />
     </div>
