@@ -6,7 +6,8 @@ import userRoutes from './routes/userRoutes.js';
 import practiceRoutes from './routes/practiceRoutes.js';
 import teacherStudentRoutes from './routes/teacherStudentRoutes.js';
 import courseProgressRoutes from './routes/courseProgressRoutes.js';
-import articleReadsRoutes from './routes/articleReadsRoutes.js'; // ✅ NEW import
+import articleReadsRoutes from './routes/articleReadsRoutes.js';
+import passwordRoutes from './routes/passwordRoutes.js'; // ✅ NEW
 
 import { pool } from './db.js';
 import {
@@ -14,7 +15,8 @@ import {
   createPracticeLogTableIfNotExists,
   createTeacherStudentTableIfNotExists,
   createUserCourseProgressTable,
-  createUserArticleReadsTable, // ✅ NEW import
+  createUserArticleReadsTable,
+  createOneTimePasswordsTable, // ✅ NEW
 } from './initDb.js';
 
 dotenv.config();
@@ -42,7 +44,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/practice', practiceRoutes);
 app.use('/api/teacher-student', teacherStudentRoutes);
 app.use('/api/course-progress', courseProgressRoutes);
-app.use('/api/article-reads', articleReadsRoutes); // ✅ NEW route
+app.use('/api/article-reads', articleReadsRoutes);
+app.use('/api', passwordRoutes); // ✅ NEW route
 
 // ✅ Start server after ensuring all tables exist
 Promise.all([
@@ -50,9 +53,12 @@ Promise.all([
   createPracticeLogTableIfNotExists(),
   createTeacherStudentTableIfNotExists(),
   createUserCourseProgressTable(),
-  createUserArticleReadsTable(), // ✅ NEW table creation
+  createUserArticleReadsTable(),
+  createOneTimePasswordsTable(), // ✅ NEW
 ]).then(() => {
   app.listen(port, () => {
     console.log(`✅ Server running on port ${port}`);
   });
+}).catch((err) => {
+  console.error("❌ Failed to initialize tables:", err.message);
 });

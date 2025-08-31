@@ -101,3 +101,19 @@ export const createUserArticleReadsTable = async () => {
   }
 };
 
+
+export const createOneTimePasswordsTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS one_time_passwords (
+        id SERIAL PRIMARY KEY,
+        password TEXT NOT NULL,
+        used BOOLEAN DEFAULT FALSE,
+        used_at TIMESTAMP
+      );
+    `);
+    console.log("✅ 'one_time_passwords' table ready.");
+  } catch (err) {
+    console.error("❌ Error creating 'one_time_passwords' table:", err.message);
+  }
+};
