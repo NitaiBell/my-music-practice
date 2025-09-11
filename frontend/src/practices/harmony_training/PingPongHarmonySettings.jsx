@@ -1,10 +1,8 @@
-// ✅ Updated PingPongHarmonySettings.jsx with specialChordMode support
-
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+// src/pages/courses/pingpong-harmony/PingPongHarmonySettings.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import './PingPongHarmonySettings.css';
-import { useNavigate } from 'react-router-dom';
 import PingPongHarmonyKeyboardView from './PingPongHarmonyKeyboardView';
 import {
   majorScales,
@@ -21,7 +19,19 @@ const PingPongHarmonySettings = () => {
   const [rounds, setRounds] = useState(15);
   const [specialChordMode, setSpecialChordMode] = useState(false);
   const [notesToFlash, setNotesToFlash] = useState([]);
+
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ pick up state from Link
+
+  // ✅ Override defaults with state from Course Page
+  useEffect(() => {
+    const s = location.state || {};
+    if (s.selectedScale) setSelectedScale(s.selectedScale);
+    if (Array.isArray(s.selectedChords)) setSelectedChords(s.selectedChords);
+    if (Array.isArray(s.outChords)) setOutChords(s.outChords);
+    if (typeof s.rounds === 'number') setRounds(s.rounds);
+    if (typeof s.specialChordMode === 'boolean') setSpecialChordMode(s.specialChordMode);
+  }, [location.state]);
 
   const toggleChord = (chord) => {
     if (chord === selectedScale) return;
@@ -109,126 +119,124 @@ const PingPongHarmonySettings = () => {
     },
     {}
   );
-  
+
   const hasAnySpecial = outChords.some((ch) => specialFunctions[ch]);
   useEffect(() => {
     if (!hasAnySpecial && specialChordMode) {
       setSpecialChordMode(false);
     }
   }, [hasAnySpecial, specialChordMode]);
-  
 
   return (
     <div className="harmony-container-settings">
       <div className="harmony-content-wrapper">
-<nav className="harmony-navbar">
-  <div className="harmony-scale-chord-wrapper">
-    <div className="harmony-dropdown">
-      <button className="harmony-dropbtn">🎼 Scale</button>
-      <div className="harmony-dropdown-content">
-        {majorScales.map((scale) => (
-          <label key={scale}>
-            <input
-              type="radio"
-              name="scale"
-              checked={selectedScale === scale}
-              onChange={() => handleScaleChange(scale)}
-            />
-            {scale} Major
-          </label>
-        ))}
-      </div>
-    </div>
+        <nav className="harmony-navbar">
+          <div className="harmony-scale-chord-wrapper">
+            <div className="harmony-dropdown">
+              <button className="harmony-dropbtn">🎼 Scale</button>
+              <div className="harmony-dropdown-content">
+                {majorScales.map((scale) => (
+                  <label key={scale}>
+                    <input
+                      type="radio"
+                      name="scale"
+                      checked={selectedScale === scale}
+                      onChange={() => handleScaleChange(scale)}
+                    />
+                    {scale} Major
+                  </label>
+                ))}
+              </div>
+            </div>
 
-    <div className="harmony-dropdown">
-      <button className="harmony-dropbtn">🎶 Chords</button>
-      <div className="harmony-dropdown-content">
-        {scaleChordsMap[selectedScale].map((chord) => (
-          <label key={chord}>
-            <input
-              type="checkbox"
-              checked={selectedChords.includes(chord)}
-              disabled={chord === selectedScale}
-              onChange={() => toggleChord(chord)}
-            />
-            {chord}
-          </label>
-        ))}
-      </div>
-    </div>
+            <div className="harmony-dropdown">
+              <button className="harmony-dropbtn">🎶 Chords</button>
+              <div className="harmony-dropdown-content">
+                {scaleChordsMap[selectedScale].map((chord) => (
+                  <label key={chord}>
+                    <input
+                      type="checkbox"
+                      checked={selectedChords.includes(chord)}
+                      disabled={chord === selectedScale}
+                      onChange={() => toggleChord(chord)}
+                    />
+                    {chord}
+                  </label>
+                ))}
+              </div>
+            </div>
 
-    <div className="harmony-dropdown">
-      <button className="harmony-dropbtn">🧩 Extra Chords</button>
-      <div className="harmony-dropdown-content">
-        {extraChords.map((chord) => (
-          <label key={chord}>
-            <input
-              type="checkbox"
-              checked={outChords.includes(chord)}
-              onChange={() => toggleOutChord(chord)}
-            />
-            {chord}
-          </label>
-        ))}
-      </div>
-    </div>
+            <div className="harmony-dropdown">
+              <button className="harmony-dropbtn">🧩 Extra Chords</button>
+              <div className="harmony-dropdown-content">
+                {extraChords.map((chord) => (
+                  <label key={chord}>
+                    <input
+                      type="checkbox"
+                      checked={outChords.includes(chord)}
+                      onChange={() => toggleOutChord(chord)}
+                    />
+                    {chord}
+                  </label>
+                ))}
+              </div>
+            </div>
 
-    {/* 📘 Instructions Button */}
-    <a
-      href="/instructions/harmony"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="harmony-instruction-link"
-    >
-      📘 Instructions
-    </a>
-  </div>
+            {/* 📘 Instructions Button */}
+            <a
+              href="/instructions/harmony"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="harmony-instruction-link"
+            >
+              📘 Instructions
+            </a>
+          </div>
 
-  <div className="harmony-controls">
-    <div className="rounds-group">
-      <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
-      <input
-        id="rounds-input"
-        type="number"
-        min="1"
-        max="20"
-        value={rounds}
-        onChange={(e) => setRounds(Number(e.target.value))}
-        className="harmony-rounds-input"
-      />
-    </div>
+          <div className="harmony-controls">
+            <div className="rounds-group">
+              <label htmlFor="rounds-input" className="rounds-label">Rounds:</label>
+              <input
+                id="rounds-input"
+                type="number"
+                min="1"
+                max="20"
+                value={rounds}
+                onChange={(e) => setRounds(Number(e.target.value))}
+                className="harmony-rounds-input"
+              />
+            </div>
 
-    <div className="harmony-special-toggle">
-      <input
-        type="checkbox"
-        checked={specialChordMode}
-        onChange={() => setSpecialChordMode((v) => !v)}
-        disabled={!hasAnySpecial}
-      />
-      🎯 Focus on Special Chords{" "}
-      {!hasAnySpecial && (
-        <span style={{ opacity: 0.6 }}>
-          — (select one to enable)
-        </span>
-      )}
-    </div>
+            <div className="harmony-special-toggle">
+              <input
+                type="checkbox"
+                checked={specialChordMode}
+                onChange={() => setSpecialChordMode((v) => !v)}
+                disabled={!hasAnySpecial}
+              />
+              🎯 Focus on Special Chords{" "}
+              {!hasAnySpecial && (
+                <span style={{ opacity: 0.6 }}>
+                  — (select one to enable)
+                </span>
+              )}
+            </div>
 
-    <button className="harmony-start-btn" onClick={startPractice}>
-      Start Practice
-    </button>
-  </div>
-</nav>
+            <button className="harmony-start-btn" onClick={startPractice}>
+              Start Practice
+            </button>
+          </div>
+        </nav>
 
         <div className="harmony-floating-setup-message">
           🎯 Choose your chords — including extra ones — and start practicing!
         </div>
 
         <div className="harmony-summary">
-  <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
-  <p>Chords: <strong>{allButtons.join(', ')}</strong></p>
-  <p>Level: <strong>{level}</strong> {specialChordMode && '(Special Mode)'}</p>
-</div>
-
+          <p><strong>{rounds}</strong> rounds | Scale: <strong>{selectedScale}</strong></p>
+          <p>Chords: <strong>{allButtons.join(', ')}</strong></p>
+          <p>Level: <strong>{level}</strong> {specialChordMode && '(Special Mode)'}</p>
+        </div>
 
         <div
           className="harmony-chord-buttons"

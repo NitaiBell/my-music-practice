@@ -52,9 +52,9 @@ import StudentLog from './pages/school/StudentLog.jsx';
 // Courses
 import AllCoursesPage from './pages/courses/AllCoursesPage/AllCoursesPage.jsx';
 import WelcomeKeyboardCoursePage from './pages/courses/welcome-keyboard/WelcomeKeyboardCoursePage.jsx';
-import FunctionalHarmonyCoursePage from './pages/courses/functional-harmony/FunctionalHarmonyCoursePage.jsx'; // ✅ NEW
-import PingPongCoursePage from './pages/courses/ping-pong-melody/PingPongCoursePage.jsx'; // ✅ NEW
-
+import FunctionalHarmonyCoursePage from './pages/courses/functional-harmony/FunctionalHarmonyCoursePage.jsx';
+import PingPongCoursePage from './pages/courses/ping-pong-melody/PingPongCoursePage.jsx'; // ✅ fixed path with dash
+import PingPongHarmonyCoursePage from './pages/courses/pingpong-harmony/PingPongHarmonyCoursePage.jsx'; // ✅ new
 
 export default function App() {
   const { currentUser } = useAuth();
@@ -116,7 +116,7 @@ export default function App() {
         <Route path="/courses/welcome-keyboard" element={<WelcomeKeyboardCoursePage />} />
         <Route path="/courses/functional-harmony" element={<FunctionalHarmonyCoursePage />} />
         <Route path="/courses/pingpong-melody" element={<PingPongCoursePage />} />
-
+        <Route path="/courses/pingpong-harmony" element={<PingPongHarmonyCoursePage />} /> {/* ✅ new */}
       </Routes>
     </Router>
   );

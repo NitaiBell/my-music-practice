@@ -7,6 +7,13 @@ const courses = [
     totalLessons: 6, // Adjust as you finalize your levels
   },
   {
+    id: 'pingpong_harmony',
+    title: '🎼 PingPong Harmony Course',
+    description: 'Develop functional harmony instincts step-by-step: diatonic progressions, secondary dominants, and modal mixture.',
+    route: '/courses/pingpong-harmony',
+    totalLessons: 6, // You defined 6 levels
+  },
+  {
     id: 'welcome_keyboard',
     title: '🎹 Welcome Keyboard',
     description: 'Start identifying notes and patterns on the piano. Great for absolute beginners.',
@@ -23,5 +30,3 @@ const courses = [
 ];
 
 export default courses;
-
-

@@ -5,13 +5,13 @@ import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import { useAuth } from '../../../context/AuthContext';
 // ממחזר את ה-CSS הקיים של פינגפונג מלודי (אותן מחלקות)
-import '../pingpong-melody/PingPongCoursePage.css';
+import '../ping-pong-melody/PingPongCoursePage.css';
 
 const levels = [
   {
     id: 'pph_level1',
     title: 'Level 1: I–V in C (C, G)',
-    description: 'פתח יציבות טונלית: תרגול מעבר בין טוניקה ודומיננטה.',
+    description: 'Establish tonal stability: practice moving between tonic and dominant.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
@@ -24,7 +24,7 @@ const levels = [
   {
     id: 'pph_level2',
     title: 'Level 2: I–IV–V (C, F, G)',
-    description: 'הוסף סאב-דומיננטה ליצירת קדנצות פשוטות.',
+    description: 'Add the subdominant to create simple cadences.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
@@ -37,11 +37,11 @@ const levels = [
   {
     id: 'pph_level3',
     title: 'Level 3: I–vi–IV–V (C, Am, F, G)',
-    description: 'פרוגרסיית פופ קלאסית – תחושת תנועה רכה וחוזרת.',
+    description: 'Classic pop progression – smooth, recurring motion.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
-      selectedChords: ['C', 'Am', 'F', 'G'],
+      selectedChords: ['C', 'Am', 'F', 'G',],
       outChords: [],
       rounds: 20,
       specialChordMode: false,
@@ -49,12 +49,12 @@ const levels = [
   },
   {
     id: 'pph_level4',
-    title: 'Level 4: All Diatonic Triads (C)',
-    description: 'כל הטריאדות הדיאטוניות בסולם דו מז׳ור.',
+    title: 'Level 4: I–vi–IV–V-ii (C, Am, F, G, Dm)',
+    description: 'Practice all diatonic triads in C major.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
-      selectedChords: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
+      selectedChords: ['C', 'Am', 'F', 'G','Dm'],
       outChords: [],
       rounds: 20,
       specialChordMode: false,
@@ -62,31 +62,31 @@ const levels = [
   },
   {
     id: 'pph_level5',
-    title: 'Level 5: Secondary Dominants (focus)',
-    description: 'הוסף דומיננטות משניות כ-Out Chords והתמקד בהן.',
+    title: 'Level 5: I–vi–IV–V-ii-iii (C, Am, F, G, Dm, Em)',
+    description: 'Add secondary dominants as out-of-scale chords and focus on them.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
       selectedChords: ['C', 'Dm', 'Em', 'F', 'G', 'Am'],
-      outChords: ['D7', 'E7', 'A7', 'Bb7'], // דוגמות: V/ii, V/iii, V/vi, וטרייטון-סאב ל-V
+      outChords: [],
       rounds: 20,
       specialChordMode: true,
     },
   },
   {
     id: 'pph_level6',
-    title: 'Level 6: Modal Mixture (♭VII, ♭VI)',
-    description: 'הלוואות מודאליות מודרניות – צבע הרמוני נוסף.',
+    title: 'Level 5: I–vi–IV–V-ii-iii-Bdim (C, Am, F, G, Dm, Em, Bdim)',
+    description: 'Introduce modal mixture with borrowed chords for extra harmonic color.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
-      selectedChords: ['C', 'F', 'G', 'Am'],
-      outChords: ['Bb', 'Ab'],
+      selectedChords: ['C', 'Dm', 'Em', 'F', 'G', 'Am','Bdim'],
       rounds: 20,
       specialChordMode: false,
     },
   },
 ];
+
 
 export default function PingPongHarmonyCoursePage() {
   const { currentUser } = useAuth();
