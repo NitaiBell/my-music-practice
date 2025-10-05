@@ -5,6 +5,9 @@ import Footer from '../../components/Footer';
 import { useAuth } from '../../context/AuthContext';
 import './PracticeLog.css';
 
+// ✅ תומך גם בלוקאל וגם בשרת אמיתי
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function PracticeLog() {
   const { practiceName } = useParams();
   const navigate = useNavigate();
@@ -39,8 +42,8 @@ export default function PracticeLog() {
 
       const endpoint =
         practiceName === 'Chords for Melody'
-          ? 'http://localhost:5000/api/melody/log'
-          : 'http://localhost:5000/api/practice/log';
+          ? `${API_BASE_URL}/api/melody/log`
+          : `${API_BASE_URL}/api/practice/log`;
 
       try {
         const res = await fetch(`${endpoint}?gmail=${gmail}&practiceName=${encodeURIComponent(practiceName)}`);
@@ -100,15 +103,10 @@ export default function PracticeLog() {
   const filteredEntries = logEntries.filter((entry) => isInTimeRange(entry.date, timeRange));
 
   const sortedEntries = filteredEntries.slice().sort((a, b) => {
-    if (sortBy === 'date') {
-      return new Date(b.date) - new Date(a.date);
-    } else if (sortBy === 'rank') {
-      return b.rank - a.rank;
-    } else if (sortBy === 'avgTime') {
-      return (a.avg_time_per_answer || Infinity) - (b.avg_time_per_answer || Infinity);
-    } else if (sortBy === 'correct') {
-      return b.correct - a.correct;
-    }
+    if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
+    if (sortBy === 'rank') return b.rank - a.rank;
+    if (sortBy === 'avgTime') return (a.avg_time_per_answer || Infinity) - (b.avg_time_per_answer || Infinity);
+    if (sortBy === 'correct') return b.correct - a.correct;
     return 0;
   });
 
@@ -122,7 +120,6 @@ export default function PracticeLog() {
 
       <div className="practice-log-scroll-container">
         <div style={{ height: '60px' }} />
-
         <div className="practice-log-content">
           <h1 className="practice-log-title">{practiceName} – Practice Log</h1>
 
@@ -193,7 +190,8 @@ export default function PracticeLog() {
                       ⚡ Avg Time: <strong>{entry.avg_time_per_answer?.toFixed(2)}s</strong>
                     </div>
                     <div className="log-entry-row">
-                      🕒 Session Time: <strong>
+                      🕒 Session Time:{' '}
+                      <strong>
                         {entry.session_time != null
                           ? formatSessionTime(entry.session_time)
                           : estimateTime(entry.avg_time_per_answer, entry.tries) != null

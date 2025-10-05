@@ -1,8 +1,8 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 
-// Main Pages
+// ✅ Main Pages
 import Home from './pages/Home.jsx';
 import NitaiPractices from './pages/NitaiPractices.jsx';
 import CoursePage from './pages/course/CoursePage.jsx';
@@ -13,21 +13,21 @@ import PracticeLog from './pages/practicelog/PracticeLog.jsx';
 import About from './pages/about/About.jsx';
 import InstructionPractice from './pages/practices/InstructionPractice.jsx';
 
-// Auth Pages
+// ✅ Auth Pages
 import SignIn from './pages/auth/SignIn.jsx';
 import SignUp from './pages/auth/SignUp.jsx';
 
-// Article Pages
+// ✅ Article Pages
 import ArticlesList from './pages/articles/ArticlesList.jsx';
 import ArticlePage from './pages/articles/ArticlePage.jsx';
 
-// Simple Practices
+// ✅ Simple Practices
 import PlayNote from './practices/playnote/PlayNote.jsx';
 import KeyboardDemo from './practices/keyboard/KeyboardDemo';
 import MusicalStaff from './practices/MusicalStaff/MusicalStaff.jsx';
 import SingNote from './practices/sing_note/SingNote.jsx';
 
-// Container Practices
+// ✅ Container Practices
 import PingPongMelodyContainer from './practices/melody_training/PingPongMelodyContainer.jsx';
 import PingPongHarmonyContainer from './practices/harmony_training/PingPongHarmonyContainer.jsx';
 import RealMelodyContainer from './practices/real_melody_training/RealMelodyContainer.jsx';
@@ -45,24 +45,57 @@ import MelodicDictationContainer from './practices/melodic_dictation/MelodicDict
 import HarmonicDictationContainer from './practices/harmonic_dictation/HarmonicDictationContainer.jsx';
 import ListOfValidProgressions from './practices/harmonic_dictation/ListOfValidProgressions.jsx';
 
-// School Pages
+// ✅ School Pages
 import School from './pages/school/School.jsx';
 import StudentLog from './pages/school/StudentLog.jsx';
 
-// Courses
+// ✅ Courses
 import AllCoursesPage from './pages/courses/AllCoursesPage/AllCoursesPage.jsx';
 import WelcomeKeyboardCoursePage from './pages/courses/welcome-keyboard/WelcomeKeyboardCoursePage.jsx';
 import FunctionalHarmonyCoursePage from './pages/courses/functional-harmony/FunctionalHarmonyCoursePage.jsx';
-import PingPongCoursePage from './pages/courses/ping-pong-melody/PingPongCoursePage.jsx'; // ✅ fixed path with dash
-import PingPongHarmonyCoursePage from './pages/courses/pingpong-harmony/PingPongHarmonyCoursePage.jsx'; // ✅ new
+import PingPongCoursePage from './pages/courses/ping-pong-melody/PingPongCoursePage.jsx';
+import PingPongHarmonyCoursePage from './pages/courses/pingpong-harmony/PingPongHarmonyCoursePage.jsx';
+
+
+// 🧠 Global Hotkey Listener – יעבוד בכל האתר
+function GlobalHotkeyListener() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleFeedbackClick = () => {
+      const subject = encodeURIComponent("Feedback for LikeMozart");
+      const body = encodeURIComponent(
+        `Page: ${window.location.origin}${location.pathname}\n\nYour feedback here: `
+      );
+      const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=mozartmozart@gmail.com&su=${subject}&body=${body}`;
+      window.open(mailtoLink, "_blank");
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.shiftKey && e.key.toLowerCase() === 'g') {
+        e.preventDefault();
+        handleFeedbackClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [location]);
+
+  return null; // אין UI
+}
+
 
 export default function App() {
   const { currentUser } = useAuth();
 
   return (
     <Router>
+      {/* ✅ מאזין גלובלי — עובד בכל העמודים */}
+      <GlobalHotkeyListener />
+
       <Routes>
-        {/* Main Pages */}
+        {/* 🏠 Main Pages */}
         <Route path="/" element={<Home />} />
         <Route path="/nitai-practices" element={<NitaiPractices />} />
         <Route path="/course/:courseId" element={<CoursePage />} />
@@ -72,24 +105,24 @@ export default function App() {
         <Route path="/instructions/:practiceKey" element={<InstructionPractice />} />
         <Route path="/practice-log/:practiceName" element={<PracticeLog />} />
 
-        {/* Auth Pages */}
+        {/* 🔐 Auth */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* About */}
+        {/* ℹ️ About */}
         <Route path="/about" element={<About />} />
 
-        {/* Articles */}
+        {/* 📰 Articles */}
         <Route path="/articles" element={<ArticlesList />} />
         <Route path="/articles/:slug" element={<ArticlePage />} />
 
-        {/* Simple Practices */}
+        {/* 🎹 Simple Practices */}
         <Route path="/play" element={<PlayNote />} />
         <Route path="/keyboard" element={<KeyboardDemo />} />
         <Route path="/staff" element={<MusicalStaff />} />
         <Route path="/sing-note" element={<SingNote />} />
 
-        {/* Container Practices */}
+        {/* 🎵 Container Practices */}
         <Route path="/melody/*" element={<PingPongMelodyContainer />} />
         <Route path="/harmony/*" element={<PingPongHarmonyContainer />} />
         <Route path="/real-melody/*" element={<RealMelodyContainer />} />
@@ -107,16 +140,16 @@ export default function App() {
         <Route path="/harmonic/*" element={<HarmonicDictationContainer />} />
         <Route path="/harmonic/progressions" element={<ListOfValidProgressions />} />
 
-        {/* School System */}
+        {/* 🏫 School System */}
         <Route path="/school" element={<School currentUser={currentUser} />} />
         <Route path="/school/log/:studentEmail" element={<StudentLog currentUser={currentUser} />} />
 
-        {/* Courses */}
+        {/* 📚 Courses */}
         <Route path="/courses" element={<AllCoursesPage />} />
         <Route path="/courses/welcome-keyboard" element={<WelcomeKeyboardCoursePage />} />
         <Route path="/courses/functional-harmony" element={<FunctionalHarmonyCoursePage />} />
         <Route path="/courses/pingpong-melody" element={<PingPongCoursePage />} />
-        <Route path="/courses/pingpong-harmony" element={<PingPongHarmonyCoursePage />} /> {/* ✅ new */}
+        <Route path="/courses/pingpong-harmony" element={<PingPongHarmonyCoursePage />} />
       </Routes>
     </Router>
   );

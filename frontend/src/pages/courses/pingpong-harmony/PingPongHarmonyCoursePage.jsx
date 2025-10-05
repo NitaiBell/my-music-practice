@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import { useAuth } from '../../../context/AuthContext';
-// ממחזר את ה-CSS הקיים של פינגפונג מלודי (אותן מחלקות)
+// ממחזר את ה-CSS הקיים של פינגפונג מלודי
 import '../ping-pong-melody/PingPongCoursePage.css';
+
+// ✅ תמיכה גם בלוקאל וגם בפרודקשן
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const levels = [
   {
@@ -41,7 +44,7 @@ const levels = [
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
-      selectedChords: ['C', 'Am', 'F', 'G',],
+      selectedChords: ['C', 'Am', 'F', 'G'],
       outChords: [],
       rounds: 20,
       specialChordMode: false,
@@ -49,12 +52,12 @@ const levels = [
   },
   {
     id: 'pph_level4',
-    title: 'Level 4: I–vi–IV–V-ii (C, Am, F, G, Dm)',
+    title: 'Level 4: I–vi–IV–V–ii (C, Am, F, G, Dm)',
     description: 'Practice all diatonic triads in C major.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
-      selectedChords: ['C', 'Am', 'F', 'G','Dm'],
+      selectedChords: ['C', 'Am', 'F', 'G', 'Dm'],
       outChords: [],
       rounds: 20,
       specialChordMode: false,
@@ -62,7 +65,7 @@ const levels = [
   },
   {
     id: 'pph_level5',
-    title: 'Level 5: I–vi–IV–V-ii-iii (C, Am, F, G, Dm, Em)',
+    title: 'Level 5: Add iii (C, Am, F, G, Dm, Em)',
     description: 'Add secondary dominants as out-of-scale chords and focus on them.',
     route: '/harmony/settings',
     state: {
@@ -75,29 +78,29 @@ const levels = [
   },
   {
     id: 'pph_level6',
-    title: 'Level 5: I–vi–IV–V-ii-iii-Bdim (C, Am, F, G, Dm, Em, Bdim)',
+    title: 'Level 6: Full diatonic set (C, Dm, Em, F, G, Am, Bdim)',
     description: 'Introduce modal mixture with borrowed chords for extra harmonic color.',
     route: '/harmony/settings',
     state: {
       selectedScale: 'C',
-      selectedChords: ['C', 'Dm', 'Em', 'F', 'G', 'Am','Bdim'],
+      selectedChords: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
       rounds: 20,
       specialChordMode: false,
     },
   },
 ];
 
-
 export default function PingPongHarmonyCoursePage() {
   const { currentUser } = useAuth();
   const [checkedLessons, setCheckedLessons] = useState({});
 
+  // ✅ שליפת התקדמות
   useEffect(() => {
     const fetchProgress = async () => {
       if (!currentUser?.email) return;
       try {
         const res = await fetch(
-          `http://localhost:5000/api/course-progress/get?email=${currentUser.email}&courseName=pingpong_harmony`
+          `${API_BASE_URL}/api/course-progress/get?email=${currentUser.email}&courseName=pingpong_harmony`
         );
         const data = await res.json();
         setCheckedLessons(data || {});
@@ -108,10 +111,11 @@ export default function PingPongHarmonyCoursePage() {
     fetchProgress();
   }, [currentUser]);
 
+  // ✅ עדכון לשרת
   const updateBackend = async (lessonId, isChecked) => {
     if (!currentUser?.email) return;
     try {
-      await fetch('http://localhost:5000/api/course-progress/save', {
+      await fetch(`${API_BASE_URL}/api/course-progress/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,13 +155,11 @@ export default function PingPongHarmonyCoursePage() {
       </div>
 
       <div className="pingpong_melody-scroll-container">
-        <div style={{ height: '60px' }} />
+        <div style={{ height: '60px' }} /> {/* Spacer for navbar */}
         <div className="pingpong_melody-inner-wrapper">
           <div className="pingpong_melody-page">
             <h1 className="pingpong_melody-title">🎼 PingPong Harmony Course</h1>
-            <p className="pingpong_melody-description">
-              אימון חשיבה פונקציונלית והרמונית בשלבים – דיאטוני, דומיננטות משניות והלוואות מודאליות.
-            </p>
+<p className="pingpong_melody-description"> Functional and harmonic thinking practice in stages — from diatonic to modal. </p>
 
             <div className="pingpong_melody-lesson-list">
               {levels.map((lesson) => (

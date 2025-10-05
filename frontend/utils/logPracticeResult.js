@@ -11,9 +11,15 @@ export const logPracticeResult = async ({
   tryScore,
   speedScore,
   avgTimePerAnswer,
-  sessionTime, // 🆕 Add this line
+  sessionTime,
 }) => {
   const date = new Date().toISOString();
+
+  // ✅ בדיקה: תראה מה באמת הערך
+  console.log('🌍 VITE_API_URL:', import.meta.env.VITE_API_URL);
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  console.log('🚀 Using API_BASE_URL:', API_BASE_URL);
 
   const payload = {
     gmail,
@@ -28,14 +34,14 @@ export const logPracticeResult = async ({
     tryScore,
     speedScore,
     avgTimePerAnswer,
-    sessionTime, // 🆕 Include it in the payload
+    sessionTime,
     date,
   };
 
   console.log('📤 Sending practice result:', payload);
 
   try {
-    const response = await fetch('http://localhost:5000/api/practice/save', {
+    const response = await fetch(`${API_BASE_URL}/api/practice/save`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -6,64 +6,59 @@ import Footer from '../../../components/Footer';
 import { useAuth } from '../../../context/AuthContext';
 import './FunctionalHarmonyCoursePage.css';
 
+// ✅ נוסיף את משתנה הסביבה כדי שיפעל גם בפרודקשן וגם בלוקאל
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const lessons = [
   {
     id: 'lesson1',
     title: 'Lesson 1: I and V in C Major',
-    description: 'Begin with the tonic (I) and dominant (V) in C major: the foundation of functional harmony.',
+    description:
+      'Begin with the tonic (I) and dominant (V) in C major: the foundation of functional harmony.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'V'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: false,
-      },
+      questionStyles: { scaleToDegree: true, scaleToNote: false },
       rounds: 6,
     },
   },
   {
     id: 'lesson2',
     title: 'Lesson 2: Add IV — The Subdominant',
-    description: 'Explore the motion between I, IV, and V in C major. The three core pillars of harmony.',
+    description:
+      'Explore the motion between I, IV, and V in C major. The three core pillars of harmony.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'IV', 'V'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: true,
-      },
+      questionStyles: { scaleToDegree: true, scaleToNote: true },
       rounds: 8,
     },
   },
   {
     id: 'lesson3',
     title: 'Lesson 3: Add VI — The Submediant',
-    description: 'Add the VI chord to your C major palette. Notice how it softens harmonic movement.',
+    description:
+      'Add the VI chord to your C major palette. Notice how it softens harmonic movement.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'IV', 'V', 'VI'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: true,
-      },
+      questionStyles: { scaleToDegree: true, scaleToNote: true },
       rounds: 8,
     },
   },
   {
     id: 'lesson4',
     title: 'Lesson 4: Add II — The Pre-Dominant',
-    description: 'The II chord leads naturally into V. Now we’re approaching full cadences.',
+    description:
+      'The II chord leads naturally into V. Now we’re approaching full cadences.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'II', 'IV', 'V', 'VI'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: true,
-      },
+      questionStyles: { scaleToDegree: true, scaleToNote: true },
       rounds: 10,
     },
   },
@@ -75,61 +70,50 @@ const lessons = [
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: true,
-      },
+      questionStyles: { scaleToDegree: true, scaleToNote: true },
       rounds: 12,
     },
   },
   {
     id: 'lesson6',
     title: 'Lesson 6: Full Set — All 7 Degrees in C Major',
-    description: 'Include the leading tone (VII) and test your ability across the full C major scale.',
+    description:
+      'Include the leading tone (VII) and test your ability across the full C major scale.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: false,
-      },
+      questionStyles: { scaleToDegree: true, scaleToNote: false },
       rounds: 14,
     },
   },
   {
     id: 'lesson7',
     title: 'Lesson 7: Note-to-Degree Challenge in C',
-    description: 'Flip the game: identify the degree based on the note. Reinforce Roman numeral meaning.',
+    description:
+      'Flip the game: identify the degree based on the note. Reinforce Roman numeral meaning.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
-      questionStyles: {
-        scaleToDegree: false,
-        scaleToNote: true,
-      },
+      questionStyles: { scaleToDegree: false, scaleToNote: true },
       rounds: 14,
     },
   },
   {
     id: 'lesson8',
     title: 'Lesson 8: Mixed Challenge in C',
-    description: 'Randomized question types — both degree-to-note and note-to-degree — to solidify fluency.',
+    description:
+      'Randomized question types — both degree-to-note and note-to-degree — to solidify fluency.',
     route: '/degree-notice/settings',
     state: {
       selectedScales: ['C'],
       selectedDegrees: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
-      questionStyles: {
-        scaleToDegree: true,
-        scaleToNote: true,
-      },
+      questionStyles: { scaleToDegree: true, scaleToNote: true },
       rounds: 16,
     },
   },
 ];
-
-
 
 export default function FunctionalHarmonyCoursePage() {
   const { currentUser } = useAuth();
@@ -140,7 +124,7 @@ export default function FunctionalHarmonyCoursePage() {
       if (!currentUser?.email) return;
       try {
         const res = await fetch(
-          `http://localhost:5000/api/course-progress/get?email=${currentUser.email}&courseName=functional_harmony`
+          `${API_BASE_URL}/api/course-progress/get?email=${currentUser.email}&courseName=functional_harmony`
         );
         const data = await res.json();
         setCheckedLessons(data || {});
@@ -154,7 +138,7 @@ export default function FunctionalHarmonyCoursePage() {
   const updateBackend = async (lessonId, isChecked) => {
     if (!currentUser?.email) return;
     try {
-      await fetch('http://localhost:5000/api/course-progress/save', {
+      await fetch(`${API_BASE_URL}/api/course-progress/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -173,11 +157,8 @@ export default function FunctionalHarmonyCoursePage() {
     const newStatus = !checkedLessons[lessonId];
     setCheckedLessons((prev) => {
       const updated = { ...prev };
-      if (newStatus) {
-        updated[lessonId] = true;
-      } else {
-        delete updated[lessonId];
-      }
+      if (newStatus) updated[lessonId] = true;
+      else delete updated[lessonId];
       return updated;
     });
     updateBackend(lessonId, newStatus);

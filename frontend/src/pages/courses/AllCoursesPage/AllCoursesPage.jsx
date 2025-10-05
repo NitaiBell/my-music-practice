@@ -6,6 +6,9 @@ import courses from '../../../data/courseList';
 import { useAuth } from '../../../context/AuthContext';
 import './AllCoursesPage.css';
 
+// ✅ שימוש במשתנה סביבה לפרודקשן / localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const AllCoursesPage = () => {
   const { currentUser } = useAuth();
   const [progressMap, setProgressMap] = useState({});
@@ -14,7 +17,7 @@ const AllCoursesPage = () => {
     const fetchAllProgress = async () => {
       if (!currentUser?.email) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/course-progress/all?email=${currentUser.email}`);
+        const res = await fetch(`${API_BASE_URL}/api/course-progress/all?email=${currentUser.email}`);
         const data = await res.json(); // Format: { welcome_keyboard: {0:true,1:true}, functional_harmony: {0:true} }
         setProgressMap(data || {});
       } catch (err) {

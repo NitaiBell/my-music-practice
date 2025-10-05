@@ -2,8 +2,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer'; // ✅ import Footer
+import Footer from '../../components/Footer'; // ✅ Import Footer
 import './SignUp.css';
+
+// ✅ נשתמש בכתובת מה־ENV אם קיימת (לפרודקשן), אחרת localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -15,6 +18,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ✅ בדיקות בסיסיות
     if (password !== confirm) {
       alert("Passwords don't match");
       return;
@@ -26,7 +30,8 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/signup', {
+      // ✅ שליחה לשרת (לוקאל או חיצוני)
+      const response = await fetch(`${API_BASE_URL}/api/users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -40,14 +45,14 @@ export default function SignUp() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('Signed up user:', data);
+        console.log('✅ Signed up user:', data);
         localStorage.setItem('user', JSON.stringify(data));
         alert(`Welcome, ${data.name}!`);
       } else {
         alert(data.error || 'Signup failed.');
       }
     } catch (err) {
-      console.error('Signup error:', err);
+      console.error('❌ Signup error:', err);
       alert('An error occurred. Please try again.');
     }
   };
@@ -59,6 +64,7 @@ export default function SignUp() {
       <div style={{ flexGrow: 1 }}>
         <div className="auth-container">
           <h2>Sign Up</h2>
+
           <form onSubmit={handleSubmit} className="auth-form">
             <input
               type="text"

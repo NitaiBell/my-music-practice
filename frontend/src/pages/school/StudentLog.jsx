@@ -6,7 +6,8 @@ import Footer from '../../components/Footer';
 import { useAuth } from '../../context/AuthContext';
 import '../practicelog/PracticeLog.css';
 
-const BACKEND_URL = 'http://localhost:5000';
+// ✅ משתנה סביבה – עובד גם בלוקאל וגם בפרודקשן
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const StudentLog = () => {
   const { studentEmail } = useParams();
@@ -24,7 +25,7 @@ const StudentLog = () => {
     const fetchLogs = async () => {
       try {
         const res = await fetch(
-          `${BACKEND_URL}/api/practice/log/all?gmail=${encodeURIComponent(studentEmail)}`
+          `${API_BASE_URL}/api/practice/log/all?gmail=${encodeURIComponent(studentEmail)}`
         );
         const allLogs = await res.json();
         setLogs(allLogs);

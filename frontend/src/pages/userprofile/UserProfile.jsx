@@ -137,7 +137,8 @@ export default function UserProfile() {
       const allStats = {};
       for (const practice of [...practiceLinks, chordsForMelodyPractice]) {
         try {
-          const res = await fetch(`http://localhost:5000/api/practice/stats?gmail=${gmail}&practiceName=${encodeURIComponent(practice.name)}`);
+          const res = await fetch(`${API_BASE_URL}/api/practice/stats?gmail=${gmail}&practiceName=${encodeURIComponent(practice.name)}`);
+
           const data = await res.json();
           allStats[practice.name] = data;
         } catch (err) {
@@ -149,7 +150,7 @@ export default function UserProfile() {
 
     const fetchCourseProgress = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/course-progress/all?email=${gmail}`);
+        const res = await fetch(`${API_BASE_URL}/api/course-progress/all?email=${gmail}`);
         const data = await res.json();
         setCurrentUser(prev => ({
           ...prev,
@@ -178,7 +179,7 @@ const res = await fetch(`${API_BASE_URL}/api/article-reads/read?email=${gmail}`)
 
   const updateImageOnServer = async (newImageUrl) => {
     try {
-      const res = await fetch('http://localhost:5000/api/users/update-image', {
+      const res = await fetch(`${API_BASE_URL}/api/users/update-image`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, imageUrl: newImageUrl }),

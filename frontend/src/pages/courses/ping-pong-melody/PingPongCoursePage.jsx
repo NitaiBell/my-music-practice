@@ -6,66 +6,51 @@ import Footer from '../../../components/Footer';
 import { useAuth } from '../../../context/AuthContext';
 import './PingPongCoursePage.css';
 
+// ✅ תמיכה גם ב-production וגם בלוקאל
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const levels = [
   {
     id: 'level1',
     title: 'Level 1: C and G only',
     description: 'Start building short melodies with just the notes C and G.',
     route: '/real-melody/settings',
-    state: {
-      selectedNotes: ['C', 'G'],
-      rounds: 30,
-    },
+    state: { selectedNotes: ['C', 'G'], rounds: 30 },
   },
   {
     id: 'level2',
     title: 'Level 2: C, G, E',
     description: 'Add E to create new melodic contours with three notes.',
     route: '/real-melody/settings',
-    state: {
-      selectedNotes: ['C', 'G', 'E'],
-      rounds: 30,
-    },
+    state: { selectedNotes: ['C', 'G', 'E'], rounds: 30 },
   },
   {
     id: 'level3',
     title: 'Level 3: Add A',
     description: 'Four-note melodies: expand with A and experiment with steps.',
     route: '/real-melody/settings',
-    state: {
-      selectedNotes: ['C', 'G', 'E', 'A'],
-      rounds: 30,
-    },
+    state: { selectedNotes: ['C', 'G', 'E', 'A'], rounds: 30 },
   },
   {
     id: 'level4',
     title: 'Level 4: Add D',
     description: 'Include D and explore higher range movement.',
     route: '/real-melody/settings',
-    state: {
-      selectedNotes: ['C', 'G', 'E', 'A', 'D'],
-      rounds: 30,
-    },
+    state: { selectedNotes: ['C', 'G', 'E', 'A', 'D'], rounds: 30 },
   },
   {
     id: 'level5',
-    title: 'Level 4: Add E',
-    description: 'Now use C-D-E-F-G-A and start composing more complete motifs.',
+    title: 'Level 5: Add F',
+    description: 'Now use C–D–E–F–G–A to start creating full melodic phrases.',
     route: '/real-melody/settings',
-    state: {
-      selectedNotes: ['C', 'G', 'E', 'F', 'A', 'D', 'E'],
-      rounds: 30,
-    },
+    state: { selectedNotes: ['C', 'D', 'E', 'F', 'G', 'A'], rounds: 30 },
   },
-    {
+  {
     id: 'level6',
-    title: 'Level 4: Add B',
-    description: 'Now use C-D-E-F-G-A-B and start composing more complete motifs.',
+    title: 'Level 6: Add B — Full Major Scale',
+    description: 'Now use all notes C–D–E–F–G–A–B and create complete melodies.',
     route: '/real-melody/settings',
-    state: {
-      selectedNotes: ['C', 'G', 'E','F', 'A', 'D', 'E', 'B'],
-      rounds: 30,
-    },
+    state: { selectedNotes: ['C', 'D', 'E', 'F', 'G', 'A', 'B'], rounds: 30 },
   },
 ];
 
@@ -73,12 +58,13 @@ export default function PingPongCoursePage() {
   const { currentUser } = useAuth();
   const [checkedLessons, setCheckedLessons] = useState({});
 
+  // ✅ שליפת התקדמות
   useEffect(() => {
     const fetchProgress = async () => {
       if (!currentUser?.email) return;
       try {
         const res = await fetch(
-          `http://localhost:5000/api/course-progress/get?email=${currentUser.email}&courseName=pingpong_melody`
+          `${API_BASE_URL}/api/course-progress/get?email=${currentUser.email}&courseName=pingpong_melody`
         );
         const data = await res.json();
         setCheckedLessons(data || {});
@@ -89,10 +75,11 @@ export default function PingPongCoursePage() {
     fetchProgress();
   }, [currentUser]);
 
+  // ✅ עדכון לבקאנד
   const updateBackend = async (lessonId, isChecked) => {
     if (!currentUser?.email) return;
     try {
-      await fetch('http://localhost:5000/api/course-progress/save', {
+      await fetch(`${API_BASE_URL}/api/course-progress/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -111,11 +98,8 @@ export default function PingPongCoursePage() {
     const newStatus = !checkedLessons[lessonId];
     setCheckedLessons((prev) => {
       const updated = { ...prev };
-      if (newStatus) {
-        updated[lessonId] = true;
-      } else {
-        delete updated[lessonId];
-      }
+      if (newStatus) updated[lessonId] = true;
+      else delete updated[lessonId];
       return updated;
     });
     updateBackend(lessonId, newStatus);
@@ -135,12 +119,13 @@ export default function PingPongCoursePage() {
       </div>
 
       <div className="pingpong_melody-scroll-container">
-        <div style={{ height: '60px' }} />
+        <div style={{ height: '60px' }} /> {/* Spacer for navbar */}
         <div className="pingpong_melody-inner-wrapper">
           <div className="pingpong_melody-page">
             <h1 className="pingpong_melody-title">🎵 PingPong Melody Course</h1>
             <p className="pingpong_melody-description">
-              Build your melodic instinct step-by-step using limited note sets. Great for beginners in improvisation and melodic composition.
+              Build your melodic instinct step-by-step using limited note sets.
+              Great for beginners in improvisation and melodic composition.
             </p>
 
             <div className="pingpong_melody-lesson-list">

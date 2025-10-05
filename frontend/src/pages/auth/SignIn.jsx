@@ -1,9 +1,12 @@
-// pages/auth/SignIn.jsx
+// src/pages/auth/SignIn.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer'; // ✅ Import Footer
 import './SignIn.css';
+
+// ✅ נשתמש במשתנה סביבה (אם יש) או ב-localhost כברירת מחדל
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -14,7 +17,8 @@ export default function SignIn() {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:5000/api/users/login', {
+      // ✅ שימוש בכתובת דינמית (ENV או localhost)
+      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -23,13 +27,14 @@ export default function SignIn() {
       const data = await res.json();
 
       if (res.ok) {
+        console.log('✅ Logged in successfully:', data);
         localStorage.setItem('user', JSON.stringify(data));
         navigate('/profile');
       } else {
         alert(data.error || 'Login failed.');
       }
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('❌ Login error:', err);
       alert('Something went wrong. Try again.');
     }
   };
@@ -41,6 +46,7 @@ export default function SignIn() {
       <div style={{ flexGrow: 1 }}>
         <div className="auth-container">
           <h2>Sign In</h2>
+
           <form onSubmit={handleSubmit} className="auth-form">
             <input
               type="email"
@@ -49,6 +55,7 @@ export default function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+
             <input
               type="password"
               placeholder="Password"
@@ -56,6 +63,7 @@ export default function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+
             <button type="submit">Sign In</button>
           </form>
 

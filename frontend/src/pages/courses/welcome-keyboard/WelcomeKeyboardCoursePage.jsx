@@ -5,11 +5,15 @@ import Footer from '../../../components/Footer';
 import { useAuth } from '../../../context/AuthContext';
 import './WelcomeKeyboardCoursePage.css';
 
+// ✅ כדי שיתמוך גם בלוקאל וגם בשרת החיצוני
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const lessons = [
   {
     id: 'lesson1',
     title: 'Lesson 1: Just C and G',
-    description: 'Start by identifying only two keys: C and G. Get familiar with the spacing between white keys.',
+    description:
+      'Start by identifying only two keys: C and G. Get familiar with the spacing between white keys.',
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
@@ -21,7 +25,8 @@ const lessons = [
   {
     id: 'lesson2',
     title: 'Lesson 2: Add E to the Mix',
-    description: 'Now play C, E, and G — the building blocks of a basic triad on the keyboard.',
+    description:
+      'Now play C, E, and G — the building blocks of a basic triad on the keyboard.',
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
@@ -33,7 +38,8 @@ const lessons = [
   {
     id: 'lesson3',
     title: 'Lesson 3: Add A',
-    description: 'Add the A note and begin to recognize more combinations and fingerings.',
+    description:
+      'Add the A note and begin to recognize more combinations and fingerings.',
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
@@ -45,7 +51,8 @@ const lessons = [
   {
     id: 'lesson4',
     title: 'Lesson 4: Add D',
-    description: 'Include the D note and explore longer patterns across the keyboard.',
+    description:
+      'Include the D note and explore longer patterns across the keyboard.',
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
@@ -57,7 +64,8 @@ const lessons = [
   {
     id: 'lesson5',
     title: 'Lesson 5: Add F',
-    description: 'Now you’re almost playing the full C major scale—just one more step.',
+    description:
+      'Now you’re almost playing the full C major scale — just one more step.',
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
@@ -69,7 +77,8 @@ const lessons = [
   {
     id: 'lesson6',
     title: 'Lesson 6: All White Keys in C Major',
-    description: 'Practice with all the white keys in C major: C D E F G A B.',
+    description:
+      'Practice with all the white keys in C major: C D E F G A B.',
     route: '/learn-piano/settings',
     state: {
       defaultScale: 'C',
@@ -80,18 +89,17 @@ const lessons = [
   },
 ];
 
-
 export default function WelcomeKeyboardCoursePage() {
   const { currentUser } = useAuth();
   const [completedLessons, setCompletedLessons] = useState({});
 
-  // Load lesson progress from backend on mount
+  // ✅ שולף התקדמות משתמש מהשרת
   useEffect(() => {
     const fetchProgress = async () => {
       if (!currentUser?.email) return;
       try {
         const res = await fetch(
-          `http://localhost:5000/api/course-progress/get?email=${currentUser.email}&courseName=welcome_keyboard`
+          `${API_BASE_URL}/api/course-progress/get?email=${currentUser.email}&courseName=welcome_keyboard`
         );
         const data = await res.json();
         setCompletedLessons(data || {});
@@ -102,10 +110,11 @@ export default function WelcomeKeyboardCoursePage() {
     fetchProgress();
   }, [currentUser]);
 
+  // ✅ מעדכן שרת כשמשתמש מסמן שיעור
   const updateBackend = async (lessonId, isChecked) => {
     if (!currentUser?.email) return;
     try {
-      await fetch('http://localhost:5000/api/course-progress/save', {
+      await fetch(`${API_BASE_URL}/api/course-progress/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -124,11 +133,8 @@ export default function WelcomeKeyboardCoursePage() {
     const newStatus = !completedLessons[lessonId];
     setCompletedLessons((prev) => {
       const updated = { ...prev };
-      if (newStatus) {
-        updated[lessonId] = true;
-      } else {
-        delete updated[lessonId];
-      }
+      if (newStatus) updated[lessonId] = true;
+      else delete updated[lessonId];
       return updated;
     });
     updateBackend(lessonId, newStatus);
@@ -136,10 +142,7 @@ export default function WelcomeKeyboardCoursePage() {
 
   const handleStartLesson = (lessonId) => {
     if (!completedLessons[lessonId]) {
-      setCompletedLessons((prev) => {
-        const updated = { ...prev, [lessonId]: true };
-        return updated;
-      });
+      setCompletedLessons((prev) => ({ ...prev, [lessonId]: true }));
       updateBackend(lessonId, true);
     }
   };
@@ -152,7 +155,6 @@ export default function WelcomeKeyboardCoursePage() {
 
       <div className="welcome_keyboard-scroll-container">
         <div style={{ height: '60px' }} /> {/* Spacer for navbar */}
-
         <div className="welcome_keyboard-inner-wrapper">
           <div className="welcome_keyboard-page">
             <h1 className="welcome_keyboard-title">🎹 Welcome to the Keyboard</h1>
@@ -186,7 +188,6 @@ export default function WelcomeKeyboardCoursePage() {
               ))}
             </div>
           </div>
-
           <Footer />
         </div>
       </div>

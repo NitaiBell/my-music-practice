@@ -6,7 +6,8 @@ import './School.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-const BACKEND_URL = 'http://localhost:5000';
+// ✅ משתמש במשתנה סביבה – עובד גם בשרת אמיתי וגם בלוקאל
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const School = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const School = () => {
   const fetchStudents = async () => {
     try {
       const res = await fetch(
-        `${BACKEND_URL}/api/teacher-student/students?teacherEmail=${encodeURIComponent(currentUser.email)}`
+        `${API_BASE_URL}/api/teacher-student/students?teacherEmail=${encodeURIComponent(currentUser.email)}`
       );
       const data = await res.json();
       setStudents(data);
@@ -33,7 +34,7 @@ const School = () => {
   const fetchTeachers = async () => {
     try {
       const res = await fetch(
-        `${BACKEND_URL}/api/teacher-student/teacher?studentEmail=${encodeURIComponent(currentUser.email)}`
+        `${API_BASE_URL}/api/teacher-student/teacher?studentEmail=${encodeURIComponent(currentUser.email)}`
       );
       const data = await res.json();
       setLinkedTeachers(data || []);
@@ -54,7 +55,7 @@ const School = () => {
     const targetEmail = role === 'teacher' ? studentEmail : teacherEmail;
 
     try {
-      const res = await fetch(`${BACKEND_URL}/api/teacher-student/propose-link`, {
+      const res = await fetch(`${API_BASE_URL}/api/teacher-student/propose-link`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ initiatorEmail, targetEmail, role }),
