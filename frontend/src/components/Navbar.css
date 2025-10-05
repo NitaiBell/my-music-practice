@@ -27,9 +27,8 @@
   cursor: pointer;
   padding: 6px 10px;
   line-height: 1;
-  margin: 0;                /* ❌ remove margin-top */
+  margin: 0; /* ❌ remove margin-top */
 }
-
 
 /* Desktop layout */
 .navbar-links-group {
@@ -91,6 +90,25 @@
   color: #ffffff;
 }
 
+/* Feedback Button - Desktop */
+.navbar-feedback-button {
+  background-color: transparent;
+  color: #ffffff;
+  padding: 8px 14px;
+  margin-left: 20px;
+  border: 2px solid #fbbf24; /* amber border for visibility */
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar-feedback-button:hover {
+  background-color: #fbbf24;
+  border-color: #f59e0b;
+  color: #065f46; /* dark green text when active */
+}
+
 /* ─── Mobile Styles ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .navbar-hamburger {
@@ -129,8 +147,6 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-
-  
   .navbar-signin-button {
     margin: 10px 20px;
     padding: 10px;
@@ -151,6 +167,25 @@
 
   .navbar-profile-link:hover {
     background-color: #059669;
+    color: #ffffff;
+  }
+
+  /* Feedback Button - Mobile */
+  .navbar-feedback-button {
+    margin: 10px 20px;
+    padding: 10px;
+    width: calc(100% - 40px); /* full width minus padding */
+    border-radius: 6px;
+    text-align: center;
+    background-color: #fbbf24;
+    border: none;
+    color: #065f46;
+    font-weight: bold;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .navbar-feedback-button:hover {
+    background-color: #f59e0b;
     color: #ffffff;
   }
 }
