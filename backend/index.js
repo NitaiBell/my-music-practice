@@ -70,21 +70,25 @@ app.use("/api/article-reads", articleReadsRoutes);
 app.use("/api", passwordRoutes); // ✅ NEW route
 
 
-// 🧩 6. Start server after ensuring DB tables exist
-Promise.all([
-  createUsersTableIfNotExists(),
-  createPracticeLogTableIfNotExists(),
-  createTeacherStudentTableIfNotExists(),
-  createUserCourseProgressTable(),
-  createUserArticleReadsTable(),
-  createOneTimePasswordsTable(), // ✅ NEW
-])
-  .then(() => {
+// 🧩 6. Start server after ensuring DB tables exist (with correct order)
+(async () => {
+  try {
+    console.log("🧱 Initializing database tables...");
+
+    await createUsersTableIfNotExists();            // חייב ראשון
+    await createPracticeLogTableIfNotExists();
+    await createTeacherStudentTableIfNotExists();
+    await createUserCourseProgressTable();          // תלוי ב-users
+    await createUserArticleReadsTable();            // תלוי ב-users
+    await createOneTimePasswordsTable();
+
+    console.log("✅ All tables initialized successfully!");
+
     app.listen(port, () => {
       console.log(`✅ Server running on port ${port} (${process.env.NODE_ENV})`);
     });
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error("❌ Failed to initialize tables:", err.message);
     process.exit(1);
-  });
+  }
+})();
